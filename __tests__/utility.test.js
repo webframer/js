@@ -1,16 +1,7 @@
-import {
-  cloneDeep,
-  hasDuplicateInList,
-  isId,
-  isTruthy,
-  ONE_HOUR,
-  ONE_MINUTE,
-  ONE_MONTH,
-  ONE_SECOND,
-  ONE_WEEK,
-  ONE_YEAR
-} from 'utils-pack'
-import { distanceBetween, Id, timestampFromId } from '../utility.js'
+import { hasDuplicateInList } from '../array.js'
+import { ONE_HOUR, ONE_MINUTE, ONE_MONTH, ONE_SECOND, ONE_WEEK, ONE_YEAR } from '../constants.js'
+import { cloneDeep } from '../object.js'
+import { distanceBetween, Id, isId, isTruthy, timestampFromId } from '../utility.js'
 
 const NON_TRUTHY_VALUES = [
   false,

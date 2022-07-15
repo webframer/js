@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { ADD, DELETE, GET, SET } from '../constants.js'
 import { __CLIENT__ } from '../_envs.js'
 import { memoryCache, performStorage, } from '../storage.js'
