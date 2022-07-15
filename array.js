@@ -13,7 +13,6 @@ import {
   unionWith,
   uniqWith,
 } from 'lodash-es'
-import thenby from 'thenby'
 import { toLowerCaseAny } from './string.js'
 
 /**
@@ -505,25 +504,6 @@ export function by (...args) {
 
     return result
   }
-}
-
-/**
- * Helper to sort arrays on multiple keys. Can compose like sortBy().thenBy().thenBy()
- * @NOTE: this methods is much slower than writing native sort function, use it for convenience only
- *
- * @uses thenby
- * @see {@link https://github.com/Teun/thenBy.js} for further information
- *
- * @example
- *    array.sort(firstBy((a, b) => (a > b ? -1 : 1)).thenBy('id'))
- *    >>> a will appear before b, then sorted by id alphabetically
- *
- * @param {Function|string} sort - A sorting compare function or, in the case of a string, an object attribute to sort by
- * @param {Object|number} options - An object of options for sorting, or in the case of a number, the sort direction
- * @return {Function} - A new sortBy function
- */
-export function firstBy (sort, options) {
-  return thenby(sort, options)
 }
 
 /**

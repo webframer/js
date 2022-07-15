@@ -1,6 +1,6 @@
+import thenby from 'thenby' // for benchmark testing only, not used in production
 import {
   by,
-  firstBy,
   hasCommonListValue,
   intersection,
   mergeLists,
@@ -8,8 +8,8 @@ import {
   sort,
   toListTotal,
   toUniqueListFast
-} from '../array'
-import { bench } from '../log'
+} from '../array.js'
+import { bench } from '../log.js'
 
 /**
  * BENCHMARK TESTS =============================================================
@@ -91,3 +91,21 @@ bench.skip({log: '[0]', loop: 1000000}, arrayPush, longList)
 bench.skip({log: '[0]', loop: 1000000}, arrayConcat, longList)  // ~ 20% faster than arrayPush()
 bench({log: '[0]', loop: 1000000}, arrayIndexOf, 111)
 bench({log: '[0]', loop: 1000000}, arrayIncludes, 111)  // no difference compared to array.indexOf() check
+
+/**
+ * @Archived as benchmark function only.
+ * Helper to sort arrays on multiple keys. Can compose like sortBy().thenBy().thenBy()
+ * @NOTE: this methods is much slower than writing native sort function, use it for bench only
+ * @see {@link https://github.com/Teun/thenBy.js} for further information
+ *
+ * @example
+ *    array.sort(firstBy((a, b) => (a > b ? -1 : 1)).thenBy('id'))
+ *    >>> a will appear before b, then sorted by id alphabetically
+ *
+ * @param {Function|string} sort - A sorting compare function or, in the case of a string, an object attribute to sort by
+ * @param {Object|number} options - An object of options for sorting, or in the case of a number, the sort direction
+ * @return {Function} - A new sortBy function
+ */
+function firstBy (sort, options) {
+  return thenby(sort, options)
+}

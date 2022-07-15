@@ -1,4 +1,6 @@
-export const ObjectId = require('bson-objectid') // adds 1 KB to bundle size gzipped
+import ObjectId from 'bson-objectid' // adds 1 KB to bundle size gzipped
+
+export {ObjectId}
 
 /**
  * Create 12 bits Hex string ID compatible with MongoDB ID

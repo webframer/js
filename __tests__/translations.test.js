@@ -1,9 +1,9 @@
-import { Active } from '../_envs'
-import { l, LANGUAGE } from '../constants'
-import { localiseTranslation } from '../definitions'
-import { cloneDeep } from '../object'
-import { interpolateString } from '../string'
-import { _ } from '../translations'
+import { Active } from '../_envs.js'
+import { l, LANGUAGE } from '../constants.js'
+import { localiseTranslation } from '../definitions.js'
+import { cloneDeep } from '../object.js'
+import { interpolateString } from '../string.js'
+import { _ } from '../translations.js'
 
 describe(`i18n translation`, () => {
   const variable = 'Hello'

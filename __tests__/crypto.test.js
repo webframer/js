@@ -1,5 +1,5 @@
-import { CRYPTO } from '../constants'
-import { cryptoSign, cryptoSignVerify, decrypt, encrypt, } from '../crypto'
+import { CRYPTO } from '../constants.js'
+import { cryptoSign, cryptoSignVerify, decrypt, encrypt, } from '../crypto.js'
 
 describe(`Crypto Signing`, () => {
   const algo = CRYPTO.HMAC_SHA256

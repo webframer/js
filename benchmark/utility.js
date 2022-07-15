@@ -1,6 +1,6 @@
 import qs from 'querystring'
-import { bench } from '../log'
-import { passStrength, } from '../utility'
+import { bench } from '../log.js'
+import { passStrength, } from '../utility.js'
 
 /**
  * BENCHMARK TESTS =============================================================

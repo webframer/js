@@ -13,7 +13,7 @@ import {
   sha256,
   toURI,
   truncate
-} from '../string'
+} from '../string.js'
 
 const NON_STRING_VALUES = [
   100,

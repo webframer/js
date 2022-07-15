@@ -1,4 +1,3 @@
-import dotProp from 'dot-prop-immutable'
 import flatten from 'flat'
 import {
 	cloneDeep,
@@ -10,11 +9,12 @@ import {
 	matches,
 	merge as _merge,
 	property,
-	setWith,
 	unset
 } from 'lodash-es'
 import qs from 'querystring'
 import { isCollection } from './array.js'
+
+export {setWith as set} from 'lodash-es'
 
 /**
  * OBJECT FUNCTIONS ============================================================
@@ -157,48 +157,6 @@ export function objChanges (original, changed) {
 		changed[deleted] = null
 	}
 	return isEmpty(changed) ? undefined : changed
-}
-
-/**
- * Safely sets the provided value at the given path of an object, creating portions of the path if they don't exist.
- * Unless an optional customizer function is provided, arrays are created for missing index properties while objects
- * are created for all other missing properties.
- *
- * NOTE - This function mutates the provided 'object'
- *
- * @uses lodash
- * @see https://lodash.com/docs/4.17.4#set
- *
- * @param {Object} object - The object to modify
- * @param {String|String[]|Number|Number[]} path - The path in the given object to set the provided values
- * @param {*} value - The value to set
- * @param {Function} [customizer] - An optional function that specifies how to fill in a missing path
- * @returns {Object}
- */
-export function set(object, path, value, customizer) {
-	return setWith(object, path, value, customizer)
-}
-
-/**
- * Similar to set() but returns copy of the object instead of mutating it
- * Note: may not work if the path contains space character, e.g. `path = 'items[key with space].isNotWorking'`
- *
- * @uses dot-prop-immutable
- * @see {@link https://github.com/debitoor/dot-prop-immutable} for further information
- *
- * @param {Object} object - The object to modify
- * @param {string} path - The path in the given object to set the provided values
- * @param {*} value - The value to set
- * @return {Object} - A new object
- */
-export function setImmutably(object, path, value) {
-	// Change into suitable format for dotProp eg. myArray[0].myProperty -> myArray.0.myProperty
-	const parsedPath = path
-
-		// Remove brackets around strings (add a dot before it, except when bracket is the first character) ie. object[string] -> object.string
-		.replace(/(\[)(.*?)(\])/g, (match, match1, match2, match3, offset) => (offset > 0 ? '.' : '') + String(match2))
-
-	return dotProp.set(object, parsedPath, value)
 }
 
 /**

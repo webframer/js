@@ -58,7 +58,7 @@ export function enumCheck (enums, value, self) {
  * Check if values provided do match, using given comparison operator
  *
  * @param {string} type - comparison operator (i.e. enum(['AND', 'OR']))
- * @return {function<Array>} that takes boolean arguments and return true or false based on match type
+ * @return {function} that takes boolean arguments and return true or false based on match type
  */
 export function matchByType (type) {
 	enumCheck(['AND', 'OR'], type, this)

@@ -1,6 +1,6 @@
 import { isFunction as _isFunction } from 'lodash-es'
-import { isFunction } from '../function'
-import { bench } from '../log'
+import { isFunction } from '../function.js'
+import { bench } from '../log.js'
 
 /**
  * BENCHMARK TESTS =============================================================

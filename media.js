@@ -26,7 +26,7 @@ export function aspectRatio (width, height) {
  * @returns {String|Undefined} aspect ratio - or undefined, if not supported
  */
 export function aspectRatioAllowed (supportedAspectRatios, width, height) {
-  // Create lowest common divisor aspect ratios
+  // Create the lowest common divisor aspect ratios
   // this converts 21:9 to 7:3 for the calc aspect to work correctly
   const ratio = aspectRatio(width, height)
   return supportedAspectRatios

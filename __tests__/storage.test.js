@@ -1,6 +1,6 @@
-import { ADD, DELETE, GET, SET } from '../constants'
-import { __CLIENT__ } from '../_envs'
-import { memoryCache, performStorage, } from '../storage'
+import { ADD, DELETE, GET, SET } from '../constants.js'
+import { __CLIENT__ } from '../_envs.js'
+import { memoryCache, performStorage, } from '../storage.js'
 
 it(`${memoryCache.name}() stores and retrieves values correctly`, () => {
   const user = memoryCache()

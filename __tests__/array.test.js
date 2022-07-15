@@ -23,8 +23,8 @@ import {
   toUniqueList,
   toUniqueListCaseInsensitive,
   toUniqueListFast
-} from '../array'
-import { cloneDeep } from '../object'
+} from '../array.js'
+import { cloneDeep } from '../object.js'
 
 const NON_ARRAY_VALUES = [
   100,

@@ -13,7 +13,7 @@ import {
   shortNumber,
   startEndFromNumberRanges,
   toPercentage
-} from '../number'
+} from '../number.js'
 
 const NUMBER_VALUES = [
   1,

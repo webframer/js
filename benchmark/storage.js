@@ -1,6 +1,6 @@
 import { GET, SET } from '../../constants'
-import { bench } from '../log'
-import { performCache, performStorage } from '../storage'
+import { bench } from '../log.js'
+import { performCache, performStorage } from '../storage.js'
 
 /**
  * BENCHMARK TESTS =============================================================

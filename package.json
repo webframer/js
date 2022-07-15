@@ -1,42 +1,31 @@
 {
-  "name": "utils-pack",
+  "name": "@webframer/utils",
   "version": "0.11.8",
   "description": "JS Helper Functions",
   "license": "MIT",
-  "main": "index.js",
-  "homepage": "https://github.com/ecoinomist/utils-pack",
-  "private": false,
-  "sideEffects": false,
   "type": "module",
+  "main": "index.js",
+  "homepage": "https://github.com/webframer/utils",
+  "sideEffects": false,
   "keywords": [
     "helper",
     "utils",
     "functions"
   ],
   "scripts": {
-    "release": "yarn push && git push",
-    "push": "yarn push:src",
-    "prebuild": "yarn symlink ../babel.config.js ./",
-    "build": "yarn delete dist && babel src --out-dir dist",
-    "push:dist": "cp {README.md,LICENSE,package.json} dist/ && cd dist && yarn publish && cd ../ && yarn delete dist",
-    "push:src": "cp {README.md,LICENSE,package.json} src/ && cd src && yarn publish && cd ../ && yarn delete src/{README.md,LICENSE,package.json}",
-    "delete": "../../node_modules/rimraf/bin.js",
-    "symlink": "node ../../scripts/symlink.js"
+    "push": "npm publish --access public"
   },
   "dependencies": {
-    "bson-objectid": "^1.3.1",
-    "circular-json": "^0.5.9",
+    "bson-objectid": "^2.0.3",
+    "circular-json-es6": "^2.0.2",
     "classnames": "^2.3.1",
-    "dayjs": "^1.9.1",
-    "dot-prop-immutable": "^1.5.0",
-    "flat": "^4.1.0",
-    "humanize-duration": "^3.15.3",
+    "dayjs": "^1.11.3",
+    "flat": "^5.0.2",
+    "humanize-duration": "^3.27.2",
     "lodash-es": "^4.17.21",
-    "minimist": "^1.2.3",
-    "papaparse": "^5.2.0",
+    "papaparse": "^5.3.2",
     "performance-now": "^2.1.0",
     "pluralize": "^8.0.0",
-    "reselect": "^4.0.0",
-    "thenby": "^1.3.0"
+    "reselect": "^4.1.6"
   }
 }

@@ -17,7 +17,7 @@ import {
   toObjValuesKeyTotal,
   toObjValuesTotal,
   update
-} from '../object'
+} from '../object.js'
 
 const NON_OBJECT_VALUES = [
   100,

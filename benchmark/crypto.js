@@ -1,5 +1,5 @@
-import { cryptoHash, cryptoSign, decrypt, encrypt } from '../crypto'
-import { bench } from '../log'
+import { cryptoHash, cryptoSign, decrypt, encrypt } from '../crypto.js'
+import { bench } from '../log.js'
 
 /**
  * BENCHMARK TESTS =============================================================

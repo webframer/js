@@ -1,5 +1,5 @@
-import { l } from './constants'
-import { localiseTranslation } from './definitions'
+import { l } from './constants.js'
+import { localiseTranslation } from './definitions.js'
 
 /**
  * LOCALISED TRANSLATIONS (i18n) ===============================================
@@ -36,7 +36,7 @@ localiseTranslation({
     [l.ENGLISH]: 'Untranslated',
     // @Note: only english is provided in the bundle definition
     // All other languages are to be loaded on the fly as static assets,
-    // so that they can be cached by the the browser.
+    // so that they can be cached by the browser.
   },
 
   // Actions
@@ -255,7 +255,7 @@ localiseTranslation({
   },
   OUR_SITE_USES_COOKIES_BY_CONTINUING_TO_USE_OUR_SITE_YOU_ARE_AGREEING_TO_OUR: {
     [l.ENGLISH]: 'Our site uses cookies. By continuing to use our site you are agreeing to our',
-    // [l.RUSSIAN]: 'Этот сайт использует cookies. Мы используем файлы cookie для запоминания и анализа ваших предпочтений. Продолжая пользоваться сайтом, вы соглашаетесь на использование файлов cookie',
+    // [l.RUSSIAN]: 'Этот сайт использует cookies. Продолжая пользоваться сайтом, вы соглашаетесь на использование файлов cookie',
   },
   OK_I_UNDERSTAND: {
     [l.ENGLISH]: 'OK, I understand',

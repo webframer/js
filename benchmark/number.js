@@ -1,5 +1,5 @@
-import { bench } from '../log'
-import { decimalPlaces, formatNumber, round, shortNumber } from '../number'
+import { bench } from '../log.js'
+import { decimalPlaces, formatNumber, round, shortNumber } from '../number.js'
 
 /**
  * BENCHMARK TESTS =============================================================

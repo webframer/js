@@ -1,4 +1,4 @@
-import { aspectRatio, widthScaled } from '../media'
+import { aspectRatio, widthScaled } from '../media.js'
 
 test(`${aspectRatio.name}() returns correct aspect ratio from given width and height`, () => {
   // 4:3

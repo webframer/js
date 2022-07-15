@@ -1,4 +1,4 @@
-import { colorScaleDistinct, rgbFromColor3, rgbFromHex, rgbToColor3, rgbToHex, toRgbaColor } from '../color'
+import { colorScaleDistinct, rgbFromColor3, rgbFromHex, rgbToColor3, rgbToHex, toRgbaColor } from '../color.js'
 
 test(`${colorScaleDistinct.name}() computes color orders correctly`, () => {
   let colors = [0, 1, 2, 3, 4, 5]

@@ -1,5 +1,5 @@
 import { START } from '../../constants'
-import { bench } from '../log'
+import { bench } from '../log.js'
 
 /**
  * BENCHMARK TESTS =============================================================

@@ -1,5 +1,5 @@
-import { bench } from '../log'
-import { get, listProps, merge, removeKey, update } from '../object'
+import { bench } from '../log.js'
+import { get, listProps, merge, removeKey, update } from '../object.js'
 
 /**
  * BENCHMARK TESTS =============================================================

@@ -1,6 +1,6 @@
 import CircularJSON from 'circular-json-es6'
-import { fromJSON, toJSON } from '../codec'
-import { bench } from '../log'
+import { fromJSON, toJSON } from '../codec.js'
+import { bench } from '../log.js'
 
 /**
  * BENCHMARK TESTS =============================================================

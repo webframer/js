@@ -10,7 +10,7 @@ import {
   ONE_WEEK,
   ONE_YEAR
 } from 'utils-pack'
-import { distanceBetween, Id, timestampFromId } from '../utility'
+import { distanceBetween, Id, timestampFromId } from '../utility.js'
 
 const NON_TRUTHY_VALUES = [
   false,

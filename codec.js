@@ -1,4 +1,9 @@
-import CircularJSON from 'circular-json' // do not change to `flatted` package, because it does not comply to JSON standard
+import CircularJSON from 'circular-json-es6' // do not change to `flatted` package,
+// because it does not comply to JSON standard, and outputs a flat index of objects.
+// Example:
+//  - flatted.stringify({a:1}) >>> [{a:1}]
+//  - flatted.toJSON({a:1}) >>> [{a:1}]
+// => better to use 'circular-json-es6' because it's about two times faster than 'circular-json'
 
 /**
  * DATA FORMAT FUNCTIONS =======================================================

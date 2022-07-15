@@ -1,4 +1,4 @@
-import { FIVE_HOURS, FORMAT_DATE, ONE_DAY, ONE_HOUR, ONE_MINUTE, ONE_MONTH, ONE_YEAR } from '../constants'
+import { FIVE_HOURS, FORMAT_DATE, ONE_DAY, ONE_HOUR, ONE_MINUTE, ONE_MONTH, ONE_YEAR } from '../constants.js'
 import {
   formatDuration,
   formatTime,
@@ -10,7 +10,7 @@ import {
   totalFromTimeRanges,
   toTimeRanges,
   toTimestamp
-} from '../time'
+} from '../time.js'
 
 const date = '31.12.2000'
 const timestamp = timestampFromDate(date)

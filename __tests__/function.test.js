@@ -1,4 +1,4 @@
-import { isAsync, isFunction } from '../function'
+import { isAsync, isFunction } from '../function.js'
 
 const NON_OBJECT_VALUES = [
   100,
