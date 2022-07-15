@@ -255,28 +255,30 @@ export function passStrength (password) {
 /**
  * Check that given .env variables are defined, and parse them to objects if necessary
  *
- * @param {Object} variables - key/value pairs of variable names and their descriptions
- * @return {Object} variables - has map of variables with their .env values, or throws error if variables are missing
+ * @param {Object} required - key/value pairs of variable names and their descriptions
+ * @return {Object} envs - map of variables with their .env values, or throws error if variables are missing
  */
-export function requireEnv (variables) {
+export function requireEnv (required) {
   const result = {}
-  Object.keys(variables).forEach(variable => {
-    if (!ENV[variable])
-      throw new Error(`Please enter ${variable} in .env in the root directory, as ${variables[variable]}`)
-    result[variable] = fromJSON(ENV[variable].replace(/'/g, '"'))
+  Object.keys(required).forEach(key => {
+    if (ENV[key] === void 0)
+      throw new Error(`Please enter ${key} in .env in the root directory, as ${required[key]}`)
+
+    result[key] = fromJSON(ENV[key].replace(/'/g, '"'))
   })
   return result
 }
 
 /**
  * Add Event Listener
+ * @note: since not all events, like `resize`, exist on the document, subscribe to the window
  *
  * @param {String} event - name (i.e. 'keydown', 'keyup', etc.)
  * @param {Function} callback - event handler to add, receives `event` as argument
  */
 export function subscribeTo (event, callback) {
-  if (typeof document === 'undefined') return
-  document.addEventListener(event, callback)
+  if (typeof window === 'undefined') return
+  window.addEventListener(event, callback)
 }
 
 /**
@@ -286,6 +288,6 @@ export function subscribeTo (event, callback) {
  * @param {Function} callback - event handler to remove
  */
 export function unsubscribeFrom (event, callback) {
-  if (typeof document === 'undefined') return
-  document.removeEventListener(event, callback)
+  if (typeof window === 'undefined') return
+  window.removeEventListener(event, callback)
 }

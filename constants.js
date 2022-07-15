@@ -111,78 +111,150 @@ export const ALL_RESULTS = [
 	VOID,
 ]
 
-/* Key Codes */
+/**
+ * Map of Event.code as `key` ad Event.keyCode as `value`, followed by Event.key as comment.
+ *
+ * @notes:
+ *  - ignore recommendation from MDN to use .code instead .keyCode (as said to be deprecated),
+ *    because .code is poorly supported while .keyCode is on all browsers atm of writing.
+ *    https://caniuse.com/keyboardevent-code
+ *    https://caniuse.com/mdn-api_keyboardevent_keycode
+ */
 export const KEY = {
-  UNDEFINED: -1,
-  LEFT_CLICK: 0,
-  MIDDLE_CLICK: 1,
-  RIGHT_CLICK: 2,
+	// PointerEvent.button - these have no names, `code`, `key` and `keyCode` are undefined
+	UNDEFINED: -1,
+	LEFT_CLICK: 0,
+	MIDDLE_CLICK: 1,
+	RIGHT_CLICK: 2,
 
-  // @see: https://github.com/kabirbaidhya/keycode-js/blob/master/dist/keycode.cjs.js
-  CANCEL: 3,
-  HELP: 6,
-  BACK_SPACE: 8,
-  TAB: 9,
-  CLEAR: 12,
-  RETURN: 13,
-  SHIFT: 16,
-  CONTROL: 17,
-  ALT: 18,
-  PAUSE: 19,
-  CAPS_LOCK: 20,
-  ESCAPE: 27,
-  SPACE: 32,
-  PAGE_UP: 33,
-  PAGE_DOWN: 34,
-  END: 35,
-  HOME: 36,
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  PRINTSCREEN: 44,
-  INSERT: 45,
-  DELETE: 46,
-  LEFT_CMD: 91,
-  RIGHT_CMD: 92,
+	// @see: https://github.com/kabirbaidhya/keycode-js/blob/master/dist/keycode.cjs.js
+	// key = KeyboardEvent.code
+	Cancel: 3, // Cancel?
+	Help: 6, // Help?
+	Backspace: 8, // Backspace
+	Tab: 9, // Tab
+	Clear: 12, // Clear?
+	Enter: 13, // Enter
+	ShiftLeft: 16, // Shift
+	ShiftRight: 16, // Shift
+	Shift: 16, // Shift
+	ControlLeft: 17, // Control
+	ControlRight: 17, // Control
+	Control: 17, // Control (defined the last for swapKeyWithValue() to work
+	AltLeft: 18, // Alt
+	AltRight: 18, // Alt
+	Alt: 18, // Alt
+	Pause: 19, // Pause
+	CapsLock: 20, // CapsLock
+	Escape: 27, // Escape
+	Space: 32, //
+	PageUp: 33, // PageUp?
+	PageDown: 34, // PageDown?
+	End: 35, // End?
+	Home: 36, // Home?
+	ArrowLeft: 37, // ArrowLeft
+	ArrowUp: 38, // ArrowUp
+	ArrowRight: 39, // ArrowRight
+	ArrowDown: 40, // ArrowDown
+	PrintScreen: 44, // PrintScreen?
+	Insert: 45, // Insert?
+	Delete: 46, // Delete?
+	MetaLeft: 91, // Meta (left command ⌘ in macOS)
+	MetaRight: 93, // Meta (right command ⌘ in macOS)
+	Equal: 187, // =
+	Minus: 189, // -
 
-  // Alphanumeric
-  _0: 48,
-  _1: 49,
-  _2: 50,
-  _3: 51,
-  _4: 52,
-  _5: 53,
-  _6: 54,
-  _7: 55,
-  _8: 56,
-  _9: 57,
-  A: 65,
-  B: 66,
-  C: 67,
-  D: 68,
-  E: 69,
-  F: 70,
-  G: 71,
-  H: 72,
-  I: 73,
-  J: 74,
-  K: 75,
-  L: 76,
-  M: 77,
-  N: 78,
-  O: 79,
-  P: 80,
-  Q: 81,
-  R: 82,
-  S: 83,
-  T: 84,
-  U: 85,
-  V: 86,
-  W: 87,
-  X: 88,
-  Y: 89,
-  Z: 90,
+	// for developer convenience
+	_0: 48,
+	_1: 49,
+	_2: 50,
+	_3: 51,
+	_4: 52,
+	_5: 53,
+	_6: 54,
+	_7: 55,
+	_8: 56,
+	_9: 57,
+
+	// for `key` fallback
+	[0]: 48,
+	[1]: 49,
+	[2]: 50,
+	[3]: 51,
+	[4]: 52,
+	[5]: 53,
+	[6]: 54,
+	[7]: 55,
+	[8]: 56,
+	[9]: 57,
+
+	// Actual Event.code for programmatic use
+	Digit0: 48, // 0
+	Digit1: 49, // 1
+	Digit2: 50, // 2
+	Digit3: 51, // 3
+	Digit4: 52, // 4
+	Digit5: 53, // 5
+	Digit6: 54, // 6
+	Digit7: 55, // 7
+	Digit8: 56, // 8
+	Digit9: 57, // 9
+
+	// for developer convenience and for `key` fallback if `code` not found
+	a: 65,
+	b: 66,
+	c: 67,
+	d: 68,
+	e: 69,
+	f: 70,
+	g: 71,
+	h: 72,
+	i: 73,
+	j: 74,
+	k: 75,
+	l: 76,
+	m: 77,
+	n: 78,
+	o: 79,
+	p: 80,
+	q: 81,
+	r: 82,
+	s: 83,
+	t: 84,
+	u: 85,
+	v: 86,
+	w: 87,
+	x: 88,
+	y: 89,
+	z: 90,
+
+	// Actual Event.code for programmatic use
+	KeyA: 65, // a
+	KeyB: 66, // b
+	KeyC: 67, // c
+	KeyD: 68, // d
+	KeyE: 69, // e
+	KeyF: 70, // f
+	KeyG: 71, // g
+	KeyH: 72, // h
+	KeyI: 73, // i
+	KeyJ: 74, // j
+	KeyK: 75, // k
+	KeyL: 76, // l
+	KeyM: 77, // m
+	KeyN: 78, // n
+	KeyO: 79, // o
+	KeyP: 80, // p
+	KeyQ: 81, // q
+	KeyR: 82, // r
+	KeyS: 83, // s
+	KeyT: 84, // t
+	KeyU: 85, // u
+	KeyV: 86, // v
+	KeyW: 87, // w
+	KeyX: 88, // x
+	KeyY: 89, // y
+	KeyZ: 90, // z
 }
 
 /* Distance */
