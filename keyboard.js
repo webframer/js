@@ -1,5 +1,5 @@
 import { isList, toList } from './array.js'
-import { KEY, l } from './constants.js'
+import { isMacLike, KEY, l } from './constants.js'
 import { localiseTranslation } from './definitions.js'
 import { isFunction } from './function.js'
 import { swapKeyWithValue } from './object.js'
@@ -36,6 +36,15 @@ class Keyboard {
     'textarea': true,
   }
 
+  // Map of Ctrl keyCode conversions from Windows/macOS to a consistent internal KEY.Ctrl
+  #ctrlKeyCode = isMacLike
+    ? {
+      [KEY.MetaLeft]: KEY.Ctrl,
+      [KEY.MetaRight]: KEY.Ctrl,
+    } : {
+      [KEY.Control]: KEY.Ctrl,
+    }
+
   // Map of Event.keyCode as `key` and Event.code/key as `value`
   #keyByCode = swapKeyWithValue(KEY)
 
@@ -46,7 +55,7 @@ class Keyboard {
    * Add Keyboard Observable for key press/es
    * @example:
    *    class PenTool extend PureComponent {
-   *      setup = () => keyboard.addShortcut(this.enable, [KEY.Shift, KEY.p], 'PenTool')
+   *      setup = () => keyboard.addShortcut(this.enable, [KEY.Ctrl, KEY.p], 'PenTool')
    *      remove = () => keyboard.removeShortcut(this.enable)
    *    }
    * @param {function} callback - will get `KeyboardEvent` as argument
@@ -146,15 +155,27 @@ class Keyboard {
 
   #onPress = (event) => {
     if (this.ignoreEventsFrom[event.target.localName]) return
-    this.pressed[this.#keyByCode[event.keyCode]] = this.keyCode[event.keyCode] = true
+    // Unify inconsistent behavior from OSes, by converting 'Control' and 'Meta' keys to KEY.Ctrl
+    const keyCode = this.#ctrlKeyCode[event.keyCode] || event.keyCode
+    this.pressed[this.#keyByCode[keyCode]] = this.keyCode[keyCode] = true
     const keyCodes = Object.keys(this.keyCode).sort().join()
     if (this.#shortcuts[keyCodes]) this.#shortcuts[keyCodes].callback(event)
   }
 
   #onRelease = (event) => {
-    // delete to improve performance for #onPress
-    delete this.pressed[this.#keyByCode[event.keyCode]]
-    delete this.keyCode[event.keyCode]
+    /**
+     * In Mac browsers, `keyup` event does not fire when `Meta` (Cmd) is held - this is OS level bug.
+     * => When Meta key is released on macOS, clear all pressed keys.
+     */
+    if (event.key === 'Meta' && isMacLike) {
+      this.pressed = {}
+      this.keyCode = {}
+    } else {
+      // delete to improve performance for #onPress
+      const keyCode = this.#ctrlKeyCode[event.keyCode] || event.keyCode
+      delete this.pressed[this.#keyByCode[keyCode]]
+      delete this.keyCode[keyCode]
+    }
   }
 }
 

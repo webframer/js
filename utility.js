@@ -271,23 +271,26 @@ export function requireEnv (required) {
 
 /**
  * Add Event Listener
- * @note: since not all events, like `resize`, exist on the document, subscribe to the window
+ * @note: since not all events, like `resize`, exist on the document, subscribe to the window.
  *
- * @param {String} event - name (i.e. 'keydown', 'keyup', etc.)
- * @param {Function} callback - event handler to add, receives `event` as argument
+ * @param {string} eventName - example: 'keydown', 'keyup', etc.
+ * @param {function} callback - event handler to add, receives `event` as argument
+ * @param {boolean | AddEventListenerOptions} [options]
  */
-export function subscribeTo (event, callback) {
+export function subscribeTo (eventName, callback, options) {
   if (typeof window === 'undefined') return
-  window.addEventListener(event, callback)
+  window.addEventListener(eventName, callback, options)
 }
 
 /**
  * Remove Event Listener
+ * @note: this removes the event listener created with the subscribeTo() method.
  *
- * @param {String} event - name (i.e. 'keydown', 'keyup', etc.)
- * @param {Function} callback - event handler to remove
+ * @param {string} eventName - example: 'keydown', 'keyup', etc.
+ * @param {function} callback - event handler to remove
+ * @param {boolean | EventListenerOptions} [options]
  */
-export function unsubscribeFrom (event, callback) {
+export function unsubscribeFrom (eventName, callback, options) {
   if (typeof window === 'undefined') return
-  window.removeEventListener(event, callback)
+  window.removeEventListener(eventName, callback, options)
 }

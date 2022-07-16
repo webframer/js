@@ -111,6 +111,8 @@ export const ALL_RESULTS = [
 	VOID,
 ]
 
+export const isMacLike = typeof navigator !== 'undefined' && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)
+
 /**
  * Map of Event.code as `key` ad Event.keyCode as `value`, followed by Event.key as comment.
  *
@@ -127,6 +129,17 @@ export const KEY = {
 	MIDDLE_CLICK: 1,
 	RIGHT_CLICK: 2,
 
+	/**
+	 * Use the non-existing event.code 'Ctrl' when creating keyboard shortcuts, instead of KEY.Control
+	 * because of inconsistent behaviors for Ctrl/Control keys on Windows/macOS:
+	 *   - Ctrl: `event.ctrlKey === true`, `event.metaKey === false`, `keyCode === 17` in Windows
+	 *   - ⌘: `event.ctrlKey === false`, `event.metaKey === true`, `keyCode === (91 || 93)` in macOS
+	 *  - `-17` is a non-existing `keyCode` value for internal logic check.
+	 * @see: `./keyboard.js` for reference of internal logic implementation.
+	 */
+	Ctrl: -17,
+
+	// @reference: https://www.freecodecamp.org/news/javascript-keycode-list-keypress-event-key-codes/
 	// @see: https://github.com/kabirbaidhya/keycode-js/blob/master/dist/keycode.cjs.js
 	// key = KeyboardEvent.code
 	Cancel: 3, // Cancel?
@@ -137,10 +150,10 @@ export const KEY = {
 	Enter: 13, // Enter
 	ShiftLeft: 16, // Shift
 	ShiftRight: 16, // Shift
-	Shift: 16, // Shift
+	Shift: 16, // Shift (defined the last for swapKeyWithValue() to work)
 	ControlLeft: 17, // Control
 	ControlRight: 17, // Control
-	Control: 17, // Control (defined the last for swapKeyWithValue() to work
+	Control: 17, // Control (⌃ in macOS, and Ctrl in Windows) -> do not use for shortcuts, see above
 	AltLeft: 18, // Alt
 	AltRight: 18, // Alt
 	Alt: 18, // Alt
@@ -159,10 +172,14 @@ export const KEY = {
 	PrintScreen: 44, // PrintScreen?
 	Insert: 45, // Insert?
 	Delete: 46, // Delete?
-	MetaLeft: 91, // Meta (left command ⌘ in macOS)
-	MetaRight: 93, // Meta (right command ⌘ in macOS)
 	Equal: 187, // =
 	Minus: 189, // -
+	/**
+	 *  @note: Meta key is unreliable, it depends on the keyboard. For example, most online sources
+	 *  report 92 as MetaRight, but when tested on MacBook Pro 16", it is 93.
+	 */
+	MetaLeft: 91, // Meta (left command ⌘ in macOS, or left window in Windows)
+	MetaRight: 93, // Meta (right command ⌘ in macOS, or right window in Windows?)
 
 	// for developer convenience
 	_0: 48,
