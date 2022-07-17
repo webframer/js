@@ -1,4 +1,4 @@
-import { isAsync, isFunction } from '../function.js'
+import { isAsyncFunction, isFunction, isGeneratorFunction } from '../function.js'
 
 const NON_OBJECT_VALUES = [
   100,
@@ -22,8 +22,14 @@ test(`${isFunction.name}() returns true for normal, async and generator function
   expect(isFunction(function * () {})).toBe(true)
 })
 
-test(`${isAsync.name}() returns true for async functions only`, () => {
-  expect(isAsync(() => {})).toBe(false)
-  expect(isAsync(async () => {})).toBe(true)
-  expect(isAsync(function * () {})).toBe(false)
+test(`${isAsyncFunction.name}() returns true for async functions only`, () => {
+  expect(isAsyncFunction(() => {})).toBe(false)
+  expect(isAsyncFunction(async () => {})).toBe(true)
+  expect(isAsyncFunction(function * () {})).toBe(false)
+})
+
+test(`${isGeneratorFunction.name}() returns true for generator functions only`, () => {
+  expect(isGeneratorFunction(() => {})).toBe(false)
+  expect(isGeneratorFunction(async () => {})).toBe(false)
+  expect(isGeneratorFunction(function * () {})).toBe(true)
 })

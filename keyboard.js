@@ -15,6 +15,10 @@ import { subscribeTo, unsubscribeFrom } from './utility'
  *
  * @example:
  *    import keyboard from '@webframer/utils/keyboard.js'
+ *    keyboard.addShortcut(callback, [KEY.Ctrl, KEY.i], groupId?) // all keydown events
+ *    keyboard.onTap.addShortcut(callback, KEY.i, groupId?) // keydown followed by keyup events
+ *    keyboard.onHold.addShortcut(callback, KEY.ArrowUp, groupId?) // all keydown events
+ *    keyboard.onRelease.addShortcut(callback, KEY.Alt, groupId?) // keyup event
  *    keyboard.unsubscribe() // pause Keyboard Event subscription
  *    keyboard.subscribe() // resume Keyboard Event subscription
  *    keyboard.pressed.Shift >>> true // if Shift key is currently pressed
@@ -89,21 +93,21 @@ class Keyboard {
    *    keyboard.removeShortcut(observable)
    *    // Same as above
    *    keyboard.removeShortcut(this.enable)
-   *    // Remove all shortcuts by group id
-   *    keyboard.removeShortcut('PenTool')
    *    // Remove all shortcuts by keyCodes
    *    keyboard.removeShortcut([KEY.p])
+   *    // Remove all shortcuts by group id
+   *    keyboard.removeShortcut('PenTool')
    *
-   * @param {function|string|number|number[]} callbackOrIdOrKeyCodes
+   * @param {function|number[]|string|number} callbackOrKeyCodesOrId
    */
-  removeShortcut = (callbackOrIdOrKeyCodes) => {
+  removeShortcut = (callbackOrKeyCodesOrId) => {
     // Remove all shortcuts for a particular function
-    if (isFunction(callbackOrIdOrKeyCodes)) {
-      this.removeShortcutByCallback(callbackOrIdOrKeyCodes)
-    } else if (isList(callbackOrIdOrKeyCodes)) {
-      this.removeShortcutByKeyCodes(...callbackOrIdOrKeyCodes)
+    if (isFunction(callbackOrKeyCodesOrId)) {
+      this.removeShortcutByCallback(callbackOrKeyCodesOrId)
+    } else if (isList(callbackOrKeyCodesOrId)) {
+      this.removeShortcutByKeyCodes(...callbackOrKeyCodesOrId)
     } else {
-      this.removeShortcutById(callbackOrIdOrKeyCodes)
+      this.removeShortcutById(callbackOrKeyCodesOrId)
     }
   }
 
@@ -125,7 +129,7 @@ class Keyboard {
   }
 
   /**
-   * @param {string|number}id
+   * @param {string|number} id
    */
   removeShortcutById = (id) => {
     for (const keyCodes in this.#shortcuts) {
@@ -139,6 +143,19 @@ class Keyboard {
     if (ignoreEventsFrom) this.ignoreEventsFrom = ignoreEventsFrom
     this.subscribe()
     return this
+  }
+
+  onTap = {
+    addShortcut: this.addShortcut, // todo
+    removeShortcut: this.removeShortcut, // todo
+  }
+  onHold = {
+    addShortcut: this.addShortcut,
+    removeShortcut: this.removeShortcut,
+  }
+  onRelease = {
+    addShortcut: this.addShortcut, // todo
+    removeShortcut: this.removeShortcut, // todo
   }
 
   // Subscribe to Keyboard Events

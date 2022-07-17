@@ -17,26 +17,19 @@ import { randomString } from './string.js'
  * @return {boolean}
  */
 export function isFunction (func) {
-	// When 'GeneratorFunction' is defined globally, use it instead of isFunction.Generator
-	return !!func && (
-		func.constructor === Function ||
-		func.constructor === isFunction.Async ||
-		func.constructor === isFunction.Generator
-	)
+	return typeof func === 'function' // works for async and generator functions too
 }
 
-isFunction.Generator = (function * () {}).constructor
-isFunction.Async = (async () => {}).constructor
-
-/**
- * Check if given function is Asynchronous
- *
- * @param {Function} func - to check
- * @returns {Boolean} true - if it is
- */
-export function isAsync (func) {
-	return func.constructor.name === 'AsyncFunction'
+export function isAsyncFunction (func) {
+	return typeof func === 'function' && func.constructor === asyncFuncConstructor
 }
+
+export function isGeneratorFunction (func) {
+	return typeof func === 'function' && func.constructor === generatorFuncConstructor
+}
+
+export const asyncFuncConstructor = (async () => {}).constructor
+export const generatorFuncConstructor = (function * () {}).constructor
 
 /**
  * Check for a Valid Enumerable Value and Throw Error If It's Not
