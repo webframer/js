@@ -180,6 +180,7 @@ class Keyboard {
   }
 
   #onRelease = (event) => {
+    if (this.ignoreEventsFrom[event.target.localName]) return
     /**
      * In Mac browsers, `keyup` event does not fire when `Meta` (Cmd) is held - this is OS level bug.
      * => When Meta key is released on macOS, clear all pressed keys.

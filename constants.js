@@ -1,3 +1,14 @@
+/* Platform Prefixes */
+export const SERVICE = {
+	API: 'API',
+	BOT: 'BOT',
+	CLIENT: 'CLIENT',
+	DESKTOP: 'DESKTOP',
+	MOBILE: 'MOBILE',
+	SERVER: 'SERVER',
+	WEB: 'WEB',
+}
+
 /**
  * COMMON ACTION CONSTANTS =====================================================
  * =============================================================================

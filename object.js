@@ -9,12 +9,12 @@ import {
 	matches,
 	merge as _merge,
 	property,
-	unset
+	unset,
 } from 'lodash-es'
 import qs from 'querystring'
 import { isCollection } from './array.js'
 
-export {setWith as set} from 'lodash-es'
+export { clone, setWith as set } from 'lodash-es'
 
 /**
  * OBJECT FUNCTIONS ============================================================
@@ -34,7 +34,7 @@ export function classInstanceMethodNames (Class) {
 /**
  * Clone Object/Collection/Class
  */
-export function clone (obj) {
+export function cloneFast (obj) {
 	return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj)
 }
 

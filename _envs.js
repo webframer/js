@@ -1,4 +1,4 @@
-import { LANGUAGE } from './constants.js'
+import { LANGUAGE, SERVICE } from './constants.js'
 
 /**
  * Environment Variables
@@ -16,24 +16,25 @@ export const __TEST__ = NODE_ENV === 'test'
 export const __DEV__ = NODE_ENV === 'development'
 export const __CLIENT__ = typeof window !== 'undefined'
 export const __BACKEND__ = !__CLIENT__
-export const __IOS__ = false
+export const __IOS__ = !!ENV.__IOS__
 export const _INIT_ = __BACKEND__ && (__PROD__ || __STAGE__)
 export const _SHOULD_SHOW_TEST_ = __DEV__
 export const _WORK_DIR_ = typeof process !== 'undefined' ? process.cwd() : '.' // relative to root `index.js`
-export const UNDEFINED = (Undefined => Undefined)()
 
 /* Globally Accessible Objects */
 export const Active = {
   // will be overridden at runtime, used for avoiding circular import and env-dependent libraries
   DEFAULT: {LANGUAGE: LANGUAGE.ENGLISH._},
   LANG: LANGUAGE.ENGLISH, // currently used language
-  SETTINGS: {}, // User settings
+  SERVICE: ENV.SERVICE || (__CLIENT__ ? SERVICE.CLIENT : SERVICE.SERVER), // current process prefix
+  SETTINGS: {HAS_SOUND: false}, // User settings
   Storage: typeof localStorage !== 'undefined' ? localStorage : undefined, // LocalStorage for Node
   WebSocket: typeof WebSocket !== 'undefined' ? WebSocket : undefined, // WebSocket for Node
   history: {}, // Cross Platform route history object
   iconClass: '', // CSS className for <Icon />
   iconClassPrefix: 'icon-', // CSS className prefix for <Icon />
   client: undefined, // Apollo client
+  pubsub: undefined, // GraphQL Pubsub module
   log: undefined, // backend console logger
   user: {}, // the current user, for quick access to user info, such as auth
   usersById: {}, // for storing temporary info, like user.lastOnline

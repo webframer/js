@@ -11,7 +11,7 @@ export * from './array.js'
 export * from './codec.js'
 // export * from './color' // to be imported directly to reduce bundle size
 // export * from './crypto' // to be imported directly to reduce bundle size
-// export * from './file' // to be imported directly to reduce bundle size
+export * from './file'
 export * from './function.js'
 export * from './math.js'
 export * from './log.js'
