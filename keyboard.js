@@ -41,7 +41,7 @@ class Keyboard {
   }
 
   // Map of Ctrl keyCode conversions from Windows/macOS to a consistent internal KEY.Ctrl
-  #ctrlKeyCode = isMacLike
+  _ctrlKeyCode = isMacLike
     ? {
       [KEY.MetaLeft]: KEY.Ctrl,
       [KEY.MetaRight]: KEY.Ctrl,
@@ -50,10 +50,10 @@ class Keyboard {
     }
 
   // Map of Event.keyCode as `key` and Event.code/key as `value`
-  #keyByCode = swapKeyWithValue(KEY)
+  _keyByCode = swapKeyWithValue(KEY)
 
   // Shortcut keyCodes array as `key` and {id, callback} as `value`
-  #shortcuts = {}
+  _shortcuts = {}
 
   /**
    * Add Keyboard Observable for key press/es
@@ -71,16 +71,16 @@ class Keyboard {
     const _keyCodes = toList(keyCodes).sort().join()
 
     // Check for duplicates
-    if (this.#shortcuts[_keyCodes]) {
-      const {id, callback} = this.#shortcuts[_keyCodes]
-      const value = keyCodes.map(keyCode => this.#keyByCode[keyCode]).join(' + ')
+    if (this._shortcuts[_keyCodes]) {
+      const {id, callback} = this._shortcuts[_keyCodes]
+      const value = keyCodes.map(keyCode => this._keyByCode[keyCode]).join(' + ')
       throw new Error(
         ips(_.KEYBOARD_SHORTCUT___value___IS_TAKEN_BY_COMPONENT__id_, {value, id: id || callback}),
       )
     }
 
     // Add shortcut when no duplicates found
-    this.#shortcuts[_keyCodes] = {callback, id}
+    this._shortcuts[_keyCodes] = {callback, id}
     return callback
   }
 
@@ -115,8 +115,8 @@ class Keyboard {
    * @param {function} callback
    */
   removeShortcutByCallback = (callback) => {
-    for (const keyCodes in this.#shortcuts) {
-      if (callback === this.#shortcuts[keyCodes].callback) delete this.#shortcuts[keyCodes]
+    for (const keyCodes in this._shortcuts) {
+      if (callback === this._shortcuts[keyCodes].callback) delete this._shortcuts[keyCodes]
     }
   }
 
@@ -125,15 +125,15 @@ class Keyboard {
    */
   removeShortcutByKeyCodes = (...keyCodes) => {
     const _keyCodes = keyCodes.sort().join()
-    delete this.#shortcuts[_keyCodes]
+    delete this._shortcuts[_keyCodes]
   }
 
   /**
    * @param {string|number} id
    */
   removeShortcutById = (id) => {
-    for (const keyCodes in this.#shortcuts) {
-      if (id === this.#shortcuts[keyCodes].id) delete this.#shortcuts[keyCodes]
+    for (const keyCodes in this._shortcuts) {
+      if (id === this._shortcuts[keyCodes].id) delete this._shortcuts[keyCodes]
     }
   }
 
@@ -160,26 +160,26 @@ class Keyboard {
 
   // Subscribe to Keyboard Events
   subscribe = () => {
-    subscribeTo('keydown', this.#onPress)
-    subscribeTo('keyup', this.#onRelease)
+    subscribeTo('keydown', this._onPress)
+    subscribeTo('keyup', this._onRelease)
   }
 
   // Unsubscribe from Keyboard Events
   unsubscribe = () => {
-    unsubscribeFrom('keydown', this.#onPress)
-    unsubscribeFrom('keyup', this.#onRelease)
+    unsubscribeFrom('keydown', this._onPress)
+    unsubscribeFrom('keyup', this._onRelease)
   }
 
-  #onPress = (event) => {
+  _onPress = (event) => {
     if (this.ignoreEventsFrom[event.target.localName]) return
     // Unify inconsistent behavior from OSes, by converting 'Control' and 'Meta' keys to KEY.Ctrl
-    const keyCode = this.#ctrlKeyCode[event.keyCode] || event.keyCode
-    this.pressed[this.#keyByCode[keyCode]] = this.keyCode[keyCode] = true
+    const keyCode = this._ctrlKeyCode[event.keyCode] || event.keyCode
+    this.pressed[this._keyByCode[keyCode]] = this.keyCode[keyCode] = true
     const keyCodes = Object.keys(this.keyCode).sort().join()
-    if (this.#shortcuts[keyCodes]) this.#shortcuts[keyCodes].callback(event)
+    if (this._shortcuts[keyCodes]) this._shortcuts[keyCodes].callback(event)
   }
 
-  #onRelease = (event) => {
+  _onRelease = (event) => {
     if (this.ignoreEventsFrom[event.target.localName]) return
     /**
      * In Mac browsers, `keyup` event does not fire when `Meta` (Cmd) is held - this is OS level bug.
@@ -189,9 +189,9 @@ class Keyboard {
       this.pressed = {}
       this.keyCode = {}
     } else {
-      // delete to improve performance for #onPress
-      const keyCode = this.#ctrlKeyCode[event.keyCode] || event.keyCode
-      delete this.pressed[this.#keyByCode[keyCode]]
+      // delete to improve performance for _onPress
+      const keyCode = this._ctrlKeyCode[event.keyCode] || event.keyCode
+      delete this.pressed[this._keyByCode[keyCode]]
       delete this.keyCode[keyCode]
     }
   }

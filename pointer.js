@@ -28,7 +28,7 @@ class Pointer {
   }
 
   // Drag element node as `key` and {id, callback} as `value`
-  #dragNodes = new Map()
+  _dragNodes = new Map()
 
   /**
    * Add Pointer Observable for node element
@@ -49,8 +49,8 @@ class Pointer {
   addDragBehavior = ({onDrag, onDragStart, onDragEnd}, node, id) => {
 
     // Check for duplicates
-    if (this.#dragNodes[node]) {
-      const {id, onDrag, onDragStart, onDragEnd} = this.#dragNodes[node]
+    if (this._dragNodes[node]) {
+      const {id, onDrag, onDragStart, onDragEnd} = this._dragNodes[node]
       throw new Error(
         ips(_.POINTER_DRAG_OF___node___IS_TAKEN_BY__id_, {
           node, id: id || onDrag || onDragStart || onDragEnd,
@@ -59,7 +59,7 @@ class Pointer {
     }
 
     // Add drag when no duplicates found
-    this.#dragNodes[node] = {onDrag, onDragStart, onDragEnd, id}
+    this._dragNodes[node] = {onDrag, onDragStart, onDragEnd, id}
     return node
   }
 
@@ -94,11 +94,11 @@ class Pointer {
    * @param {function} callback
    */
   removeDragByCallback = (callback) => {
-    for (const node in this.#dragNodes) {
-      const {onDrag, onDragStart, onDragEnd} = this.#dragNodes[node]
+    for (const node in this._dragNodes) {
+      const {onDrag, onDragStart, onDragEnd} = this._dragNodes[node]
       if (
         callback === onDrag || callback === onDragStart || callback === onDragEnd
-      ) delete this.#dragNodes[node]
+      ) delete this._dragNodes[node]
     }
   }
 
@@ -106,15 +106,15 @@ class Pointer {
    * @param {object|HTMLElement} node
    */
   removeDragByNode = (node) => {
-    delete this.#dragNodes[node]
+    delete this._dragNodes[node]
   }
 
   /**
    * @param {string|number} id
    */
   removeDragById = (id) => {
-    for (const node in this.#dragNodes) {
-      if (id === this.#dragNodes[node].id) delete this.#dragNodes[node]
+    for (const node in this._dragNodes) {
+      if (id === this._dragNodes[node].id) delete this._dragNodes[node]
     }
   }
 
@@ -127,31 +127,31 @@ class Pointer {
 
   // Subscribe to Pointer Events
   subscribe = () => {
-    subscribeTo('pointerdown', this.#onPointerDown)
-    subscribeTo('pointerup', this.#onPointerUp)
+    subscribeTo('pointerdown', this._onPointerDown)
+    subscribeTo('pointerup', this._onPointerUp)
   }
 
   // Unsubscribe from Pointer Events
   unsubscribe = () => {
-    unsubscribeFrom('pointerdown', this.#onPointerDown)
-    unsubscribeFrom('pointerup', this.#onPointerUp)
+    unsubscribeFrom('pointerdown', this._onPointerDown)
+    unsubscribeFrom('pointerup', this._onPointerUp)
   }
 
   subscribeToMove = () => {
-    subscribeTo('pointermove', this.#onPointerMove)
+    subscribeTo('pointermove', this._onPointerMove)
   }
 
   unsubscribeFromMove = () => {
-    unsubscribeFrom('pointermove', this.#onPointerMove)
+    unsubscribeFrom('pointermove', this._onPointerMove)
   }
 
   // event.button === 0 (for left mouse)
-  #onPointerDown = (event) => {
+  _onPointerDown = (event) => {
     if (this.ignoreEventsFrom[event.target.localName]) return
     let node = event.target
     // Traverse up the DOM tree, until a container node found for registered drag events
     while (node.parentElement) {
-      if (this.#dragNodes[node]) {
+      if (this._dragNodes[node]) {
         // Only register the event, without firing onDragStart, until dragging actually begins.
         // This avoids false positive for tap events
         this.pointerDownEvent = event
@@ -164,8 +164,8 @@ class Pointer {
   }
 
   // event.button === -1 (for left mouse)
-  #onPointerMove = (event) => {
-    const {onDragStart, onDrag} = this.#dragNodes[this.subscribedNode]
+  _onPointerMove = (event) => {
+    const {onDragStart, onDrag} = this._dragNodes[this.subscribedNode]
 
     // Call onDragStart first, if defined
     if (this.pointerDownEvent) {
@@ -179,9 +179,9 @@ class Pointer {
   }
 
   // event.button === 0 (for left mouse)
-  #onPointerUp = (event) => {
+  _onPointerUp = (event) => {
     if (this.subscribedNode) {
-      const {onDragEnd} = this.#dragNodes[this.subscribedNode]
+      const {onDragEnd} = this._dragNodes[this.subscribedNode]
       this.unsubscribeFromMove()
       this.subscribedNode = null
       if (this.hadDrag) {
