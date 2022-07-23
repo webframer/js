@@ -34,27 +34,33 @@ class Pointer {
    * Add Pointer Observable for node element
    * @example:
    *    class PenTool extend PureComponent {
-   *      setup = () => pointer.addDrag(this.enable, this.containerElement, 'PenTool')
-   *      remove = () => pointer.removeDrag(this.enable)
+   *      setup = () => pointer.addDrag({onDrag: this.enable}, this.containerElement, 'PenTool')
+   *      remove = () => pointer.removeDrag(this.containerElement)
    *    }
-   * @param {function} callback - will get `PointerEvent` as argument
+   * @param {{
+   *    onDrag?: function,
+   *    onDragStart?: function,
+   *    onDragEnd?: function
+   *  }} event handlers - will get `PointerEvent` as argument
    * @param {object|HTMLElement} node - element to listen for pointer events
    * @param {string|number} [id] - group id to remove all drags on unmount
-   * @returns {function} callback - to be used for removing the drag
+   * @returns {object|HTMLElement} node - to be used for removing the drag
    */
-  addDragBehavior = (callback, node, id) => {
+  addDragBehavior = ({onDrag, onDragStart, onDragEnd}, node, id) => {
 
     // Check for duplicates
     if (this.#dragNodes[node]) {
-      const {id, callback} = this.#dragNodes[node]
+      const {id, onDrag, onDragStart, onDragEnd} = this.#dragNodes[node]
       throw new Error(
-        ips(_.POINTER_DRAG_OF___node___IS_TAKEN_BY__id_, {node, id: id || callback}),
+        ips(_.POINTER_DRAG_OF___node___IS_TAKEN_BY__id_, {
+          node, id: id || onDrag || onDragStart || onDragEnd,
+        }),
       )
     }
 
     // Add drag when no duplicates found
-    this.#dragNodes[node] = {callback, id}
-    return callback
+    this.#dragNodes[node] = {onDrag, onDragStart, onDragEnd, id}
+    return node
   }
 
   /**
@@ -71,16 +77,16 @@ class Pointer {
    *    // Remove all drags by keyCodes
    *    pointer.removeDrag([KEY.p])
    *
-   * @param {function|string|number|object|HTMLElement} callbackOrIdOrNode
+   * @param {function|object|HTMLElement|string|number} callbackOrNodeOrId
    */
-  removeDrag = (callbackOrIdOrNode) => {
+  removeDrag = (callbackOrNodeOrId) => {
     // Remove all drags for a particular function
-    if (isFunction(callbackOrIdOrNode)) {
-      this.removeDragByCallback(callbackOrIdOrNode)
-    } else if (typeof callbackOrIdOrNode === 'object') {
-      this.removeDragByNode(callbackOrIdOrNode)
+    if (isFunction(callbackOrNodeOrId)) {
+      this.removeDragByCallback(callbackOrNodeOrId)
+    } else if (typeof callbackOrNodeOrId === 'object') {
+      this.removeDragByNode(callbackOrNodeOrId)
     } else {
-      this.removeDragById(callbackOrIdOrNode)
+      this.removeDragById(callbackOrNodeOrId)
     }
   }
 
@@ -89,7 +95,10 @@ class Pointer {
    */
   removeDragByCallback = (callback) => {
     for (const node in this.#dragNodes) {
-      if (callback === this.#dragNodes[node].callback) delete this.#dragNodes[node]
+      const {onDrag, onDragStart, onDragEnd} = this.#dragNodes[node]
+      if (
+        callback === onDrag || callback === onDragStart || callback === onDragEnd
+      ) delete this.#dragNodes[node]
     }
   }
 
@@ -101,7 +110,7 @@ class Pointer {
   }
 
   /**
-   * @param {string|number}id
+   * @param {string|number} id
    */
   removeDragById = (id) => {
     for (const node in this.#dragNodes) {
@@ -128,46 +137,62 @@ class Pointer {
     unsubscribeFrom('pointerup', this.#onPointerUp)
   }
 
+  subscribeToMove = () => {
+    subscribeTo('pointermove', this.#onPointerMove)
+  }
+
+  unsubscribeFromMove = () => {
+    unsubscribeFrom('pointermove', this.#onPointerMove)
+  }
+
+  // event.button === 0 (for left mouse)
   #onPointerDown = (event) => {
     if (this.ignoreEventsFrom[event.target.localName]) return
     let node = event.target
     // Traverse up the DOM tree, until a container node found for registered drag events
     while (node.parentElement) {
-      console.warn('--->', node)
       if (this.#dragNodes[node]) {
-        this.#dragNodes[node].callback(event)
+        // Only register the event, without firing onDragStart, until dragging actually begins.
+        // This avoids false positive for tap events
+        this.pointerDownEvent = event
+        this.subscribeToMove()
+        this.subscribedNode = node
         break
       }
       node = node.parentElement
     }
   }
 
-  #onPointerUp = (event) => {
-    if (this.ignoreEventsFrom[event.target.localName]) return
+  // event.button === -1 (for left mouse)
+  #onPointerMove = (event) => {
+    const {onDragStart, onDrag} = this.#dragNodes[this.subscribedNode]
 
+    // Call onDragStart first, if defined
+    if (this.pointerDownEvent) {
+      if (onDragStart) onDragStart(this.pointerDownEvent)
+      this.pointerDownEvent = null
+      this.hadDrag = true
+    }
+
+    // Then fire onDrag events
+    if (onDrag) onDrag(event)
+  }
+
+  // event.button === 0 (for left mouse)
+  #onPointerUp = (event) => {
+    if (this.subscribedNode) {
+      const {onDragEnd} = this.#dragNodes[this.subscribedNode]
+      this.unsubscribeFromMove()
+      this.subscribedNode = null
+      if (this.hadDrag) {
+        this.hadDrag = null
+        if (onDragEnd) onDragEnd(event)
+      }
+    }
   }
 }
 
 export default new Pointer()
-
-/**
- * Check whether pressed PointerEvent matches given `keyCode` and has Ctrl/Cmd modifier key pressed
- * @param {PointerEvent} event
- * @param {number} keyCode
- * @returns {boolean} true - if everything matches
- */
-export function isCtrlKeyPress (event, keyCode) {
-  return (event.ctrlKey || event.metaKey) && event.keyCode === keyCode
-}
-
-/**
- * Check whether pressed PointerEvent is without key modifiers, such as: Ctrl, Alt, Shift
- * @param {PointerEvent} event
- * @returns {boolean} true - if no modifier keys pressed
- */
-export function isPureKeyPress (event) {
-  return !(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
-}
 
 localiseTranslation({
   POINTER_DRAG_OF___node___IS_TAKEN_BY__id_: {
