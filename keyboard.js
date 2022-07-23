@@ -176,7 +176,10 @@ class Keyboard {
     const keyCode = this._ctrlKeyCode[event.keyCode] || event.keyCode
     this.pressed[this._keyByCode[keyCode]] = this.keyCode[keyCode] = true
     const keyCodes = Object.keys(this.keyCode).sort().join()
-    if (this._shortcuts[keyCodes]) this._shortcuts[keyCodes].callback(event)
+    if (this._shortcuts[keyCodes]) {
+      event.preventDefault()
+      this._shortcuts[keyCodes].callback(event)
+    }
   }
 
   _onRelease = (event) => {

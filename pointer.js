@@ -154,6 +154,7 @@ class Pointer {
       if (this._dragNodes[node]) {
         // Only register the event, without firing onDragStart, until dragging actually begins.
         // This avoids false positive for tap events
+        event.preventDefault()
         this.pointerDownEvent = event
         this.subscribeToMove()
         this.subscribedNode = node
@@ -165,6 +166,7 @@ class Pointer {
 
   // event.button === -1 (for left mouse)
   _onPointerMove = (event) => {
+    event.preventDefault()
     const {onDragStart, onDrag} = this._dragNodes[this.subscribedNode]
 
     // Call onDragStart first, if defined
@@ -181,6 +183,7 @@ class Pointer {
   // event.button === 0 (for left mouse)
   _onPointerUp = (event) => {
     if (this.subscribedNode) {
+      event.preventDefault()
       const {onDragEnd} = this._dragNodes[this.subscribedNode]
       this.unsubscribeFromMove()
       this.subscribedNode = null
