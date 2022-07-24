@@ -1,4 +1,4 @@
-import { l } from './constants.js'
+import { KEY, l } from './constants.js'
 import { localiseTranslation } from './definitions.js'
 import { isFunction } from './function.js'
 import { ips } from './string.js'
@@ -79,7 +79,7 @@ class Pointer {
    *
    * @param {function|object|HTMLElement|string|number} callbackOrNodeOrId
    */
-  removeDrag = (callbackOrNodeOrId) => {
+  removeDragBehavior = (callbackOrNodeOrId) => {
     // Remove all drags for a particular function
     if (isFunction(callbackOrNodeOrId)) {
       this.removeDragByCallback(callbackOrNodeOrId)
@@ -147,6 +147,7 @@ class Pointer {
 
   // event.button === 0 (for left mouse)
   _onPointerDown = (event) => {
+    if (event.button !== KEY.LEFT_CLICK) return
     if (this.ignoreEventsFrom[event.target.localName]) return
     let node = event.target
     // Traverse up the DOM tree, until a container node found for registered drag events
