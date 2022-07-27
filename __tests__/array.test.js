@@ -22,7 +22,7 @@ import {
   toListValuesTotal,
   toUniqueList,
   toUniqueListCaseInsensitive,
-  toUniqueListFast
+  toUniqueListFast,
 } from '../array.js'
 import { cloneDeep } from '../object.js'
 
@@ -315,12 +315,24 @@ describe(`${removeFromList.name}()`, () => {
     expect(removeFromList(list, 1)).toEqual(['id'])
     expect(list).toEqual(listClone)
   })
+  it('Removes primitive value from array as expected, with mutation', () => {
+    const list = [1, 'id']
+    removeFromList(list, 1, true)
+    expect(list).toEqual(['id'])
+  })
   it('Removes values of one array from another, without mutation', () => {
     const list = [1, 7, 'id']
     const listClone = cloneDeep(list)
     expect(removeFromList(list, [1, 'id'])).toEqual([7])
     expect(removeFromList(list, [1, 7, 'id'])).toEqual([])
     expect(list).toEqual(listClone)
+  })
+  it('Removes values of one array from another, with mutation', () => {
+    const list = [1, 7, 'id']
+    removeFromList(list, [1, 'id'], true)
+    expect(list).toEqual([7])
+    removeFromList(list, [1, 7, 'id'], true)
+    expect(list).toEqual([])
   })
 })
 

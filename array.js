@@ -21,6 +21,21 @@ import { toLowerCaseAny } from './string.js'
  */
 
 /**
+ * Add Value to Array if not found, with optional mutation in place.
+ *
+ * @param {any[]} array - list of values to add to
+ * @param {any|any[]} valueToAdd - if given array, will add all elements inside it to `array`
+ * @param {boolean} mutate - whether to mutate the original array
+ * @return {any[]} - new/mutated array with value(s) added, without duplicates
+ */
+export function addToList (array, valueToAdd, mutate = false) {
+  toList(valueToAdd).forEach(value => {
+    if (array.indexOf(value) === -1) array.push(value)
+  })
+  return array
+}
+
+/**
  * Check if the data passed is an array and has values.
  *
  * @param {*} data - The variable to check
@@ -328,19 +343,29 @@ export function mergeLists (...arrays) {
 }
 
 /**
- * Remove Value from Array if found, without mutation
+ * Remove Value from Array if found, with optional mutation in place.
  *
- * @param {Array } listToKeep - list of values to search from
- * @param {String|Number|Array} valueToRemove - to remove
- * @return {Array} - new array with value removed
+ * @param {any[]} array - list of values to search from
+ * @param {any|any[]} valueToRemove - if given array, will remove all elements inside it from `array`
+ * @param {boolean} mutate - whether to mutate the original array
+ * @return {any[]} - new/mutated array with matching value(s) removed
  */
-export function removeFromList (listToKeep, valueToRemove) {
+export function removeFromList (array, valueToRemove, mutate = false) {
+  if (mutate) {
+    let index
+    toList(valueToRemove).forEach(value => {
+      index = array.indexOf(value)
+      if (index >= 0) array.splice(index, 1)
+    })
+    return array
+  }
+
   // Value is Array
-  if (isList(valueToRemove)) return difference(listToKeep, valueToRemove)
+  if (isList(valueToRemove)) return difference(array, valueToRemove)
 
   // Value is of primitive type
-  const result = [...listToKeep]
-  const index = listToKeep.indexOf(valueToRemove)
+  const result = [...array]
+  const index = array.indexOf(valueToRemove)
   if (index > -1) result.splice(index, 1)
   return result
 }
