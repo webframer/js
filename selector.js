@@ -13,7 +13,7 @@ import { formatNumber } from './number.js'
  *
  * @example:
  *   // selectors.js
- *   @selector(NAME)
+ *  *@selector(NAME)
  *   export default class select {
  *
  *     static activeRoute = () => [
@@ -35,7 +35,7 @@ import { formatNumber } from './number.js'
  * @param {Number} [maxTime] - milliseconds, to be considered slow (highlights execution time as red), default is 5 ms
  * @returns {Function} decorator - that transforms given class' static properties
  */
-export default function selector (NAME, maxTime = 5 * ONE_MILLISECOND) {
+export function selector (NAME, maxTime = 5 * ONE_MILLISECOND) {
   let start
   return function (constructor) {
     for (const key in constructor) {
@@ -68,6 +68,7 @@ export default function selector (NAME, maxTime = 5 * ONE_MILLISECOND) {
       )
     }
     constructor.NAME = NAME // can be accessed as instance `this.NAME` within selectors
+    return constructor
   }
 }
 
