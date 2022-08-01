@@ -11,7 +11,7 @@ import { localiseTranslation } from './definitions.js'
  * @note: follow the example to ensure only one instance of translation exists.
  * @example:
  *    import { l, localiseTranslation } from '@webframer/utils'
- *    export { _ } from '@webframer/utils/translations'
+ *    export { _ } from '@webframer/utils/translations.js'
  *    localiseTranslation({
  *      NEW_PHRASE: {
  *        [l.ENGLISH]: 'New Phrase',

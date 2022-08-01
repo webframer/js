@@ -2,13 +2,14 @@ import { LANGUAGE, SERVICE } from './constants.js'
 
 /**
  * Environment Variables
- * @note: for Next.js, explicitly set variable on initialisation like so:
- *   import config from 'next/config'
+ * @example:
+ *   // For Next.js, explicitly set variable on initialisation like so:
  *   import { ENV } from '@webframer/utils'
+ *   import config from 'next/config.js'
  *
  *   Object.assign(ENV, config().publicRuntimeConfig)
  */
-export let ENV = (typeof process !== 'undefined' && process.env) || {}
+export const ENV = (typeof process !== 'undefined' && process.env) || {}
 export const NODE_ENV = ENV.NODE_ENV // @Note: Next.js does not automatically add NODE_ENV, set inside next.config.js
 export const __PROD__ = NODE_ENV === 'production'
 export const __STAGE__ = NODE_ENV === 'stage'
@@ -19,25 +20,43 @@ export const __BACKEND__ = !__CLIENT__
 export const __IOS__ = !!ENV.__IOS__
 export const _INIT_ = __BACKEND__ && (__PROD__ || __STAGE__)
 export const _SHOULD_SHOW_TEST_ = __DEV__
-export const _WORK_DIR_ = typeof process !== 'undefined' ? process.cwd() : '.' // relative to root `index.js`
+// Directory path relative to the root `index.js`
+export const _WORK_DIR_ = typeof process !== 'undefined' ? process.cwd() : '.'
 
 /* Globally Accessible Objects */
 export const Active = {
-  // will be overridden at runtime, used for avoiding circular import and env-dependent libraries
+  // Will be overridden at runtime, used for avoiding circular import and env-dependent libraries
   DEFAULT: {LANGUAGE: LANGUAGE.ENGLISH._},
-  LANG: LANGUAGE.ENGLISH, // currently used language
-  SERVICE: ENV.SERVICE || (__CLIENT__ ? SERVICE.CLIENT : SERVICE.SERVER), // current process prefix
-  SETTINGS: {HAS_SOUND: false}, // User settings
-  Storage: typeof localStorage !== 'undefined' ? localStorage : undefined, // LocalStorage for Node
-  WebSocket: typeof WebSocket !== 'undefined' ? WebSocket : undefined, // WebSocket for Node
-  history: {}, // Cross Platform route history object
-  iconClass: '', // CSS className for <Icon />
-  iconClassPrefix: 'icon-', // CSS className prefix for <Icon />
-  client: undefined, // Apollo client
-  pubsub: undefined, // GraphQL Pubsub module
-  log: undefined, // backend console logger
-  user: {}, // the current user, for quick access to user info, such as auth
-  usersById: {}, // for storing temporary info, like user.lastOnline
+  // The currently used language definition
+  LANG: LANGUAGE.ENGLISH,
+  // The current process name prefix
+  SERVICE: ENV.SERVICE || (__CLIENT__ ? SERVICE.CLIENT : SERVICE.SERVER),
+  // User settings
+  SETTINGS: {HAS_SOUND: false},
+  // Redux state
+  state: {},
+  // Redux store
+  store: {},
+  // Cross Platform API for local storage in Browser, Node.js, React Native, etc.
+  Storage: typeof localStorage !== 'undefined' ? localStorage : undefined,
+  // Cross Platform WebSocket API for Browser, Node.js, React Native, etc.
+  WebSocket: typeof WebSocket !== 'undefined' ? WebSocket : undefined,
+  // Cross Platform route history object
+  history: {},
+  // CSS className for `<Icon />`
+  iconClass: '',
+  // CSS className prefix for `<Icon />`
+  iconClassPrefix: 'icon-',
+  // Apollo client
+  client: undefined,
+  // GraphQL Pubsub module
+  pubsub: undefined,
+  // Backend console logger
+  log: undefined,
+  // The current user object, for quick access to user info, such as auth
+  user: {},
+  // For storing temporary info, like user.lastOnline
+  usersById: {},
 
   /**
    * Password Strength Calculator
