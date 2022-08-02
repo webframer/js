@@ -17,10 +17,10 @@ describe(`i18n translation`, () => {
       [l.ENGLISH]: english,
     },
   }
-  const activeLang = cloneDeep(Active.LANG)
+  const activeLang = cloneDeep(Active.LANGUAGE)
   const activeDefault = cloneDeep(Active.DEFAULT)
   afterAll(() => {
-    Active.LANG = activeLang
+    Active.LANGUAGE = activeLang
     Active.DEFAULT = activeDefault
   })
 
@@ -30,17 +30,17 @@ describe(`i18n translation`, () => {
   })
   test(`returns correct translation for active language`, () => {
     localiseTranslation(TRANSLATION)
-    Active.LANG = LANGUAGE.ENGLISH
+    Active.LANGUAGE = LANGUAGE.ENGLISH
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(english)
   })
   test(`fallbacks to Active.DEFAULT.LANGUAGE if active language has no translation`, () => {
-    Active.LANG = LANGUAGE.RUSSIAN
-    Active.DEFAULT.LANGUAGE = LANGUAGE.ENGLISH._
+    Active.LANGUAGE = LANGUAGE.RUSSIAN
+    Active.DEFAULT.LANG = LANGUAGE.ENGLISH._
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(english)
   })
   test(`returns translation key if fallback does not exist`, () => {
-    Active.LANG = LANGUAGE.RUSSIAN
-    Active.DEFAULT.LANGUAGE = LANGUAGE.SPANISH._
+    Active.LANGUAGE = LANGUAGE.RUSSIAN
+    Active.DEFAULT.LANG = LANGUAGE.SPANISH._
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual('TEST_VARIABLE_MESSAGE_TYPE')
   })
   test(`can redefine the same translation key repeatedly to add translations`, () => {
@@ -50,15 +50,15 @@ describe(`i18n translation`, () => {
       },
     }
     localiseTranslation(TRANSLATION)
-    Active.LANG = LANGUAGE.RUSSIAN
+    Active.LANGUAGE = LANGUAGE.RUSSIAN
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(russian)
-    Active.LANG = LANGUAGE.ENGLISH
+    Active.LANGUAGE = LANGUAGE.ENGLISH
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(english)
   })
   test(`works with string interpolation`, () => {
-    Active.LANG = LANGUAGE.ENGLISH
+    Active.LANGUAGE = LANGUAGE.ENGLISH
     expect(interpolateString(_.TEST_VARIABLE_MESSAGE_TYPE, {variable, type})).toEqual(englishInterpolated)
-    Active.LANG = LANGUAGE.RUSSIAN
+    Active.LANGUAGE = LANGUAGE.RUSSIAN
     expect(interpolateString(_.TEST_VARIABLE_MESSAGE_TYPE, {variable, type})).toEqual(russianInterpolated)
   })
 })

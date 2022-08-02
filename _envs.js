@@ -26,9 +26,9 @@ export const _WORK_DIR_ = typeof process !== 'undefined' ? process.cwd() : '.'
 /* Globally Accessible Objects */
 export const Active = {
   // Will be overridden at runtime, used for avoiding circular import and env-dependent libraries
-  DEFAULT: {LANGUAGE: LANGUAGE.ENGLISH._},
+  DEFAULT: {LANG: LANGUAGE.ENGLISH._},
   // The currently used language definition
-  LANG: LANGUAGE.ENGLISH,
+  LANGUAGE: LANGUAGE.ENGLISH,
   // The current process name prefix
   SERVICE: ENV.SERVICE || (__CLIENT__ ? SERVICE.CLIENT : SERVICE.SERVER),
   // User settings

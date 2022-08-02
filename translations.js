@@ -10,19 +10,23 @@ import { localiseTranslation } from './definitions.js'
  * Localised String Object (can be extended by adding new terms or languages)
  * @note: follow the example to ensure only one instance of translation exists.
  * @example:
- *    import { l, localiseTranslation } from '@webframer/utils'
- *    export { _ } from '@webframer/utils/translations.js'
+ *    import { _, l, localiseTranslation } from '@webframer/utils'
+ *
  *    localiseTranslation({
  *      NEW_PHRASE: {
  *        [l.ENGLISH]: 'New Phrase',
  *        [l.RUSSIAN]: 'Новая Фраза',
  *      },
  *    })
- * @usage:
+ *
+ * // Usage:
  *    console.log(_.NEW_PHRASE)
  *    >>> 'New Phrase'
- *    console.log(_.THANK_YOU)
- *    >>> 'Thank You!'
+ *
+ *    Active.LANG = LANGUAGE.RUSSIAN
+ *    console.log(_.NEW_PHRASE)
+ *    >>> 'Новая Фраза'
+ *
  * @returns {Object} localised string - that returns localised 'Untranslated' string if no translation found
  */
 export const _ = new Proxy(localiseTranslation.instance, {

@@ -65,8 +65,8 @@ export function definitionSetup (...props) {
  *        ...
  *      }
  *
- * @param {Object<KEY<_...>>|Array<_...>} DEFINITION - key/value pairs of variable name with its underscore value
- * @return {Object<_<_...>>} definition - grouped by its underscore value
+ * @param {Object|Object[]} DEFINITION - key/value pairs of variable name with its underscore value
+ * @return {Object} definition - grouped by its underscore value
  */
 export function definitionByValue (DEFINITION) {
   const result = {}
@@ -84,7 +84,7 @@ export function definitionByValue (DEFINITION) {
  *  enumFrom(LANGUAGE)
  *  >>> ['en', 'fr'...]
  *
- * @param {Object<KEY<_...>>|Array<_...>} DEFINITION - key/value pairs of variable name with its underscore value
+ * @param {Object|Object[]} DEFINITION - key/value pairs of variable name with its underscore value
  * @returns {Array<String>} enums - list of enumerable values
  */
 export function enumFrom (DEFINITION) {
@@ -109,7 +109,7 @@ export function enumFrom (DEFINITION) {
 export function optionsFrom (DEFINITION) {
   const options = {
     get items () {
-      return this[Active.LANG._] || this[LANGUAGE.ENGLISH._] || []
+      return this[Active.LANGUAGE._] || this[LANGUAGE.ENGLISH._] || []
     }
   }
   for (const index in DEFINITION) {
@@ -131,7 +131,7 @@ export function optionsFrom (DEFINITION) {
  *    console.log(LANGUAGE.ENGLISH.name)
  *    >>> English
  *
- * @param {Object|Object<KEY<_...>>|Array<_...>} DEFINITION - key/value pairs of variable name with its _ value
+ * @param {Object|Object<Object>|Object[]} DEFINITION - key/value pairs of variable name with its _ value
  *    Multiple definitions can be nested unlimited times inside a single object.
  */
 export function localise (DEFINITION) {
@@ -141,13 +141,13 @@ export function localise (DEFINITION) {
     if (name == null && _ != null) {
       Object.defineProperty(DEFINITION[index], 'name', {
         get () {
-          return this[Active.LANG._] != null
-            ? this[Active.LANG._]
+          return this[Active.LANGUAGE._] != null
+            ? this[Active.LANGUAGE._]
             : (this[LANGUAGE.ENGLISH._] != null ? this[LANGUAGE.ENGLISH._] : String(_))
         }
       })
     } else {
-      if (definition.constructor === Object) localise(definition, Active) // recursively process nested definitions
+      if (definition.constructor === Object) localise(definition) // recursively process nested definitions
     }
   }
 }
@@ -173,7 +173,7 @@ export function localise (DEFINITION) {
  *    # if active language is Chinese
  *    >>> 搜索
  *
- * @param {Object|Object<KEY<_...>>} TRANSLATION - key/value pairs of variable name with its localised values
+ * @param {Object} TRANSLATION - key/value pairs of variable name with its localised values
  * @returns {Object} translations - with all definitions as javascript getters returning currently active language,
  *  (falls back to English if definition not found for active language, or empty string).
  */
@@ -190,7 +190,7 @@ export function localiseTranslation (TRANSLATION) {
         get () {
           // initially cannot use setter to define translations, thus fallback to _data
           const data = localiseTranslation.instance[_key] || (localiseTranslation.instance[_key] = _data)
-          return data[Active.LANG._] || data[Active.DEFAULT.LANGUAGE] || KEY || ''
+          return data[Active.LANGUAGE._] || data[Active.DEFAULT.LANG] || KEY || ''
         },
         set (data) {
           // merge new translations with existing
@@ -212,7 +212,7 @@ localiseTranslation.queriedById = {}
  *  initValuesFor(LANGUAGE, LANGUAGE_LEVEL.BASIC._)
  *  >>> {'en': 1, 'fr': 1, ...}
  *
- * @param {Object<KEY<_...>>} DEFINITION - key/value pairs of variable name with its underscore value
+ * @param {Object} DEFINITION - key/value pairs of variable name with its underscore value
  * @param {Number} initValue - the initial value to use for each option
  * @return {Object} initial values - to use with redux form, for example
  */

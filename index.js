@@ -16,7 +16,7 @@ export * from './file.js'
 export * from './function.js'
 export * from './math.js'
 export * from './log.js'
-export * from './media' // to be imported directly to reduce bundle size
+export * from './media.js' // to be imported directly to reduce bundle size
 export * from './number.js'
 export * from './object.js'
 // export * from './selector' // to be imported directly to reduce bundle size
