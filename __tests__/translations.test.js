@@ -25,15 +25,15 @@ describe(`i18n translation`, () => {
   })
 
   /* Tests must run in correct order */
-  test(`returns 'Untranslated' for undefined string`, () => {
-    expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual('Untranslated')
+  test(`returns "Untranslated '{key}'" for undefined string`, () => {
+    expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(`Untranslated 'TEST_VARIABLE_MESSAGE_TYPE'`)
   })
   test(`returns correct translation for active language`, () => {
     localiseTranslation(TRANSLATION)
     Active.LANGUAGE = LANGUAGE.ENGLISH
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(english)
   })
-  test(`fallbacks to Active.DEFAULT.LANGUAGE if active language has no translation`, () => {
+  test(`fallbacks to Active.DEFAULT.LANG if active language has no translation`, () => {
     Active.LANGUAGE = LANGUAGE.RUSSIAN
     Active.DEFAULT.LANG = LANGUAGE.ENGLISH._
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(english)
