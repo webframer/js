@@ -23,6 +23,20 @@ const upperThresholdAlphaNum = 1 - 26 / 62 // minimum Math.random() result for u
  */
 
 /**
+ * Append an incrementing Number to given String to make it unique
+ * @param {string} string
+ * @return {string} string - appended/incremented with a number at the end
+ */
+export function appendNumber (string) {
+	const numbers = string.match(/\d+$/) // extract numbers at the end of the string
+	if (numbers) {
+		return string.replace(numbers[0], '') + (+numbers[0] + 1)
+	} else {
+		return string + 1
+	}
+}
+
+/**
  * Escape String for use in Regex Expression
  * @see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
  * @param {String} string - to be sanitized
@@ -101,7 +115,7 @@ export function pathURI (url) {
  * @returns {Boolean} true - if given value is non-empty string
  */
 export function hasStringValue(value) {
-	return !!value && typeof value === 'string'
+	return typeof value === 'string' && !!value
 }
 
 /**

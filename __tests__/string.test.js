@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import {
+  appendNumber,
   escapeRegExp,
   fileNameWithoutExt,
   formatKeyPath,
@@ -15,7 +16,7 @@ import {
   regexExp,
   sha256,
   toURI,
-  truncate
+  truncate,
 } from '../string.js'
 
 const NON_STRING_VALUES = [
@@ -30,8 +31,17 @@ const NON_STRING_VALUES = [
   [],
   {},
   null,
-  undefined
+  undefined,
 ]
+
+test(`${appendNumber.name} increments string with a number`, () => {
+  expect(appendNumber('User')).toBe('User1')
+  expect(appendNumber('User1')).toBe('User2')
+  expect(appendNumber('User2')).toBe('User3')
+  expect(appendNumber('User9')).toBe('User10')
+  expect(appendNumber('User10')).toBe('User11')
+  expect(appendNumber('Camera3D')).toBe('Camera3D1')
+})
 
 it(`${escapeRegExp.name}() returns escaped string ready for RegexExp use`, () => {
   expect(escapeRegExp('a | b')).toEqual('a \\| b')
