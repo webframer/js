@@ -11,18 +11,31 @@ import CircularJSON from 'circular-json-es6' // do not change to `flatted` packa
  */
 
 export {
-  CircularJSON
+  CircularJSON,
+}
+
+/**
+ * Compare if two values are the same by converting them to JSON strings
+ * @example:
+ *    React.memo(func, isEqualJSON)
+ *
+ * @param {any} oldVal - to compare
+ * @param {any} newVal - to compare
+ * @returns {Boolean} true - if JSON string of given values are the same
+ */
+export function isEqualJSON (oldVal, newVal) {
+  return toJSON(oldVal) === toJSON(newVal)
 }
 
 /**
  * Converts given value to a JSON string if necessary
  *
- * @param {*} data - to convert
- * @param {*} args - additional options
+ * @param {any} data - to convert
+ * @param {any} args - additional options
  * @return {string}
  */
 export function toJSON (data, ...args) {
-  return (typeof data === 'object') ? CircularJSON.stringify(data, ...args) : data
+  return (typeof data === 'object') ? CircularJSON.stringify(data, ...args) : String(data)
 }
 
 /**

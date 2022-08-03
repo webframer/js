@@ -72,3 +72,5 @@ export function selector (NAME, maxTime = 5 * ONE_MILLISECOND) {
   }
 }
 
+export default selector
+
