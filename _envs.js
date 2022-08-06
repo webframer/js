@@ -4,7 +4,7 @@ import { LANGUAGE, SERVICE } from './constants.js'
  * Environment Variables
  * @example:
  *   // For Next.js, explicitly set variable on initialisation like so:
- *   import { ENV } from '@webframer/utils'
+ *   import { ENV } from '@webframer/js'
  *   import config from 'next/config.js'
  *
  *   Object.assign(ENV, config().publicRuntimeConfig)

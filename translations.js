@@ -11,7 +11,7 @@ import { ips } from './string.js'
  * Localised String Object (can be extended by adding new terms or languages)
  * @note: follow the example to ensure only one instance of translation exists.
  * @example:
- *    import { _, l, localiseTranslation } from '@webframer/utils'
+ *    import { _, l, localiseTranslation } from '@webframer/js'
  *
  *    localiseTranslation({
  *      NEW_PHRASE: {
@@ -24,7 +24,7 @@ import { ips } from './string.js'
  *    console.log(_.NEW_PHRASE)
  *    >>> 'New Phrase'
  *
- *    Active.LANG = LANGUAGE.RUSSIAN
+ *    Active.LANGUAGE = LANGUAGE.RUSSIAN
  *    console.log(_.NEW_PHRASE)
  *    >>> 'Новая Фраза'
  *

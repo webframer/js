@@ -10,7 +10,7 @@ import { subscribeTo, unsubscribeFrom } from './utility'
  * Global PointerEvent observable instance for mouse, pen and touch events.
  *
  * @example:
- *    import pointer from '@webframer/utils/pointer.js'
+ *    import pointer from '@webframer/js/pointer.js'
  *    pointer.addDragBehavior( // attach drag behavior to targetNode
  *      {onDrag, onDragStart, onDragEnd}, targetNode, groupId?
  *    )

@@ -5,7 +5,7 @@ import { isFunction } from './function.js'
 import { swapKeyWithValue } from './object.js'
 import { ips } from './string.js'
 import { _ } from './translations.js'
-import { subscribeTo, unsubscribeFrom } from './utility'
+import { subscribeTo, unsubscribeFrom } from './utility.js'
 
 /**
  * KEYBOARD EVENTS TRACKER ----------------------------------------------------
@@ -14,7 +14,7 @@ import { subscribeTo, unsubscribeFrom } from './utility'
  * but can be paused/reactivated at any time.
  *
  * @example:
- *    import keyboard from '@webframer/utils/keyboard.js'
+ *    import keyboard from '@webframer/js/keyboard.js'
  *    keyboard.addShortcut(callback, [KEY.Ctrl, KEY.i], groupId?) // all keydown events
  *    keyboard.onTap.addShortcut(callback, KEY.i, groupId?) // keydown followed by keyup events
  *    keyboard.onHold.addShortcut(callback, KEY.ArrowUp, groupId?) // all keydown events
