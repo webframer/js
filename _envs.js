@@ -36,7 +36,7 @@ export const Active = {
   // Redux state
   state: {},
   // Redux store
-  store: {},
+  store: {dispatch () {}, getState: () => ({})},
   // Cross Platform API for local storage in Browser, Node.js, React Native, etc.
   Storage: typeof localStorage !== 'undefined' ? localStorage : undefined,
   // Cross Platform WebSocket API for Browser, Node.js, React Native, etc.
