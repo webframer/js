@@ -6,11 +6,11 @@ import { greatestCommonDivisor } from './number.js'
  */
 
 /**
- * Get Aspect Ratio from given width and height
+ * Get the lowest common aspect ratio from given width and height dimensions.
  *
- * @param {Number|String} width - dimension
- * @param {Number|String} height - dimension
- * @returns {String} aspect ratio - example '4:3'
+ * @param {number|string} width - dimension
+ * @param {number|string} height - dimension
+ * @returns {string} aspect ratio - example '16:9'
  */
 export function aspectRatio (width, height) {
   const divisor = greatestCommonDivisor(width, height)
@@ -18,35 +18,33 @@ export function aspectRatio (width, height) {
 }
 
 /**
- * Get Aspect Ratio if Given Width and Height are in the List of Supported Aspect Ratios
+ * Get normalized Aspect Ratio if given Width and Height are in the List of supported aspect ratios.
  *
- * @param {Array<String>} supportedAspectRatios - example ['4:3','16:9']
- * @param {Number|String} width - dimension to check
- * @param {Number|String} height - dimension to check
- * @returns {String|Undefined} aspect ratio - or undefined, if not supported
+ * @param {number|string} width - dimension to check
+ * @param {number|string} height - dimension to check
+ * @param {string[]} supportedAspectRatios - example ['4:3','16:9']
+ * @returns {string|void} aspect ratio - or void, if unsupported
  */
-export function aspectRatioAllowed (supportedAspectRatios, width, height) {
-  // Create the lowest common divisor aspect ratios
-  // this converts 21:9 to 7:3 for the calc aspect to work correctly
+export function aspectRatioAllowed (width, height, supportedAspectRatios) {
+  // Example: 32:18 converts to 16:9
   const ratio = aspectRatio(width, height)
-  return supportedAspectRatios
-    .map(ratio => aspectRatio(...ratio.split(':')))
-    .includes(ratio) ? ratio : undefined
+  if (supportedAspectRatios.map(ratio => aspectRatio(...ratio.split(':'))).includes(ratio))
+    return ratio
 }
 
 /**
- * Compute width for given resolution limit from original width/height dimensions, retaining aspect ratio
+ * Compute width for given resolution limit from original width/height dimensions, retaining aspect ratio.
  * @example:
  *  width: 10   height: 20   resolution: 200
- *      w: 5?        h: 10?        res: 50
+ *      w: 5?        h: 10?         res: 50
  *  >>> w = sqrt(res/resolution) * width
  *        = sqrt(50/200)*10
  *        = 5
  *
- * @param {Number} res - resolution limit to compute width for
- * @param {Number} width - original dimension
- * @param {Number} height - original dimension
- * @returns {Number} width - for given `res`
+ * @param {number} res - resolution limit to compute width for
+ * @param {number} width - original dimension
+ * @param {number} height - original dimension
+ * @returns {number} width - for given `res`
  */
 export function widthScaled (res, width, height) {
   return Math.round(Math.sqrt(res / width / height) * width)

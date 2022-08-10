@@ -416,11 +416,11 @@ export function decimalPlaces (value) {
 }
 
 /**
- * Calculates the Greatest Common Divisor Between Two Numbers
+ * Calculates the Greatest Common Divisor between two numbers
  *
- * @param {Number|String} a - first number
- * @param {Number|String} b - second number
- * @returns {Number} - the biggest divisible number between `a` and `b`
+ * @param {number|string} a - first number
+ * @param {number|string} b - second number
+ * @returns {number} - the biggest divisible number between `a` and `b`
  */
 export function greatestCommonDivisor(a, b) {
 	return b ? greatestCommonDivisor(b, a % b) : Math.abs(Number(a) || Infinity)
