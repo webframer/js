@@ -250,7 +250,11 @@ export function isString(value) {
  * @return {String} output - with interpolated variables
  */
 export function interpolateString (string, variables = {}, {formatKey, name, suppressError} = {}) {
-	return string.replace(interpolateStringPattern, (__, match) => {
+	return string.replace(interpolateStringPattern, (_1, match) => {
+		/**
+		 * @param _1: match including wrapper strings '{<match>}'
+		 * @param match: inner matched string in between, without wrappers '{}'
+		 */
 		let key = match
 		if (formatKey) key = formatKey.replace('key', key)
 		// noinspection JSCheckFunctionSignatures
