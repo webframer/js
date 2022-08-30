@@ -319,7 +319,7 @@ export function hasObjKeys(obj, keys = {}, match = 'deep') {
  */
 export function findObjByKeys(obj, keys = {}, match = 'deep') {
 	for (const key in obj) {
-		if (!{}.hasOwnProperty.call(obj, key)) return
+		if (!Object.hasOwnProperty.call(obj, key)) return
 		const value = obj[key]
 
 		if (!isObjectLike(value)) continue
@@ -332,17 +332,35 @@ export function findObjByKeys(obj, keys = {}, match = 'deep') {
 }
 
 /**
- * Find all the objects which matches the the keys in the object.
+ * Find all the objects which matches the keys in the object.
  * @see findObjByKeys on usage details.
  * @param obj
  * @param keys
  * @param match
  * @returns {Array}
  */
-export function findAllObjsByKeys(obj, keys = {}, match = 'deep') {
+export function findAllObjsByKeys (obj, keys = {}, match = 'deep') {
 	const result = []
 	_findAllObjsByKeys(result, obj, keys, match)
 	return result
+}
+
+/**
+ * Get the first direct parent object/array containing given `value`
+ * @param {object|array} collection - to search from
+ * @param {any} value - to find parent for
+ * @returns {object|array|void} parent - containing given `value`
+ */
+export function findParent (collection, value) {
+	let parent
+	for (const key in collection) {
+		if (!Object.hasOwnProperty.call(collection, key)) return
+		if (collection[key] === value) return collection
+
+		if (!isCollection(collection[key])) continue
+		parent = findParent(collection[key], value)
+		if (parent !== void 0) return parent
+	}
 }
 
 /**
@@ -358,7 +376,7 @@ export function findAllObjsByKeys(obj, keys = {}, match = 'deep') {
  */
 function _findAllObjsByKeys(result, obj, keys = {}, match = 'deep') {
 	for (const key in obj) {
-		if (!{}.hasOwnProperty.call(obj, key)) return
+		if (!Object.hasOwnProperty.call(obj, key)) return
 		const value = obj[key]
 
 		if (!isObjectLike(value)) continue

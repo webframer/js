@@ -4,6 +4,7 @@ import {
   deleteProp,
   findAllObjsByKeys,
   findObjByKeys,
+  findParent,
   hasObjKeys,
   hasObjMatch,
   objChanges,
@@ -16,7 +17,7 @@ import {
   sortObjKeys,
   toObjValuesKeyTotal,
   toObjValuesTotal,
-  update
+  update,
 } from '../object.js'
 
 const NON_OBJECT_VALUES = [
@@ -227,6 +228,17 @@ describe(`${objChanges.name}()`, () => {
     expect(original).toEqual(originalImmutable)
     expect(changed).toEqual(changedImmutable)
   })
+})
+
+test(`${findParent.name}() returns the first direct parent collection for given value`, () => {
+  let value = {}
+  let parent = {value}
+  expect(findParent([1, 2, parent], value)).toBe(parent)
+  value = 7
+  parent = [1, value, 5]
+  expect(findParent([1, 2, parent, value], value)).toBe(parent)
+  expect(findParent({items: [parent], value}, value)).toBe(parent)
+  expect(findParent({}, value)).toBe(void 0)
 })
 
 it(`${reset.name}() sets nested Object recursively by mutation`, () => {
