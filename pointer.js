@@ -49,8 +49,8 @@ class Pointer {
   addDragBehavior = ({onDrag, onDragStart, onDragEnd}, node, id) => {
 
     // Check for duplicates
-    if (this._dragNodes[node]) {
-      const {id, onDrag, onDragStart, onDragEnd} = this._dragNodes[node]
+    if (this._dragNodes.get(node)) {
+      const {id, onDrag, onDragStart, onDragEnd} = this._dragNodes.get(node)
       throw new Error(
         ips(_.POINTER_DRAG_OF___node___IS_TAKEN_BY__id_, {
           node, id: id || onDrag || onDragStart || onDragEnd,
@@ -59,7 +59,7 @@ class Pointer {
     }
 
     // Add drag when no duplicates found
-    this._dragNodes[node] = {onDrag, onDragStart, onDragEnd, id}
+    this._dragNodes.set(node, {onDrag, onDragStart, onDragEnd, id})
     return node
   }
 
@@ -94,11 +94,9 @@ class Pointer {
    * @param {function} callback
    */
   removeDragByCallback = (callback) => {
-    for (const node in this._dragNodes) {
-      const {onDrag, onDragStart, onDragEnd} = this._dragNodes[node]
-      if (
-        callback === onDrag || callback === onDragStart || callback === onDragEnd
-      ) delete this._dragNodes[node]
+    for (const [node, {onDrag, onDragStart, onDragEnd}] of this._dragNodes) {
+      if (callback === onDrag || callback === onDragStart || callback === onDragEnd)
+        this._dragNodes.delete(node)
     }
   }
 
@@ -106,15 +104,15 @@ class Pointer {
    * @param {object|HTMLElement} node
    */
   removeDragByNode = (node) => {
-    delete this._dragNodes[node]
+    this._dragNodes.delete(node)
   }
 
   /**
    * @param {string|number} id
    */
   removeDragById = (id) => {
-    for (const node in this._dragNodes) {
-      if (id === this._dragNodes[node].id) delete this._dragNodes[node]
+    for (const [node, value] of this._dragNodes) {
+      if (id === value.id) this._dragNodes.delete(node)
     }
   }
 
@@ -152,7 +150,7 @@ class Pointer {
     let node = event.target
     // Traverse up the DOM tree, until a container node found for registered drag events
     while (node.parentElement) {
-      if (this._dragNodes[node]) {
+      if (this._dragNodes.get(node)) {
         // Only register the event, without firing onDragStart, until dragging actually begins.
         // This avoids false positive for tap events
         event.preventDefault()
@@ -168,7 +166,7 @@ class Pointer {
   // event.button === -1 (for left mouse)
   _onPointerMove = (event) => {
     event.preventDefault()
-    const {onDragStart, onDrag} = this._dragNodes[this.subscribedNode]
+    const {onDragStart, onDrag} = this._dragNodes.get(this.subscribedNode)
 
     // Call onDragStart first, if defined
     if (this.pointerDownEvent) {
@@ -185,7 +183,7 @@ class Pointer {
   _onPointerUp = (event) => {
     if (this.subscribedNode) {
       event.preventDefault()
-      const {onDragEnd} = this._dragNodes[this.subscribedNode]
+      const {onDragEnd} = this._dragNodes.get(this.subscribedNode)
       this.unsubscribeFromMove()
       this.subscribedNode = null
       if (this.hadDrag) {
