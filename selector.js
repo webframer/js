@@ -57,6 +57,7 @@ export function selector (NAME, maxTime = 5 * ONE_MILLISECOND) {
               }
               // Chalk logger is available
               else {
+                // Since chalk v5.0.0 there is no orange color, only yellow, and no chalk.keyword(), and only ESM import
                 logSelector(`${NAME} ${key} [`, result, Active.log.keyword('red')(time), Active.log.keyword('orange')(']'))
               }
             } else {
