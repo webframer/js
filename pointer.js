@@ -42,9 +42,9 @@ class Pointer {
    *    onDragStart?: function,
    *    onDragEnd?: function
    *  }} event handlers - will get `PointerEvent` as argument
-   * @param {object|HTMLElement} node - element to listen for pointer events
+   * @param {Element} node - element to listen for pointer events
    * @param {string|number} [id] - group id to remove all drags on unmount
-   * @returns {object|HTMLElement} node - to be used for removing the drag
+   * @returns {Element} node - to be used for removing the drag
    */
   addDragBehavior = ({onDrag, onDragStart, onDragEnd}, node, id) => {
 
@@ -77,7 +77,7 @@ class Pointer {
    *    // Remove all drags by keyCodes
    *    pointer.removeDrag([KEY.p])
    *
-   * @param {function|object|HTMLElement|string|number} callbackOrNodeOrId
+   * @param {function|Element|string|number} callbackOrNodeOrId
    */
   removeDragBehavior = (callbackOrNodeOrId) => {
     // Remove all drags for a particular function
@@ -101,7 +101,7 @@ class Pointer {
   }
 
   /**
-   * @param {object|HTMLElement} node
+   * @param {Element} node
    */
   removeDragByNode = (node) => {
     this._dragNodes.delete(node)
