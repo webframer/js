@@ -8,8 +8,8 @@ export const fileNameWithoutExtPattern = /\.[^.$]+$/
 export const hyphensPattern = /-+/g
 export const hyphensTrimPattern = /^-+|-+$/g
 export const isBase64Pattern = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
-// Matches multiples spaces, including tabs, newline, etc.
-export const spacesPattern = /\s\s+/g
+// Match a single or multiples spaces, including tabs, newline, etc.
+export const spacesPattern = /\s+/g
 
 // Random String Generation (with increased search space to 88^n)
 const symbols = `~!@#%^&*()[]|{}<>:;,.?-+_=` // only use safe symbols

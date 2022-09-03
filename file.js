@@ -11,6 +11,7 @@ import { fileFormatNormalized, fileNameWithoutExt, mimeTypeFromDataUrl } from '.
 export const CDN_URL = ENV.REACT_APP_CDN_URL || ''
 
 export const FILE = {
+  PATH_ICONS: `${CDN_URL}/static/icons/`,
   PATH_IMAGES: `${CDN_URL}/static/images/`,
   PATH_SOUNDS: `${CDN_URL}/static/sounds/`,
   CDN_URL,
