@@ -425,10 +425,14 @@ export function listAlphabetically (array) {
  *    [{id: "unique", name: "test"}].reduce(listToMap, {})
  *    >>> {"unique": {id: "unique", name: "test"}}
  *
+ *    // Or
+ *    ['id1', null].reduce(listToMap, {})
+ *    >>> {"id1": "id1", "null": null}
+ *
  * @returns {Object} object with element.id being keys, and elements of original array being values
  */
 export function listToMap (obj, data) {
-  obj[data.id] = data
+  obj[(data != null && Object.hasOwnProperty.call(data, 'id')) ? data.id : data] = data
   return obj
 }
 

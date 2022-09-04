@@ -124,6 +124,15 @@ test(`${toListValuesTotal.name}() computes correct total number of values provid
 })
 
 test(`${listToMap.name}() converts array of objects to new kay-value object using element id as keys`, () => {
+  // Using array of primitive values should also work
+  expect(['id', 2, null, undefined].reduce(listToMap, {})).toEqual({
+    'id': 'id',
+    '2': 2,
+    'null': null,
+    'undefined': undefined,
+  })
+
+  // Using array of Objects with .id attribute
   const element = {id: 'unique', name: 'test'}
   const element2 = {id: 'unique2', name: 'test'}
   expect([element].reduce(listToMap, {})).toEqual({'unique': element})
