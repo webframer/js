@@ -285,6 +285,16 @@ export function hasObjKeys(obj, keys = {}, match = 'deep') {
 }
 
 /**
+ * Check if given object has `key` property defined as any value
+ * @param {any} obj
+ * @param {string} key
+ * @returns {boolean} true - if the `key` property is defined
+ */
+export function hasProp (obj, key) {
+	return Object.hasOwnProperty.call(obj, key)
+}
+
+/**
  * Get Reference to Object with Provided Key Paths and Values within Nested Object or Collection.
  *
  * @example:

@@ -153,7 +153,7 @@ class Pointer {
       if (this._dragNodes.get(node)) {
         // Only register the event, without firing onDragStart, until dragging actually begins.
         // This avoids false positive for tap events
-        event.preventDefault()
+        // event.preventDefault() // comment out to allow focus when clicking elements
         this.pointerDownEvent = event
         this.subscribeToMove()
         this.subscribedNode = node
