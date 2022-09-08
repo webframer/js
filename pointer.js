@@ -151,9 +151,10 @@ class Pointer {
     // Traverse up the DOM tree, until a container node found for registered drag events
     while (node.parentElement) {
       if (this._dragNodes.get(node)) {
+        // Event must have preventDefault to work in Firefox, otherwise it selects surrounding text
+        event.preventDefault() // unfortunately, this also disables focus when clicking elements
         // Only register the event, without firing onDragStart, until dragging actually begins.
         // This avoids false positive for tap events
-        // event.preventDefault() // comment out to allow focus when clicking elements
         this.pointerDownEvent = event
         this.pointerMoveCount = 0
         this.subscribeToMove()
