@@ -155,6 +155,7 @@ class Pointer {
         // This avoids false positive for tap events
         // event.preventDefault() // comment out to allow focus when clicking elements
         this.pointerDownEvent = event
+        this.pointerMoveCount = 0
         this.subscribeToMove()
         this.subscribedNode = node
         break
@@ -163,9 +164,15 @@ class Pointer {
     }
   }
 
+  // To avoid firing drag events on accidental click, skip the first move event
   // event.button === -1 (for left mouse)
   _onPointerMove = (event) => {
     event.preventDefault()
+    if (!this.pointerMoveCount) {
+      this.pointerMoveCount = 1
+      return
+    }
+
     const {onDragStart, onDrag} = this._dragNodes.get(this.subscribedNode)
 
     // Call onDragStart first, if defined
