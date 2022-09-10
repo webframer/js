@@ -56,7 +56,9 @@ class Keyboard {
   _shortcuts = {}
 
   /**
-   * Add Keyboard Observable for key press/es
+   * Add Keyboard Observable for key press(es).
+   * To prevent duplicate error when using the same shortcut key(s), assign a unique id.
+   *
    * @example:
    *    class PenTool extend PureComponent {
    *      setup = () => keyboard.addShortcut(this.enable, [KEY.Ctrl, KEY.p], 'PenTool')
@@ -64,23 +66,24 @@ class Keyboard {
    *    }
    * @param {function} callback - will get `KeyboardEvent` as argument
    * @param {number|number[]} keyCodes - KeyboardEvent.keyCode/s
-   * @param {string|number} [id] - group id to remove all shortcuts on unmount
+   * @param {string|number} [id] - unique group id to remove all shortcuts on unmount
    * @returns {function} callback - to be used for removing the shortcut
    */
   addShortcut = (callback, keyCodes, id) => {
-    const _keyCodes = toList(keyCodes).sort().join()
+    const keys = toList(keyCodes).sort().join()
+    const keysId = `${keys}_${id}`
 
     // Check for duplicates
-    if (this._shortcuts[_keyCodes]) {
-      const {id, callback} = this._shortcuts[_keyCodes]
-      const value = keyCodes.map(keyCode => this._keyByCode[keyCode]).join(' + ')
+    if (this._shortcuts[keysId]) {
+      const {id, callback} = this._shortcuts[keysId]
+      const value = toList(keyCodes).map(keyCode => this._keyByCode[keyCode]).join(' + ')
       throw new Error(
         ips(_.KEYBOARD_SHORTCUT___value___IS_TAKEN_BY_COMPONENT__id_, {value, id: id || callback}),
       )
     }
 
     // Add shortcut when no duplicates found
-    this._shortcuts[_keyCodes] = {callback, id}
+    this._shortcuts[keysId] = {callback, keys, id}
     return callback
   }
 
@@ -115,8 +118,8 @@ class Keyboard {
    * @param {function} callback
    */
   removeShortcutByCallback = (callback) => {
-    for (const keyCodes in this._shortcuts) {
-      if (callback === this._shortcuts[keyCodes].callback) delete this._shortcuts[keyCodes]
+    for (const keysId in this._shortcuts) {
+      if (callback === this._shortcuts[keysId].callback) delete this._shortcuts[keysId]
     }
   }
 
@@ -124,16 +127,18 @@ class Keyboard {
    * @param {number} keyCodes
    */
   removeShortcutByKeyCodes = (...keyCodes) => {
-    const _keyCodes = keyCodes.sort().join()
-    delete this._shortcuts[_keyCodes]
+    const keys = keyCodes.sort().join()
+    for (const keysId in this._shortcuts) {
+      if (keys === this._shortcuts[keysId].keys) delete this._shortcuts[keysId]
+    }
   }
 
   /**
    * @param {string|number} id
    */
   removeShortcutById = (id) => {
-    for (const keyCodes in this._shortcuts) {
-      if (id === this._shortcuts[keyCodes].id) delete this._shortcuts[keyCodes]
+    for (const keysId in this._shortcuts) {
+      if (id === this._shortcuts[keysId].id) delete this._shortcuts[keysId]
     }
   }
 
@@ -176,10 +181,12 @@ class Keyboard {
     const keyCode = this._ctrlKeyCode[event.keyCode] || event.keyCode
     this.pressed[this._keyByCode[keyCode]] = this.keyCode[keyCode] = true
     const keyCodes = Object.keys(this.keyCode).sort().join()
-    if (this._shortcuts[keyCodes]) {
-      event.preventDefault()
-      this._shortcuts[keyCodes].callback(event)
+    let called
+    for (const keysId in this._shortcuts) {
+      const {keys, callback} = this._shortcuts[keysId]
+      if ((called = keys === keyCodes)) callback(event)
     }
+    if (called) event.preventDefault()
   }
 
   _onRelease = (event) => {
