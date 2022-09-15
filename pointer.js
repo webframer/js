@@ -27,7 +27,7 @@ class Pointer {
     'body': true,
   }
 
-  // Drag element node as `key` and {id, callback} as `value`
+  // Drag element node as `key` and {id, onDrag, onDragStart, onDragEnd, ...} as `value`
   _dragNodes = new Map()
 
   /**
@@ -40,13 +40,15 @@ class Pointer {
    * @param {{
    *    onDrag?: function,
    *    onDragStart?: function,
-   *    onDragEnd?: function
+   *    onDragEnd?: function,
+   *    onDragDown?: function,
+   *    onDragUp?: function,
    *  }} event handlers - will get `PointerEvent` as argument
    * @param {Element} node - element to listen for pointer events
    * @param {string|number} [id] - group id to remove all drags on unmount
    * @returns {Element} node - to be used for removing the drag
    */
-  addDragBehavior = ({onDrag, onDragStart, onDragEnd}, node, id) => {
+  addDragBehavior = ({onDrag, onDragStart, onDragEnd, onDragDown, onDragUp}, node, id) => {
 
     // Check for duplicates
     if (this._dragNodes.get(node)) {
@@ -59,7 +61,7 @@ class Pointer {
     }
 
     // Add drag when no duplicates found
-    this._dragNodes.set(node, {onDrag, onDragStart, onDragEnd, id})
+    this._dragNodes.set(node, {id, onDrag, onDragStart, onDragEnd, onDragDown, onDragUp})
     return node
   }
 
@@ -147,12 +149,16 @@ class Pointer {
   _onPointerDown = (event) => {
     if (event.button !== KEY.LEFT_CLICK) return
     if (this.ignoreEventsFrom[event.target.localName]) return
-    let node = event.target
+    let node = event.target, handlers
     // Traverse up the DOM tree, until a container node found for registered drag events
     while (node.parentElement) {
-      if (this._dragNodes.get(node)) {
+      if ((handlers = this._dragNodes.get(node))) {
         // Event must have preventDefault to work in Firefox, otherwise it selects surrounding text
-        event.preventDefault() // unfortunately, this also disables focus when clicking elements
+        // event.preventDefault() // unfortunately, this also disables focus when clicking elements,
+        // and makes Expandable hook collapse element immediately in Chrome.
+        // => pass down custom event behavior as a custom callback option per registered node.
+        if (handlers.onDragDown) handlers.onDragDown.call(this, event)
+
         // Only register the event, without firing onDragStart, until dragging actually begins.
         // This avoids false positive for tap events
         this.pointerDownEvent = event
@@ -190,14 +196,14 @@ class Pointer {
   // event.button === 0 (for left mouse)
   _onPointerUp = (event) => {
     if (this.subscribedNode) {
-      event.preventDefault()
-      const {onDragEnd} = this._dragNodes.get(this.subscribedNode)
+      const {onDragEnd, onDragUp} = this._dragNodes.get(this.subscribedNode)
       this.unsubscribeFromMove()
       this.subscribedNode = null
       if (this.hadDrag) {
         this.hadDrag = null
         if (onDragEnd) onDragEnd(event)
       }
+      if (onDragUp) onDragUp.call(this, event) // usually call event.preventDefault()
     }
   }
 }
