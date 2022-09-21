@@ -15,7 +15,8 @@ export const FILE = {
   PATH_IMAGES: `${CDN_URL}/static/images/`,
   PATH_SOUNDS: `${CDN_URL}/static/sounds/`,
   CDN_URL,
-  EXT: {
+  FORMAT: {
+    BIN: 'bin',
     CSV: 'csv',
     GIF: 'gif',
     JSON: 'json',
@@ -47,18 +48,21 @@ export const FILE = {
     VIDEO: 'video',
   },
 }
-
+FILE.EXT = {}
+for (const key in FILE.FORMAT) {
+  FILE.EXT[key] = `.${FILE.FORMAT[key]}`
+}
 FILE.FORMAT_BY_MIME_TYPE = {
-  [FILE.MIME_TYPE.BIN]: 'bin',
-  [FILE.MIME_TYPE.CSV]: 'csv',
-  [FILE.MIME_TYPE.GIF]: 'gif',
-  [FILE.MIME_TYPE.JSON]: 'json',
-  [FILE.MIME_TYPE.JPG]: 'jpg',
-  [FILE.MIME_TYPE.MP3]: 'mp3',
-  [FILE.MIME_TYPE.MP4]: 'mp4',
-  [FILE.MIME_TYPE.PNG]: 'png',
-  [FILE.MIME_TYPE.SVG]: 'svg',
-  [FILE.MIME_TYPE.WEBP]: 'webp',
+  [FILE.MIME_TYPE.BIN]: FILE.FORMAT.BIN,
+  [FILE.MIME_TYPE.CSV]: FILE.FORMAT.CSV,
+  [FILE.MIME_TYPE.GIF]: FILE.FORMAT.GIF,
+  [FILE.MIME_TYPE.JSON]: FILE.FORMAT.JSON,
+  [FILE.MIME_TYPE.JPG]: FILE.FORMAT.JPG,
+  [FILE.MIME_TYPE.MP3]: FILE.FORMAT.MP3,
+  [FILE.MIME_TYPE.MP4]: FILE.FORMAT.MP4,
+  [FILE.MIME_TYPE.PNG]: FILE.FORMAT.PNG,
+  [FILE.MIME_TYPE.SVG]: FILE.FORMAT.SVG,
+  [FILE.MIME_TYPE.WEBP]: FILE.FORMAT.WEBP,
 }
 
 // Sounds Files

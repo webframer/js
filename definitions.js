@@ -157,7 +157,12 @@ export function localise (DEFINITION) {
  * @Note: can be applied repeatedly to add new translations or languages after requests from API
  *
  * @example:
- *    const _ = localiseTranslation(TRANSLATIONS)
+ *    const _ = localiseTranslation({
+ *      SEARCH: { // use this for key `Search`.replace(/[^a-zA-Z\d]/g, '_').toUpperCase()
+ *        [l.ENGLISH]: `Search`,
+ *        [l.RUSSIAN]: `Поиск`,
+ *      }
+ *    })
  *    log(_.SEARCH)
  *    # if active language is English
  *    >>> 'Search'
