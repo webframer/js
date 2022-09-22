@@ -7,6 +7,56 @@ import { isInString } from './string.js'
  */
 
 /**
+ * Get the Divisor closest to the target for a Number
+ * @example:
+ *    closestDivisor(27, 5)
+ *    >>> 3
+ *    closestDivisor(16, 4)
+ *    >>> 4
+ *    closestDivisor(9, 4)
+ *    >>> 3
+ *
+ * @param {number} number
+ * @param {number} target
+ * @returns {number} divisor - the smallest divisor closest to the target number
+ */
+export function closestDivisor (number, target) {
+	const sqrt = Math.sqrt(number)
+	let closest = -1
+	let diff = Infinity
+
+	// Iterate till square root of N
+	for (let i = 1; i <= sqrt; i++) {
+		if (number % i === 0) {
+
+			// Check if divisors are equal
+			if (number / i === i) {
+				// Check if `i` is the closest
+				if (Math.abs(target - i) < diff) {
+					diff = Math.abs(target - i)
+					closest = i
+				}
+			} else {
+
+				// Check if `i` is the closest
+				if (Math.abs(target - i) < diff) {
+					diff = Math.abs(target - i)
+					closest = i
+				}
+
+				// Check if n / i is the closest
+				if (Math.abs(target - number / i) < diff) {
+					diff = Math.abs(target - number / i)
+					closest = number / i
+				}
+			}
+		}
+	}
+
+	return closest
+}
+
+/**
  * Checks if value is classified as a Number primitive or object.
  *
  * Note: To exclude Infinity, -Infinity, and NaN,

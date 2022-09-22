@@ -1,4 +1,5 @@
 import {
+  closestDivisor,
   createIncrementCounter,
   decimalPlaces,
   formatNumber,
@@ -12,7 +13,7 @@ import {
   roundUpTo,
   shortNumber,
   startEndFromNumberRanges,
-  toPercentage
+  toPercentage,
 } from '../number.js'
 
 const NUMBER_VALUES = [
@@ -44,7 +45,7 @@ const NUMERIC_VALUES = [
   '1',
   '1.1',
   '0.0',
-  '0'
+  '0',
 ]
 const NON_NUMERIC_VALUES = [
   ...NON_NUMBER_VALUES,
@@ -52,8 +53,16 @@ const NON_NUMERIC_VALUES = [
   -Infinity,
   NaN,
   '1a',
-  '0.0b'
+  '0.0b',
 ]
+
+test(`${closestDivisor.name}() returns the Divisor closest to the target number`, () => {
+  expect(closestDivisor(27, 5)).toEqual(3)
+  expect(closestDivisor(16, 5)).toEqual(4)
+  expect(closestDivisor(9, 3)).toEqual(3)
+  expect(closestDivisor(2, 3)).toEqual(2)
+  expect(closestDivisor(1, 1)).toEqual(1)
+})
 
 it(`${createIncrementCounter.name}() increments counts correctly`, () => {
   const addCount = createIncrementCounter(7)
