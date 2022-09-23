@@ -1,7 +1,8 @@
-import { Active, ENV } from './_envs.js'
+import { _WORK_DIR_, Active, ENV } from './_envs.js'
 import { isList } from './array.js'
+import { SIZE_MB_16 } from './constants.js'
 import { warn } from './log.js'
-import { fileFormatNormalized, fileNameWithoutExt, mimeTypeFromDataUrl } from './string.js'
+import { fileFormatNormalized, fileNameWithoutExt, isFileSrc, mimeTypeFromDataUrl } from './string.js'
 
 /**
  * FILE VARIABLES ==============================================================
@@ -10,6 +11,7 @@ import { fileFormatNormalized, fileNameWithoutExt, mimeTypeFromDataUrl } from '.
 
 export const CDN_URL = ENV.REACT_APP_CDN_URL || ''
 
+// File definitions
 export const FILE = {
   PATH_ICONS: `${CDN_URL}/static/icons/`,
   PATH_IMAGES: `${CDN_URL}/static/images/`,
@@ -65,16 +67,68 @@ FILE.FORMAT_BY_MIME_TYPE = {
   [FILE.MIME_TYPE.WEBP]: FILE.FORMAT.WEBP,
 }
 
-// Sounds Files
+// Image File Definitions
+export const IMAGE = {
+  MAX_RES: SIZE_MB_16, // total Image width*height resolution limit (16 MB is about 4K image)
+  EXTS: [FILE.EXT.JPG, FILE.EXT.JPEG, FILE.EXT.PNG, FILE.EXT.SVG, FILE.EXT.GIF, FILE.EXT.WEBP],
+  MIME_TYPES: [FILE.MIME_TYPE.JPG, FILE.MIME_TYPE.PNG, FILE.MIME_TYPE.SVG, FILE.MIME_TYPE.GIF, FILE.MIME_TYPE.WEBP],
+  SIZES: { // default sharp.resize() config for image uploads
+    // @see: https://sharp.pixelplumbing.com/api-resize
+    '': {res: SIZE_MB_16}, // max 4K resolution for the original file
+    medium: {width: 1200, height: 1200, fit: 'inside'},
+    thumb: {width: 150, height: 150, fit: 'cover'},
+  },
+}
+
+// File Upload Definitions
+export const UPLOAD = {
+  DIR: `/uploads`, // relative to site's root for frontend, and _WORK_DIR_ for backend
+  BY_ROUTE: {
+    [FILE.TYPE.JSON]: {fileTypes: '.json', maxSize: SIZE_MB_16},
+    [FILE.TYPE.IMAGE]: {fileTypes: '.' + IMAGE.EXTS.join(', '), maxSize: SIZE_MB_16},
+    [FILE.TYPE.SOUND]: {fileTypes: '.mp3', maxSize: SIZE_MB_16},
+    [FILE.TYPE.VIDEO]: {fileTypes: '.mp4', maxSize: SIZE_MB_16},
+  },
+}
+
+// Full Upload path
+// @important: for backend, ensure .env file variables are loaded first, usually in `_init.js`
+// Bucket name must be empty string so that backend can set bucket during runtime
+UPLOAD.PATH = `${ENV.CDN_BUCKET_NAME ? '' : (ENV.UPLOAD_PATH || _WORK_DIR_)}${UPLOAD.DIR}`
+
+// Sound File Definitions
 export const SOUND = {
-  // ALERT: soundFile('alert.mp3'),
-  // INCREASE: soundFile('increase.mp3'),
-  // DECREASE: soundFile('decrease.mp3'),
-  // PRESS: soundFile('press.mp3'),
-  // PROGRESS: soundFile('progress.mp3'),
-  TOUCH: soundFile('touch.mp3'),
-  // SWOOSH: soundFile('swoosh.mp3'),
-  // SLIDE: soundFile('slide.mp3'),
+  FILE: {
+    // ALERT: soundFile('alert.mp3'),
+    // INCREASE: soundFile('increase.mp3'),
+    // DECREASE: soundFile('decrease.mp3'),
+    // PRESS: soundFile('press.mp3'),
+    // PROGRESS: soundFile('progress.mp3'),
+    TOUCH: soundFile('touch.mp3'),
+    // SWOOSH: soundFile('swoosh.mp3'),
+    // SLIDE: soundFile('slide.mp3'),
+  },
+}
+
+/**
+ * Create a Lazy-Loaded Audio File object with safe .play() method that is muted when sound is off
+ *
+ * @param {String} name - sound file name
+ * @returns {Object<{play()}>} - object with .play() method
+ */
+function soundFile (name) {
+  let file
+  return {
+    play () {
+      // IE 11 does not support Audio()
+      if (!file) try {
+        file = new Audio(FILE.PATH_SOUNDS + name)
+      } catch (err) {
+        warn(err)
+      }
+      if (Active.SETTINGS.HAS_SOUND && file) file.play().catch()
+    },
+  }
 }
 
 /**
@@ -214,22 +268,84 @@ export function loadImage (src) {
 }
 
 /**
- * Create a Lazy-Loaded Audio File object with safe .play() method that is muted when sound is off
- *
- * @param {String} name - sound file name
- * @returns {Object<{play()}>} - object with .play() method
+ * Compute Preview Image src from dynamic `preview` attribute
+ * @param {String|Object} preview - type.UrlOrBase64OrPreview
+ * @param {String} [size] - one of thumb/medium/large/etc.
+ * @param {String} [prefix] - url prefix (defaults to CDN url, if set in .env variable REACT_APP_CDN_URL)
+ * @returns {String|Object|any} preview src ready for consumption by Components
  */
-function soundFile (name) {
-  let file
-  return {
-    play () {
-      // IE 11 does not support Audio()
-      if (!file) try {
-        file = new Audio(FILE.PATH_SOUNDS + name)
-      } catch (err) {
-        warn(err)
+export function previewSize (preview, size = 'thumb',
+  prefix = ((typeof preview === 'string' && (preview.indexOf('blob:') === 0 || preview.indexOf('http') === 0)) ? '' : CDN_URL)) {
+  // typeof DOMString/ObjectURL === 'string' and typeof new String() === 'object'
+  return preview && (prefix + (typeof preview === 'object' ? (preview[size] || preview) : preview))
+}
+
+/**
+ * Compute Image `preview` URL/pathname (can accept Base64 string) in different sizes for consumption by frontend:
+ *  - `preview` matches original `src`
+ *  - `preview.medium` matches medium size of `src`
+ *  - `preview.thumb` matches thumbnail size of `src`
+ *
+ * => pass in `null` as the second parameter to disable default fallback to IMAGE.SIZES.
+ *
+ * @example:
+ *    const preview = previewSizes(image)
+ *    preview == image.src >>> true
+ *    preview.medium >>> string
+ *    preview.thumb >>> string
+ *
+ * Scenarios:
+ *  1. Production file: use `src` suffixed with 'medium' for default size, else `src` as 'original'
+ *  2. Local dev file: user `src` as base64 data if it is of base64 type, else same as point 1.
+ * @param {Object} - FileInput with `src` and optional `sizes` attribute (ex. [{key: 'medium', val: 99}])
+ * @param {String[]|Null} [resKeys] - use predefined image size keys when `FileInput.sizes` not available
+ * @return {Object|Undefined} preview<medium, thumb...> - string object with sizes attached as props of `preview`
+ */
+export function previewSizes ({src, sizes}, resKeys = imgSizes) {
+  if (!src) return
+  if ((sizes || resKeys) && isFileSrc(src)) {
+    // noinspection JSPrimitiveTypeWrapperUsage
+    const preview = new String(src)
+    if (sizes) {
+      for (const size of sizes) {
+        const {key} = size
+        if (!key) continue
+        preview[key] = fileNameSized(src, key)
       }
-      if (Active.SETTINGS.HAS_SOUND && file) file.play().catch()
-    },
+    } else {
+      // fallback is needed to compute sizes for EntrySummary that likely doesn't query `sizes`,
+      resKeys.forEach(key => key && (preview[key] = fileNameSized(src, key)))
+    }
+    return preview
   }
+  return src
+}
+
+const imgSizes = Object.keys(IMAGE.SIZES)
+
+/**
+ * Standardizes how the absolute file path is computed
+ * @param {String} [filename] - required if absolute `path` not given (ex. photo.jpg)
+ * @param {String} [folder] - file directory path relative to `workDir`, if `dir` not given, must start with slash (ex. '/User')
+ * @param {String} [workDir] - absolute working directory path, defaults to UPLOAD.PATH
+ * @param {String} [dir] - absolute directory path, excluding file name (ex. `/root/uploads`), defaults to `workDir` + `folder`
+ * @param {String} [path] - required if `filename` not given, absolute directory path, including file name (ex. `/root/uploads/old_image.jpg`)
+ * @returns {Object} {dir, path, name}
+ *    - `path` -> absolute path including filename,
+ *    - `dir` -> without filename
+ *    - `name` -> filename
+ */
+export function resolvePath ({filename = '', folder = '', dir = '', path = '', workDir = UPLOAD.PATH}) {
+  if (!filename && !path) throw new Error(`${resolvePath.name}() requires either 'filename' or full absolute 'path'`)
+  if (!path) {
+    if (!dir) dir = `${workDir}${folder}`
+    const _name = fileNameWithoutExt(filename)
+    const slash = _name && '/' // turn directory into file when `filename` only has extension (ex. '.jpg')
+    path = `${dir}${slash}${filename}`
+    dir = _name ? dir : path.substring(0, path.lastIndexOf('/'))
+  } else {
+    dir = path.substring(0, path.lastIndexOf('/'))
+  }
+  const name = path.substring(path.lastIndexOf('/') + 1)
+  return {dir, path, name}
 }
