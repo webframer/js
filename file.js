@@ -160,7 +160,7 @@ function soundFile (name) {
  * @param {File|{name?, type?}} file - File object or object with file name and MIME type to check
  * @param {string} [accept] - native HTML comma-separated list of one or more file types allowed
  * @param {string[]} [accepts] - a list of precomputed `accept` values to make it faster
- * @returns {boolean} true - if file matches `accept` list, or when accept is not defined
+ * @returns {boolean|string|void} true - when accept not defined, else matched MIME type or extension
  */
 export function canAccept ({name, type}, accept, accepts = canAcceptCache[accept]) {
   // To avoid bugs with missing definition for all possible file extensions,
@@ -170,7 +170,7 @@ export function canAccept ({name, type}, accept, accepts = canAcceptCache[accept
   if (!accepts) return true
   const ext = name && `.${name.split('.').pop().toLowerCase().trim()}`
   if (!type && ext) type = FILE.MIME_TYPE_BY_EXT[ext]
-  return !!accepts.find(t => ext === t || (type && type.indexOf(t) > -1))
+  return accepts.find(t => ext === t || (type && type.indexOf(t) > -1))
 }
 
 const canAcceptCache = {}
