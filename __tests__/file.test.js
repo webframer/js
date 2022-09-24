@@ -1,4 +1,4 @@
-import { fileName, resolvePath } from '../file.js'
+import { canAccept, FILE, fileName, resolvePath } from '../file.js'
 import { interpolateString } from '../string.js'
 
 const id = 'test'
@@ -12,6 +12,37 @@ const filenameWithoutExt = `Id`
 const folder = `${subFolder}/${filenameWithoutExt}`
 const filePath = {...file, name, folder}
 const workDir = '' // for easier testing
+
+describe(`${canAccept.name}()`, () => {
+  it(`matches file.type with accept MIME types`, () => {
+    expect(canAccept({type: 'image/svg+xml'}, [FILE.MIME_TYPE.SVG].join())).toBe(true)
+    expect(canAccept({type: 'image/png'}, [FILE.MIME_TYPE.PNG, FILE.EXT.JPG].join())).toBe(true)
+    expect(canAccept({type: 'image/jpeg'}, [FILE.MIME_TYPE.PNG].join())).toBe(false)
+  })
+  it(`matches file.name with accept MIME types`, () => {
+    expect(canAccept({name: 'file.svg'}, [FILE.MIME_TYPE.SVG].join())).toBe(true)
+    expect(canAccept({name: 'file.png'}, [FILE.MIME_TYPE.PNG, FILE.MIME_TYPE.JPG].join())).toBe(true)
+    expect(canAccept({name: 'file.gif'}, [FILE.MIME_TYPE.PNG, FILE.EXT.JPG].join())).toBe(false)
+    expect(canAccept({name: 'file.jpg'}, [FILE.MIME_TYPE.JPG].join())).toBe(true)
+    expect(canAccept({name: 'file.jpeg'}, [FILE.MIME_TYPE.JPG].join())).toBe(true)
+  })
+  it(`matches file.type with accept wildcard MIME types`, () => {
+    expect(canAccept({type: 'image/svg+xml'}, ['image/*'].join())).toBe(true)
+    expect(canAccept({type: 'image/png'}, ['image/*', 'video/*'].join())).toBe(true)
+    expect(canAccept({type: 'image/jpeg'}, ['video/*'].join())).toBe(false)
+  })
+  it(`matches file.name with accept wildcard MIME types`, () => {
+    expect(canAccept({name: 'file.svg'}, ['image/*'].join())).toBe(true)
+    expect(canAccept({name: 'file.png'}, ['image/*', 'video/*'].join())).toBe(true)
+    expect(canAccept({name: 'file.jpg'}, ['video/*'].join())).toBe(false)
+  })
+  it(`matches file.name with accept extensions`, () => {
+    expect(canAccept({name: 'file.svg'}, [FILE.EXT.SVG].join())).toBe(true)
+    expect(canAccept({name: 'file.png'}, [FILE.EXT.PNG, FILE.EXT.JPG].join())).toBe(true)
+    expect(canAccept({name: 'file.jpg'}, [FILE.EXT.PNG].join())).toBe(false)
+    expect(canAccept({name: 'file.jpg'}, [FILE.EXT.JPEG, FILE.EXT.JPG].join())).toBe(true)
+  })
+})
 
 describe(`${fileName.name}()`, () => {
   it(`returns '{id}/{kind}_{i}.{ext}' format`, () => {

@@ -50,10 +50,13 @@ export const FILE = {
     VIDEO: 'video',
   },
 }
+
+// File Extensions
 FILE.EXT = {}
 for (const key in FILE.FORMAT) {
   FILE.EXT[key] = `.${FILE.FORMAT[key]}`
 }
+
 FILE.FORMAT_BY_MIME_TYPE = {
   [FILE.MIME_TYPE.BIN]: FILE.FORMAT.BIN,
   [FILE.MIME_TYPE.CSV]: FILE.FORMAT.CSV,
@@ -65,6 +68,21 @@ FILE.FORMAT_BY_MIME_TYPE = {
   [FILE.MIME_TYPE.PNG]: FILE.FORMAT.PNG,
   [FILE.MIME_TYPE.SVG]: FILE.FORMAT.SVG,
   [FILE.MIME_TYPE.WEBP]: FILE.FORMAT.WEBP,
+}
+
+// File MIME Type by File Extension
+FILE.MIME_TYPE_BY_EXT = {
+  [FILE.EXT.BIN]: FILE.MIME_TYPE.BIN,
+  [FILE.EXT.CSV]: FILE.MIME_TYPE.CSV,
+  [FILE.EXT.GIF]: FILE.MIME_TYPE.GIF,
+  [FILE.EXT.JSON]: FILE.MIME_TYPE.JSON,
+  [FILE.EXT.JPG]: FILE.MIME_TYPE.JPG,
+  [FILE.EXT.JPEG]: FILE.MIME_TYPE.JPG,
+  [FILE.EXT.MP3]: FILE.MIME_TYPE.MP3,
+  [FILE.EXT.MP4]: FILE.MIME_TYPE.MP4,
+  [FILE.EXT.PNG]: FILE.MIME_TYPE.PNG,
+  [FILE.EXT.SVG]: FILE.MIME_TYPE.SVG,
+  [FILE.EXT.WEBP]: FILE.MIME_TYPE.WEBP,
 }
 
 // Image File Definitions
@@ -135,6 +153,27 @@ function soundFile (name) {
  * HELPER FUNCTIONS ------------------------------------------------------------
  * -----------------------------------------------------------------------------
  */
+
+/**
+ * Check if given File-like object has matching MIME type or file extension as defined by `accept`.
+ * @see: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept
+ * @param {File|{name?, type?}} file - File object or object with file name and MIME type to check
+ * @param {string} [accept] - native HTML comma-separated list of one or more file types allowed
+ * @param {string[]} [accepts] - a list of precomputed `accept` values to make it faster
+ * @returns {boolean} true - if file matches `accept` list, or when accept is not defined
+ */
+export function canAccept ({name, type}, accept, accepts = canAcceptCache[accept]) {
+  // To avoid bugs with missing definition for all possible file extensions,
+  // derive file extension from file.name in addition to MIME file.type check
+  if (!accepts) accepts = canAcceptCache[accept] = accept && accept.toLowerCase().split(',')
+    .map(type => type.trim().replace(/\*$/, '')) // remove '*' wildcard for partial match
+  if (!accepts) return true
+  const ext = name && `.${name.split('.').pop().toLowerCase().trim()}`
+  if (!type && ext) type = FILE.MIME_TYPE_BY_EXT[ext]
+  return !!accepts.find(t => ext === t || (type && type.indexOf(t) > -1))
+}
+
+const canAcceptCache = {}
 
 /**
  * Create JS File Object from given URL
@@ -297,7 +336,7 @@ export function previewSize (preview, size = 'thumb',
  * Scenarios:
  *  1. Production file: use `src` suffixed with 'medium' for default size, else `src` as 'original'
  *  2. Local dev file: user `src` as base64 data if it is of base64 type, else same as point 1.
- * @param {Object} - FileInput with `src` and optional `sizes` attribute (ex. [{key: 'medium', val: 99}])
+ * @param {Object} - FileInput with `src` and optional `sizes` attribute (ex. sizes: [{key: 'medium', val: 99}])
  * @param {String[]|Null} [resKeys] - use predefined image size keys when `FileInput.sizes` not available
  * @return {Object|Undefined} preview<medium, thumb...> - string object with sizes attached as props of `preview`
  */
