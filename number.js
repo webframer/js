@@ -300,8 +300,61 @@ formatSI.PREFIXES = {
  * @param {Number} base
  * @returns {number} log
  */
-export function mathLog(exponent, base) {
+export function mathLog (exponent, base) {
 	return Math.log(exponent) / Math.log(base)
+}
+
+/**
+ * Get Numeric Characters Pattern based on User's Locale Settings
+ * @example:
+ *    numericPattern().test('+1')
+ *    >>> true
+ *    numericPattern('en-US').test('+1,000')
+ *    >>> false
+ *    numericPattern('en-US').test('-1.000')
+ *    >>> true
+ *    numericPattern('fr-FR').test('.')
+ *    >>> false
+ *    numericPattern('fr-FR').test(',')
+ *    >>> true
+ *
+ * @param {string|string[]} [locales] - string with a BCP 47 language tag, or an array of strings
+ * @returns {RegExp} regex - that can be used to test for numeric input
+ */
+export function numericPattern (locales = navigator.languages) {
+	const {value: d} = new Intl.NumberFormat(locales).formatToParts(1.1).find(p => p.type === 'decimal')
+	return new RegExp(`^[-+0-9eE${d}]+$`, 'g') // tested with d = ' ' (space character)
+}
+
+/**
+ * Parses value of input type="number" string into a Number type with Locale aware formatting
+ * @see: https://stackoverflow.com/a/45309230
+ * @example:
+ *    parseNumber('1.123')
+ *    >>> 1.123
+ *    parseNumber('1.123', 'fr-FR')
+ *    >>> 1123
+ *    parseNumber('1,123', 'en-US')
+ *    >>> 1123
+ *    parseNumber('1,123', 'fr-FR')
+ *    >>> 1.123
+ *
+ * Note:
+ *  - input event.target.valueAsNumber does not work consistently in Safari and can return NaN
+ *  - This function instead relies on Regex pattern to strip out non-valid number characters,
+ *    based on current User's locale settings,
+ *    then performs conversion to normalized number string that gets converted to Number.
+ *
+ * @param {string|number|null|void} value - from input event.target.value
+ * @param {string|string[]} [locales] - string with a BCP 47 language tag, or an array of strings
+ * @returns {number|null} number - converted from value string, or null if not a number
+ */
+export function parseNumber (value, locales = navigator.languages) {
+	if (value == null || value === '') return null
+	if (isNumber(value)) return value
+	const {value: d} = new Intl.NumberFormat(locales).formatToParts(1.1).find(p => p.type === 'decimal')
+	value = parseFloat(value.replace(new RegExp(`[^-+0-9eE${d}]`, 'g'), '').replace(d, '.'))
+	return Number.isNaN(value) ? null : value
 }
 
 /**
@@ -310,7 +363,7 @@ export function mathLog(exponent, base) {
  * @param {number|string} number - to format
  * @return {string} - ordered number (i.e. 1st, 2nd, 3rd, 4th...)
  */
-export function toOrdinal(number) {
+export function toOrdinal (number) {
 	const v = number % 100
 	return number + (toOrdinal.list[(v - 20) % 10] || toOrdinal.list[v] || toOrdinal.list[0])
 }
@@ -446,37 +499,6 @@ export function roundDownTo (number, multiple = 1) {
  */
 export function roundUpTo (number, multiple = 1) {
 	return +(Math.ceil(+(number / multiple).toPrecision(15)) * multiple).toPrecision(15)
-}
-
-/**
- * Parses value of input type="number" string into a Number type with Locale aware formatting
- * @see: https://stackoverflow.com/a/45309230
- * @example:
- *    parseNumber('1.123')
- *    >>> 1.123
- *    parseNumber('1.123', 'fr-FR')
- *    >>> 1123
- *    parseNumber('1,123', 'en-US')
- *    >>> 1123
- *    parseNumber('1,123', 'fr-FR')
- *    >>> 1.123
- *
- * Note:
- *  - input event.target.valueAsNumber does not work consistently in Safari and can return NaN
- *  - This function instead relies on Regex pattern to strip out non-valid number characters,
- *    based on current User's locale settings,
- *    then performs conversion to normalized number string that gets converted to Number.
- *
- * @param {string|number|null|void} value - from input event.target.value
- * @param {string|string[]} [locales] - string with a BCP 47 language tag, or an array of strings
- * @returns {number|null} number - converted from value string, or null if not a number
- */
-export function parseNumber (value, locales = navigator.languages) {
-	if (value == null || value === '') return null
-	if (isNumber(value)) return value
-	const {value: d} = new Intl.NumberFormat(locales).formatToParts(1.1).find(p => p.type === 'decimal')
-	value = parseFloat(value.replace(new RegExp(`[^-+0-9eE${d}]`, 'g'), '').replace(d, '.'))
-	return Number.isNaN(value) ? null : value
 }
 
 /**
