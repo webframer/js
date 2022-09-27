@@ -1,3 +1,4 @@
+import { isNumber } from 'lodash-es'
 import { hasListValue } from './array.js'
 import { isInString } from './string.js'
 
@@ -448,6 +449,37 @@ export function roundUpTo (number, multiple = 1) {
 }
 
 /**
+ * Parses value of input type="number" string into a Number type with Locale aware formatting
+ * @see: https://stackoverflow.com/a/45309230
+ * @example:
+ *    parseNumber('1.123')
+ *    >>> 1.123
+ *    parseNumber('1.123', 'fr-FR')
+ *    >>> 1123
+ *    parseNumber('1,123', 'en-US')
+ *    >>> 1123
+ *    parseNumber('1,123', 'fr-FR')
+ *    >>> 1.123
+ *
+ * Note:
+ *  - input event.target.valueAsNumber does not work consistently in Safari and can return NaN
+ *  - This function instead relies on Regex pattern to strip out non-valid number characters,
+ *    based on current User's locale settings,
+ *    then performs conversion to normalized number string that gets converted to Number.
+ *
+ * @param {string|number|null|void} value - from input event.target.value
+ * @param {string|string[]} [locales] - string with a BCP 47 language tag, or an array of strings
+ * @returns {number|null} number - converted from value string, or null if not a number
+ */
+export function parseNumber (value, locales = navigator.languages) {
+	if (value == null || value === '') return null
+	if (isNumber(value)) return value
+	const {value: d} = new Intl.NumberFormat(locales).formatToParts(1.1).find(p => p.type === 'decimal')
+	value = parseFloat(value.replace(new RegExp(`[^-+0-9eE${d}]`, 'g'), '').replace(d, '.'))
+	return Number.isNaN(value) ? null : value
+}
+
+/**
  * Get decimal places of given Numeric value
  *
  * @param {number|string} value - number to get precision for
@@ -459,9 +491,9 @@ export function decimalPlaces (value) {
 	return Math.max(
 		// Number of digits right of decimal point.
 		(match[1] ? match[1].length : 0) -
-			// Adjust for scientific notation.
-			(match[2] ? +match[2] : 0),
-		0
+		// Adjust for scientific notation.
+		(match[2] ? +match[2] : 0),
+		0,
 	)
 }
 
