@@ -22,6 +22,8 @@ const upperThresholdAlphaNum = 1 - 26 / 62 // minimum Math.random() result for u
  * =============================================================================
  */
 
+export { isString } from 'lodash-es'
+
 /**
  * Append an incrementing Number to given String to make it unique
  * @param {string} string
@@ -217,15 +219,6 @@ export function isPhoneNumber(string) {
 }
 
 export const isPhoneNumberPattern = /^\+[0-9()\-\s]+$/
-
-/**
- * Check if given value is a String
- * @param {*} value - to check
- * @returns {Boolean} true - if it's a string
- */
-export function isString(value) {
-	return typeof value === 'string'
-}
 
 /**
  * Interpolate a Template String with given Variables

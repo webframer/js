@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash-es'
+import { isInteger, isNumber } from 'lodash-es'
 import { hasListValue } from './array.js'
 import { isInString } from './string.js'
 
@@ -76,7 +76,17 @@ export function closestDivisor (number, target) {
  * @param {*} val - The value to check.
  * @returns {boolean} - Returns true if value is a number, else false.
  */
-export { isNumber } from 'lodash-es'
+export { isNumber, isInteger } from 'lodash-es'
+
+/**
+ * Check if value is between 0 and 1 (inclusive) and is classified as a Number primitive or object
+ * (aka. [Unit interval](https://en.wikipedia.org/wiki/Unit_interval))
+ * @param {any} v
+ * @returns {boolean} true - if it is
+ */
+export function isFraction (v) {
+	return 0 <= v && v <= 1 && isNumber(v)
+}
 
 /**
  * Returns true if the given variable is a number,
@@ -106,11 +116,20 @@ export function isContinuousNumberRanges(arrayOfNumberRanges) {
 	if (!hasListValue(arrayOfNumberRanges)) return false
 	let result = true
 	let lastTo = -Infinity
-	arrayOfNumberRanges.forEach(({ from, to }) => {
+	arrayOfNumberRanges.forEach(({from, to}) => {
 		if (from <= lastTo || from >= to) result = false
 		if (to) lastTo = to
 	})
 	return result
+}
+
+/**
+ * Check if value is an Unsigned Integer
+ * @param {any} v
+ * @returns {boolean} true - if it is
+ */
+export function isUnsignedInteger (v) {
+	return 0 <= v && isInteger(v)
 }
 
 /**
@@ -119,11 +138,11 @@ export function isContinuousNumberRanges(arrayOfNumberRanges) {
  * @param {Array<{from: Number, to: Number}>} arrayOfNumberRanges - to check for values
  * @returns {{start: Number|Undefined, end: Number|Undefined}}
  */
-export function startEndFromNumberRanges(arrayOfNumberRanges) {
-	const start = (arrayOfNumberRanges.find(({ from }) => from != null) || {}).from
-	let end = ([...arrayOfNumberRanges].reverse().find(({ to }) => to != null) || {}).to
+export function startEndFromNumberRanges (arrayOfNumberRanges) {
+	const start = (arrayOfNumberRanges.find(({from}) => from != null) || {}).from
+	let end = ([...arrayOfNumberRanges].reverse().find(({to}) => to != null) || {}).to
 	if (end <= start) end = undefined
-	return { start, end }
+	return {start, end}
 }
 
 /**
