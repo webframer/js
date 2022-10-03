@@ -575,7 +575,7 @@ export {
    * to determine value equality
    *
    * @uses lodash
-   * @see {@link https://lodash.com/docs/4.17.4#unionWith} for further information.
+   * @see {@link https://lodash.com/docs/4.17.21#unionWith} for further information.
    *
    * @param {...Array} arrays - The arrays to inspect
    * @param {Function} comparator - The comparator invoked per element

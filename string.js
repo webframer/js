@@ -776,7 +776,7 @@ export {
    * A wrapper around the lodash's capitalize function
    *
    * @uses lodash
-   * @see {@link https://lodash.com/docs/4.17.4#capitalize} for further information.
+   * @see {@link https://lodash.com/docs/4.17.21#capitalize} for further information.
    *
    * @param {string} string - the string to capitalize
    * @returns {string} - the capitalized string
