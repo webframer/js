@@ -78,6 +78,12 @@ export function isJSON (data) {
  */
 export function toText (value) {
   if (value == null) return String(value)
+  switch (typeof value) {
+    case 'symbol':
+    case 'number':
+      return String(value)
+  }
+
   const string = []
 
   /* Array */
@@ -98,6 +104,8 @@ export function toText (value) {
 
   /* Function */
   if (value.constructor === Function) {
+    // note: fat arrow function will always convert to `function() {}` in browser,
+    // but in the server it converts as fat arrow function `()=>{}`
     return value.toString()
   }
 
