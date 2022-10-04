@@ -84,7 +84,7 @@ export { isNumber, isInteger } from 'lodash-es'
  * @param {any} v
  * @returns {boolean} true - if it is
  */
-export function isFraction (v) {
+export function isUnitInterval (v) {
 	return 0 <= v && v <= 1 && isNumber(v)
 }
 

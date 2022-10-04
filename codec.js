@@ -84,7 +84,7 @@ export function toText (value) {
       return String(value)
   }
 
-  const string = []
+  let string = []
 
   /* Array */
   if (value.constructor === Array) {
@@ -104,9 +104,12 @@ export function toText (value) {
 
   /* Function */
   if (value.constructor === Function) {
-    // note: fat arrow function will always convert to `function() {}` in browser,
+    // note: fat arrow function will always convert to `function () {}` in browser,
     // but in the server it converts as fat arrow function `()=>{}`
-    return value.toString()
+    string = value.toString()
+    // In server, it generates `function() {}` without extra space, convert to match standard
+    if (string === 'function() {}') string = 'function () {}'
+    return string
   }
 
   /* Other Values */
