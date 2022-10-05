@@ -5,6 +5,7 @@ import {
   get,
   isEmpty,
   isEqual,
+  isMap,
   isObjectLike,
   isPlainObject,
   matches,
@@ -676,6 +677,8 @@ export {
    * @return {boolean} - Returns true if value is empty, else false
    */
     isEmpty,
+
+  isMap,
 
   /**
    * Creates a function that returns the value at path of a given object
