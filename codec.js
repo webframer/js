@@ -77,7 +77,7 @@ export function isJSON (data) {
  * @return {string}
  */
 export function toText (value) {
-  if (value == null) return String(value)
+  if (value == null || value instanceof Error) return String(value)
   switch (typeof value) {
     case 'symbol':
     case 'number':
