@@ -40,6 +40,29 @@ export function cloneFast (obj) {
 }
 
 /**
+ * Extract Object keys starting with `#` (or `prefix` character) into a new object by mutation
+ * @example:
+ *    const props = {'#view': 'Row', _id: 'Id'}
+ *    const privateObj = extractPrivateProps(props)
+ *    >>> privateObj == {'view': 'Row'}
+ *    >>> props == {_id: 'Id'}
+ *
+ * @param {object} obj - object with mixed of private and standard properties
+ * @param {string} [prefix] - private property prefix
+ * @returns {object} privateProps - with `#` (or `prefix` character) removed from keys
+ */
+export function extractPrivateProps (obj, prefix = '#') {
+  const result = {}
+  for (const key in obj) {
+    if (key.indexOf(prefix) === 0) {
+      result[key.replace(prefix, '')] = obj[key]
+      delete obj[key]
+    }
+  }
+  return result
+}
+
+/**
  * Delete Nested Property of an Object by given Key Path
  * @param {Object} obj - to delete property from
  * @param {String|*} path - key path to nested property for deletion
