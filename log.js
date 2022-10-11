@@ -140,7 +140,7 @@ export function logBenchmark ({name, type = '', duration, loop = null, result = 
     console.log(
       `%c${task} %c${took} %c${ms} %c${iteration} %c${time}`,
       'color: Green', 'color: Teal', 'color: Orange', 'color: Teal', 'color: Orange', 'each',
-      ...output
+      ...output,
     )
   }
 }
@@ -169,26 +169,25 @@ export function logMapping (NAME, value) {
  * @param {Object} constructor - class
  */
 export function logRender (constructor) {
-  const original = constructor.prototype.render
+  if (!__DEV__) return constructor
 
+  const original = constructor.prototype.render
   constructor.prototype.render = function () {
-    if (__DEV__) {
-      const name = constructor.name
-      const start = now()
-      const result = original.apply(this, arguments)
-      const duration = now() - start
-      const colors = ['color: Teal']
-      let time = `${formatNumber(duration, {decimals: 3})} ms`
-      // Render is considered slow if it reaches near one frame in 60 FPS
-      if (__CLIENT__ && duration >= 15) {
-        time = '%c' + time + '%c'
-        colors.push('color: Red', 'color: Teal')
-      }
-      log(`♦♦♦♦♦♦♦ RENDER ${name} [${time}] ♦♦♦♦♦♦♦`, ...colors)
-      return result
+    const name = constructor.name
+    const start = now()
+    const result = original.apply(this, arguments)
+    const duration = now() - start
+    const colors = ['color: Teal']
+    let time = `${formatNumber(duration, {decimals: 3})} ms`
+    // Render is considered slow if it reaches near one frame in 60 FPS
+    if (__CLIENT__ && duration >= 15) {
+      time = '%c' + time + '%c'
+      colors.push('color: Red', 'color: Teal')
     }
-    return original.apply(this, arguments)
+    log(`♦♦♦♦♦♦♦ RENDER ${name} [${time}] ♦♦♦♦♦♦♦`, ...colors)
+    return result
   }
+  return constructor
 }
 
 /**
