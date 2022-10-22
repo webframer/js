@@ -196,7 +196,7 @@ export const testMock = {
 
 /**
  * A wrapper around the lodash's throttle function.
- * @see {@link https://lodash.com/docs/4.17.2#throttle) for further information.
+ * @see https://lodash.com/docs/4.17.2#throttle for further information.
  * @param {Function} func - to call
  * @param {Number} [wait] - milliseconds to delay
  * @param {Object} [options]

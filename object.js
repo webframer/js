@@ -148,9 +148,10 @@ export function merge (...objects) {
  *
  * @param {Object|Undefined|Null} original - to compare against
  * @param {Object|Undefined|Null} changed - object to keep changes
+ * @param {Object} [options] - ignoreDeleted?: boolean - whether to disable `null` for deleted props
  * @returns {Object|Undefined|Null} changedOnly - new object with only changed values kept, or undefined if no changes
  */
-export function objChanges (original, changed) {
+export function objChanges (original, changed, {ignoreDeleted} = {}) {
   // clone so we can delete keys while iterating
   original = {...original}
   changed = {...changed}
@@ -164,8 +165,10 @@ export function objChanges (original, changed) {
     }
     delete original[field]
   }
-  for (const deleted in original) {
-    changed[deleted] = null
+  if (!ignoreDeleted) {
+    for (const deleted in original) {
+      changed[deleted] = null
+    }
   }
   return isEmpty(changed) ? undefined : changed
 }
