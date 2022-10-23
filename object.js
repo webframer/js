@@ -705,6 +705,7 @@ export {
     isEmpty,
 
   isMap,
+  isObjectLike,
 
   /**
    * Creates a function that returns the value at path of a given object
