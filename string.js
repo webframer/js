@@ -1,8 +1,14 @@
 import { capitalize, get, startCase } from 'lodash-es'
 import pluralizer from 'pluralize'
 
+/**
+ * @example:
+ *    // Sanitize the string to contain only alphanumeric characters
+ *    str.replace(alphaNumPattern, '')
+ */
 export const alphaNumPattern = /[^a-zA-Z0-9]/g
 export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
+export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
 export const escapeRegExpPattern = /[.*+?^${}()|[\]\\]/g
 export const fileNameWithoutExtPattern = /\.[^.$]+$/
 export const hyphensPattern = /-+/g
