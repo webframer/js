@@ -15,7 +15,7 @@ import {
   unset,
 } from 'lodash-es'
 import qs from 'querystring'
-import { isCollection } from './array.js'
+import { isCollection, isList, sortDescending } from './array.js'
 
 /**
  * OBJECT FUNCTIONS ============================================================
@@ -202,14 +202,14 @@ export function reset (collection, payload) {
 }
 
 /**
- * Update Object with nested payload, keeping other attributes in the Object intact
+ * Update Collection with nested props (Array/Object), keeping other attributes in the Collection.
  *
  * @example:
- update({user: {name: 'Chris'}}, {user: {sign: 'scorpion'}})
- >>> {user: {name: 'Chris', sign: 'scorpion'}}
+ *    update({user: {name: 'Chris'}}, {user: {sign: 'scorpion'}})
+ *    >>> {user: {name: 'Chris', sign: 'scorpion'}}
  *
  * @param {Object|Array} state - collection to be updated
- * @param {Object|Array} payload - the nested Object to update with
+ * @param {Object|Array} payload - the nested props to update with, can be empty (ie. no updates)
  * @param {Boolean} [shouldCloneDeep] - whether to return new Object instead of mutating it
  * @param {Boolean} [deleteNull] - whether to remove `null` props instead of updating them
  * @return {Object|Array} - mutated/cloned Object with nested update
@@ -217,16 +217,33 @@ export function reset (collection, payload) {
 export function update (state, payload, shouldCloneDeep = false, deleteNull = false) {
   if (shouldCloneDeep) state = cloneDeep(state)
 
+  // Array with empty elements do not have `key` defined, so this will skip it
+  const indicesToDelete = []
   for (const key in payload) {
     const value = payload[key]
     if (value === null && deleteNull) {
-      delete state[key]
-    } else if (isObject(value)) {
-      state[key] = state[key] ? update(state[key], value) : value
-    } else {
+      if (isList(state)) indicesToDelete.unshift(+key) // array deletion must be reversed
+      else delete state[key]
+    } else if (
+      isCollection(value) &&
+      isCollection(state[key]) &&
+      value.Constructor === state[key].Constructor &&
+      !isEmpty(value) // simply override if nested object or array is empty
+    ) { // must be the same data type to update recursively,
+      state[key] = update(state[key], value, false, deleteNull)
+    } else { // else override
       state[key] = value
     }
   }
+
+  // Remove elements from array, starting from the end
+  if (indicesToDelete.length) { // sort to ensure correct order, because payload can be an object
+    indicesToDelete.sort(sortDescending) // default native sort does not work with numbers
+    for (const index of indicesToDelete) if (!Number.isNaN(index)) state.splice(index, 1)
+  }
+
+  // if the top level `payload` is empty, return the original state without modification,
+  // because this function is for updating nested props, not resetting, or Object.assign.
   return state
 }
 

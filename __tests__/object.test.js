@@ -27,7 +27,7 @@ const NON_OBJECT_VALUES = [
   undefined,
   'foo',
   '',
-  []
+  [],
 ]
 
 // Object to Find
@@ -35,11 +35,11 @@ const geoJSON = {
   'type': 'Feature',
   'geometry': {
     'type': 'Polygon',
-    'coordinates': [[[1, -1], [2, -2], [3, -3]]]
+    'coordinates': [[[1, -1], [2, -2], [3, -3]]],
   },
   'properties': {
-    'id': 7
-  }
+    'id': 7,
+  },
 }
 
 // Object Collection to Search from
@@ -51,11 +51,11 @@ const obj = {
       geoJSON: {
         'type': 'FeatureCollection',
         'features': [
-          geoJSON
-        ]
-      }
-    }
-  ]
+          geoJSON,
+        ],
+      },
+    },
+  ],
 }
 
 test(`${classInstanceMethodNames.name}() returns instance methods (async/getter/setter), but not static methods or props`, () => {
@@ -155,34 +155,34 @@ describe(`${findAllObjsByKeys.name}()`, () => {
   const testObj = {
     obj1: {
       'type': 'Feature',
-      'coordinates': [123, 1]
+      'coordinates': [123, 1],
     },
     obj2: {
       'type': 'Feature',
       'coordinates': [123, 2],
       obj22: {
         'type': 'Feature',
-        'coordinates': [123, 2]
-      }
+        'coordinates': [123, 2],
+      },
     },
     obj3: {
       'type': 'Feature',
-      'coordinates': [123, 3]
+      'coordinates': [123, 3],
     },
     nestedObj: {
       obj1: {
         'type': 'Feature',
-        'coordinates': [123, 4]
+        'coordinates': [123, 4],
       },
       obj2: {
         'type': 'Feature',
-        'coordinates': [123, 5]
+        'coordinates': [123, 5],
       },
       obj3: {
         'type': 'Feature',
-        'coordinates': [123, 6]
-      }
-    }
+        'coordinates': [123, 6],
+      },
+    },
   }
 
   it('finds all applicable objects, including nested objects.', () => {
@@ -191,7 +191,7 @@ describe(`${findAllObjsByKeys.name}()`, () => {
       testObj.obj1,
       testObj.obj2, testObj.obj2.obj22,
       testObj.obj3,
-      testObj.nestedObj.obj1, testObj.nestedObj.obj2, testObj.nestedObj.obj3
+      testObj.nestedObj.obj1, testObj.nestedObj.obj2, testObj.nestedObj.obj3,
     ]
     expect(findAllObjsByKeys(testObj, whereOptions)).toEqual(expectedResult)
   })
@@ -230,6 +230,56 @@ describe(`${objChanges.name}()`, () => {
   })
 })
 
+describe(`${update.name}()`, () => {
+  it(`adds nested Object recursively by mutation`, () => {
+    const state = {user: {name: 'Chris', personality: {level: 10}}}
+    const payload = {user: {name: undefined, sign: 'scorpion', personality: {type: 'Cool', element: 'Ether'}}}
+    const expected = {
+      user: {
+        name: undefined,
+        sign: 'scorpion',
+        personality: {level: 10, type: 'Cool', element: 'Ether'},
+      },
+    }
+    expect(update(state, payload)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+  it(`adds new element to the end of Array by mutation`, () => {
+    const state = {list: [1, 2, 3, 4]}
+    const list = []
+    list[state.list.length] = 'new'
+    const payload = {list}
+    const expected = {list: [1, 2, 3, 4, 'new']}
+    expect(update(state, payload)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+  it(`updates the element in the middle of Array recursively by mutation`, () => {
+    const state = {list: [[1], 2, 3, 4]}
+    const list = []
+    list[0] = [2, {}]
+    list[state.list.length] = 'new'
+    const payload = {list}
+    const expected = {list: [[2, {}], 2, 3, 4, 'new']}
+    expect(update(state, payload)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+  it(`swaps existing array element in Array with new object element`, () => {
+    const state = {list: [[1], 2, 3, 4]}
+    const payload = {list: [{}, {key: 'value'}]}
+    const expected = {list: [{}, {key: 'value'}, 3, 4]}
+    expect(update(state, payload)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+  it(`deletes existing element in Array and shifts other elements around`, () => {
+    const state = {list: [[1], 2, 3, 4]}
+    const payload = {list: [null]}
+    payload.list[2] = null
+    const expected = {list: [2, 4]}
+    expect(update(state, payload, false, true)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+})
+
 test(`${findParent.name}() returns the first direct parent collection for given value`, () => {
   let value = {}
   let parent = {value}
@@ -248,14 +298,6 @@ it(`${reset.name}() sets nested Object recursively by mutation`, () => {
   expect(state).toEqual(payload)
 })
 
-it(`${update.name}() adds nested Object recursively by mutation`, () => {
-  const state = {user: {name: 'Chris', personality: {level: 10}}}
-  const payload = {user: {name: undefined, sign: 'scorpion', personality: {type: 'Cool', element: 'Ether'}}}
-  const expected = {user: {name: undefined, sign: 'scorpion', personality: {level: 10, type: 'Cool', element: 'Ether'}}}
-  expect(update(state, payload)).toEqual(expected)
-  expect(state).toEqual(expected)
-})
-
 it(`${removeNilValues.name}() deletes all Null/Undefined value keys from Collection (Falsey values from List)`, () => {
   const object = {
     id: 7,
@@ -264,22 +306,22 @@ it(`${removeNilValues.name}() deletes all Null/Undefined value keys from Collect
     address: {
       street: null,
       city: undefined,
-      planet: 'Earth'
-    }
+      planet: 'Earth',
+    },
   }
   const expectedDefault = {
     id: 7,
     address: {
       street: null,
       city: undefined,
-      planet: 'Earth'
-    }
+      planet: 'Earth',
+    },
   }
   const expectedRecursive = {
     id: 7,
     address: {
-      planet: 'Earth'
-    }
+      planet: 'Earth',
+    },
   }
   const list = [null, undefined, false, NaN, 0, '', 7, {person: [null, 'God']}]
   const expectedList = [7, {person: ['God']}]
@@ -295,23 +337,23 @@ it(`${removeEmptyValues.name}() deletes all Empty string value keys from Collect
     address: {
       street: '',
       city: undefined,
-      planet: 'Earth'
-    }
+      planet: 'Earth',
+    },
   }
   const expectedDefault = {
     id: 7,
     address: {
       street: '',
       city: undefined,
-      planet: 'Earth'
-    }
+      planet: 'Earth',
+    },
   }
   const expectedRecursive = {
     id: 7,
     address: {
       city: undefined,
-      planet: 'Earth'
-    }
+      planet: 'Earth',
+    },
   }
   const list = [null, undefined, false, NaN, 0, '', 7, {person: [null, 'God']}]
   const expectedList = [7, {person: ['God']}]
@@ -326,8 +368,8 @@ it(`${removeDeletedItems.name}() deletes all objects with truthy 'delete' proper
     currencies: {
       ETH: {
         currency: 'ETH',
-        delete: true
-      }
+        delete: true,
+      },
     },
     exchanges: {
       WEX: {
@@ -335,15 +377,15 @@ it(`${removeDeletedItems.name}() deletes all objects with truthy 'delete' proper
         currencies: {
           ETH: {
             currency: 'ETH',
-            delete: true
-          }
-        }
+            delete: true,
+          },
+        },
       },
       EXX: {
         exchange: 'EXX',
-        delete: true
-      }
-    }
+        delete: true,
+      },
+    },
   }
   const expected = {
     isActive: null,
@@ -351,9 +393,9 @@ it(`${removeDeletedItems.name}() deletes all objects with truthy 'delete' proper
     exchanges: {
       WEX: {
         exchange: 'WEX',
-        currencies: {}
-      }
-    }
+        currencies: {},
+      },
+    },
   }
   const list = [7, {delete: 'yes', id: 7}, {person: {id: 'God', delete: true}}]
   const expectedList = [7, {}]
@@ -364,7 +406,7 @@ it(`${removeDeletedItems.name}() deletes all objects with truthy 'delete' proper
 it(`${sanitizeResponse.name}() deletes all GraphQL tags, Null/Undefined values from Collection (Falsey values from List)`, () => {
   const hiddenFields = {}
   const tags = [
-    '__typename', 'updated', 'created', 'creator', 'creatorId'
+    '__typename', 'updated', 'created', 'creator', 'creatorId',
   ]
   tags.forEach(name => hiddenFields[name] = true)
   const object = {
@@ -377,16 +419,16 @@ it(`${sanitizeResponse.name}() deletes all GraphQL tags, Null/Undefined values f
       city: undefined,
       planet: 'Earth',
       location: [0, 0.1, 2],
-      __typename: 'Address'
+      __typename: 'Address',
     },
-    __typename: 'Profile'
+    __typename: 'Profile',
   }
   const expected = {
     beliefs: [false, NaN, 0, '', 7, {person: ['God']}],
     address: {
       planet: 'Earth',
       location: [0, 0.1, 2],
-    }
+    },
   }
   expect(sanitizeResponse(object, {tags})).toEqual(expected)
 })
@@ -425,7 +467,7 @@ describe(`${queryString.name}()`, () => {
     const obj = {
       query: 'God',
       ids: [1, 2],
-      limit: 7
+      limit: 7,
     }
     expect(queryString(obj)).toEqual('query=God&ids=1&ids=2&limit=7')
   })
