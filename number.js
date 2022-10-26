@@ -368,7 +368,7 @@ export function numericPattern (locales = navigator.languages) {
  * @param {string|string[]} [locales] - string with a BCP 47 language tag, or an array of strings
  * @returns {number|null} number - converted from value string, or null if not a number
  */
-export function parseNumber (value, locales = navigator.languages) {
+export function parseNumberLocale (value, locales = navigator.languages) {
 	if (value == null || value === '') return null
 	if (isNumber(value)) return value
 	const {value: d} = new Intl.NumberFormat(locales).formatToParts(1.1).find(p => p.type === 'decimal')
