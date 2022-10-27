@@ -253,7 +253,25 @@ describe(`${update.name}()`, () => {
     expect(update(state, payload)).toEqual(expected)
     expect(state).toEqual(expected)
   })
-  it(`updates the element in the middle of Array recursively by mutation`, () => {
+  it(`adds new element to the Array without holes by mutation`, () => {
+    const state = {list: [1, 2, 3, 4]}
+    const list = []
+    list[state.list.length + 7] = 'new'
+    const payload = {list}
+    const expected = {list: [1, 2, 3, 4, 'new']}
+    expect(update(state, payload)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+  it(`removes array holes from new array with holes`, () => {
+    const state = {}
+    const list = []
+    list[list.length + 7] = 'new'
+    const payload = {list}
+    const expected = {list: ['new']}
+    expect(update(state, payload)).toEqual(expected)
+    expect(state).toEqual(expected)
+  })
+  it(`updates element in the middle of Array recursively by mutation`, () => {
     const state = {list: [[1], 2, 3, 4]}
     const list = []
     list[0] = [2, {}]
@@ -275,7 +293,7 @@ describe(`${update.name}()`, () => {
     const payload = {list: [null]}
     payload.list[2] = null
     const expected = {list: [2, 4]}
-    expect(update(state, payload, false, true)).toEqual(expected)
+    expect(update(state, payload, {removeNull: true})).toEqual(expected)
     expect(state).toEqual(expected)
   })
 })
