@@ -28,6 +28,19 @@ import { subscribeTo, unsubscribeFrom } from './utility.js'
  * -----------------------------------------------------------------------------
  */
 class Keyboard {
+  /**
+   * Check if given keyCode is currently pressed
+   * @example:
+   *    keyboard.hasKeyPress(KEY.Space)
+   *    >>> false
+   *
+   * @param {number} keyCode
+   * @returns {boolean} true is it is pressed
+   */
+  hasKeyPress = (keyCode) => {
+    return !!this.keyCode[keyCode]
+  }
+
   // Map of KEY.code as `key` and boolean true/undefined as value for currently pressed keys
   pressed = KEY // assigned KEY is purely for IDE intellisense, this gets reset to `{}`
 
