@@ -429,7 +429,7 @@ export function listAlphabetically (array) {
  *    ['id1', null].reduce(listToMap, {})
  *    >>> {"id1": "id1", "null": null}
  *
- * @returns {Object} object with element.id being keys, and elements of original array being values
+ * @returns {Object} object with optional element.id being keys, and elements of original array being values
  */
 export function listToMap (obj, data) {
   obj[(data != null && Object.hasOwnProperty.call(data, 'id')) ? data.id : data] = data
@@ -487,7 +487,7 @@ export function sort (key, order = 'asc') {
 }
 
 /**
- * Sort List By Object Properties or custom sort Function (with optional chaining)
+ * Sort List By Collection Properties or custom sort Function (with optional chaining)
  * (Moderately Fast)
  *
  * @example:

@@ -199,9 +199,9 @@ export const testMock = {
  * @see https://lodash.com/docs/4.17.2#throttle for further information.
  * @param {Function} func - to call
  * @param {Number} [wait] - milliseconds to delay
- * @param {Object} [options]
+ * @param {Object} [options] - default is {leading: true, trailing: true}
  * @returns {function(...[*]=)} - throttled
  */
-export function throttle (func, wait = TIME_DURATION_INSTANT, options = {}) {
+export function throttle (func, wait = TIME_DURATION_INSTANT, options = {leading: true, trailing: true}) {
 	return _throttle(func, wait, options)
 }
