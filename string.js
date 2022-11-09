@@ -28,7 +28,7 @@ const upperThresholdAlphaNum = 1 - 26 / 62 // minimum Math.random() result for u
  * =============================================================================
  */
 
-export { isString, startCase as toCapCase, camelCase as toCamelCase } from 'lodash-es'
+export { isString, startCase as toCapCaseSpace, camelCase as toCamelCase } from 'lodash-es'
 
 /**
  * Append an incrementing Number to given String to make it unique
