@@ -1,10 +1,9 @@
 import { isList, toList } from './array.js'
 import { isMacLike, KEY, l } from './constants.js'
-import { localiseTranslation } from './definitions.js'
 import { isFunction } from './function.js'
 import { swapKeyWithValue } from './object.js'
 import { ips } from './string.js'
-import { _ } from './translations.js'
+import { _, localiseTranslation } from './translations.js'
 import { subscribeTo, unsubscribeFrom } from './utility.js'
 
 /**
