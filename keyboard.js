@@ -3,7 +3,7 @@ import { isMacLike, KEY, l } from './constants.js'
 import { isFunction } from './function.js'
 import { swapKeyWithValue } from './object.js'
 import { ips } from './string.js'
-import { _, localiseTranslation } from './translations.js'
+import { _, translate } from './translation.js'
 import { subscribeTo, unsubscribeFrom } from './utility.js'
 
 /**
@@ -240,7 +240,7 @@ export function isPureKeyPress (event) {
   return !(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
 }
 
-localiseTranslation({
+translate({
   KEYBOARD_SHORTCUT___value___IS_TAKEN_BY_COMPONENT__id_: {
     [l.ENGLISH]: 'Keyboard.shortcut ({value}) is taken by component {id}',
   },

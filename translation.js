@@ -42,7 +42,7 @@ export function localise (DEFINITION) {
  * @Note: can be applied repeatedly to add new translations or languages after requests from API
  *
  * @example:
- *    const _ = localiseTranslation({
+ *    translate({
  *      SEARCH: { // use this for key `Search`.replace(/[^a-zA-Z\d]/g, '_').toUpperCase()
  *        [l.ENGLISH]: `Search`,
  *        [l.RUSSIAN]: `Поиск`,
@@ -63,42 +63,42 @@ export function localise (DEFINITION) {
  *    # if active language is Chinese
  *    >>> 搜索
  *
- * @param {Object} TRANSLATION - key/value pairs of variable name with its localised values
+ * @param {Object} TRANSLATION - key/value pairs of variable name with its localised (translated) values
  * @returns {Object} translations - with all definitions as javascript getters returning currently active language,
  *  (falls back to English if definition not found for active language, or empty string).
  */
-export function localiseTranslation (TRANSLATION) {
+export function translate (TRANSLATION) {
   for (const KEY in TRANSLATION) {
     const _data = TRANSLATION[KEY]
     // Update existing translations
-    if (KEY in localiseTranslation.instance) {
-      localiseTranslation.instance[KEY] = _data
+    if (KEY in translate.instance) {
+      translate.instance[KEY] = _data
     } else {
       // Define translations for the first time
       const _key = '~' + KEY
-      Object.defineProperty(localiseTranslation.instance, KEY, {
+      Object.defineProperty(translate.instance, KEY, {
         get () {
           // initially cannot use setter to define translations, thus fallback to _data
-          const data = localiseTranslation.instance[_key] || (localiseTranslation.instance[_key] = _data)
+          const data = translate.instance[_key] || (translate.instance[_key] = _data)
           return data[Active.LANGUAGE._] || data[Active.DEFAULT.LANG] || KEY || ''
         },
         set (data) {
           // merge new translations with existing
-          localiseTranslation.instance[_key] = {...localiseTranslation.instance[_key], ...data}
+          translate.instance[_key] = {...translate.instance[_key], ...data}
         },
       })
     }
   }
-  return localiseTranslation.instance
+  return translate.instance
 }
 
-localiseTranslation.instance = {}
-localiseTranslation.queriedById = {}
+translate.instance = {}
+translate.queriedById = {}
 
 // @Note: only english is provided in the bundle definition
 // All other languages are to be loaded on the fly as static assets,
 // so that they can be cached by the browser.
-localiseTranslation({
+translate({
   // Default messaged for undefined strings
   UNTRANSLATED___key__: {
     [l.ENGLISH]: `Untranslated '{key}'`,
@@ -109,28 +109,43 @@ localiseTranslation({
  * Localised String Object (can be extended by adding new terms or languages)
  * @note: follow the example to ensure only one instance of translation exists.
  * @example:
- *    import { _, l, localiseTranslation } from '@webframer/js'
+ *    import { _, l, translate } from '@webframer/js'
  *
- *    localiseTranslation({
+ *    // Add or update localised term(s)
+ *    translate({
  *      NEW_PHRASE: {
  *        [l.ENGLISH]: 'New Phrase',
- *        [l.RUSSIAN]: 'Новая Фраза',
  *      },
  *    })
  *
- * // Usage:
- *    console.log(_.NEW_PHRASE)
+ *    // Usage:
+ *    log(_.NEW_PHRASE)
  *    >>> 'New Phrase'
  *
+ *    // Add or update localised term(s)
+ *    translate({
+ *      NEW_PHRASE: {
+ *        [l.RUSSIAN]: 'Новая Фраза',
+ *      },
+ *      MORE_PHRASES: {
+ *        [l.ENGLISH]: 'More Phrases',
+ *      },
+ *    })
+ *
+ *    // Existing translations remain
+ *    log(_.NEW_PHRASE)
+ *    >>> 'New Phrase'
+ *
+ *    // Set the current language.
  *    Active.LANGUAGE = LANGUAGE.RUSSIAN
- *    console.log(_.NEW_PHRASE)
+ *    log(_.NEW_PHRASE)
  *    >>> 'Новая Фраза'
  *
  * @returns {Object} localised string - that returns localised 'Untranslated' string if no translation found
  */
-export const _ = new Proxy(localiseTranslation.instance, {
+export const _ = new Proxy(translate.instance, {
   get (target, key) {
-    return localiseTranslation.queriedById[key] = (target[key] || ips(target.UNTRANSLATED___key__, {key}))
+    return translate.queriedById[key] = (target[key] || ips(target.UNTRANSLATED___key__, {key}))
   },
 })
 

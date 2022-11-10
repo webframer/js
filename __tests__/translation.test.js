@@ -2,7 +2,7 @@ import { Active } from '../_envs.js'
 import { l, LANGUAGE } from '../constants.js'
 import { cloneDeep } from '../object.js'
 import { interpolateString } from '../string.js'
-import { _, localiseTranslation } from '../translations.js'
+import { _, translate } from '../translation.js'
 
 describe(`i18n translation`, () => {
   const variable = 'Hello'
@@ -28,7 +28,7 @@ describe(`i18n translation`, () => {
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(`Untranslated 'TEST_VARIABLE_MESSAGE_TYPE'`)
   })
   test(`returns correct translation for active language`, () => {
-    localiseTranslation(TRANSLATION)
+    translate(TRANSLATION)
     Active.LANGUAGE = LANGUAGE.ENGLISH
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(english)
   })
@@ -48,7 +48,7 @@ describe(`i18n translation`, () => {
         [l.RUSSIAN]: russian,
       },
     }
-    localiseTranslation(TRANSLATION)
+    translate(TRANSLATION)
     Active.LANGUAGE = LANGUAGE.RUSSIAN
     expect(_.TEST_VARIABLE_MESSAGE_TYPE).toEqual(russian)
     Active.LANGUAGE = LANGUAGE.ENGLISH

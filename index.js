@@ -23,5 +23,5 @@ export * from './object.js'
 export * from './storage.js'
 export * from './string.js'
 // export * from './time' // to be imported directly to reduce bundle size
-export * from './translations.js'
+export * from './translation.js'
 export * from './utility.js'

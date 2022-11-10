@@ -1,8 +1,7 @@
 import { KEY, l } from './constants.js'
-import { localiseTranslation } from './definitions.js'
 import { isFunction } from './function.js'
 import { ips } from './string.js'
-import { _ } from './translations.js'
+import { _, translate } from './translation.js'
 import { subscribeTo, unsubscribeFrom } from './utility'
 
 /**
@@ -210,7 +209,7 @@ class Pointer {
 
 export default new Pointer()
 
-localiseTranslation({
+translate({
   POINTER_DRAG_OF___node___IS_TAKEN_BY__id_: {
     [l.ENGLISH]: 'Pointer.drag of ({node}) is taken by {id}',
   },
