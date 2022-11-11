@@ -9,6 +9,7 @@ import {
   getParamByKey,
   insertToString,
   interpolateString,
+  isClosedBrackets,
   isInString,
   isIpAddress,
   isPhoneNumber,
@@ -51,6 +52,28 @@ it(`${escapeRegExp.name}() returns escaped string ready for RegexExp use`, () =>
 it(`${regexExp.name}() returns escaped string RegexExp`, () => {
   expect(regexExp('a | b')).toEqual(/a \| b/)
   expect(regexExp('a \\ b', 'i')).toEqual(/a \\ b/i)
+})
+
+test(`${isClosedBrackets.name} returns true for properly closed or no brackets string`, () => {
+  expect(isClosedBrackets('')).toBe(true)
+  expect(isClosedBrackets('abc')).toBe(true)
+  expect(isClosedBrackets('{abc}')).toBe(true)
+  expect(isClosedBrackets('{a[b]c}')).toBe(true)
+  expect(isClosedBrackets('{(a[b]c)}')).toBe(true)
+  expect(isClosedBrackets('{(a[b]c}')).toBe(false)
+  expect(isClosedBrackets('{(ab]c})')).toBe(false)
+  expect(isClosedBrackets('{(ab][c)}')).toBe(false)
+  expect(isClosedBrackets('{a[b]c)}(')).toBe(false)
+  expect(isClosedBrackets(')({a[b]c}')).toBe(false)
+  expect(isClosedBrackets('(abc')).toBe(false)
+  expect(isClosedBrackets('{abc')).toBe(false)
+  expect(isClosedBrackets('[abc')).toBe(false)
+  expect(isClosedBrackets('abc)')).toBe(false)
+  expect(isClosedBrackets('abc}')).toBe(false)
+  expect(isClosedBrackets('abc]')).toBe(false)
+  expect(isClosedBrackets('abc{)')).toBe(false)
+  expect(isClosedBrackets('abc[}')).toBe(false)
+  expect(isClosedBrackets('abc(]')).toBe(false)
 })
 
 it(`${isInString.name}() returns true when match found, else false`, () => {

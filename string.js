@@ -9,6 +9,8 @@ import pluralizer from 'pluralize'
 export const alphaNumPattern = /[^a-zA-Z0-9]/g
 export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
 export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
+export const closeBracketsPattern = /{}|\[]|\(\)/g
+export const nonBracketsPattern = /[^{}[\]()]/g
 export const escapeRegExpPattern = /[.*+?^${}()|[\]\\]/g
 export const fileNameWithoutExtPattern = /\.[^.$]+$/
 export const hyphensPattern = /-+/g
@@ -140,6 +142,31 @@ export function pathURI (url) {
  */
 export function hasStringValue (value) {
   return typeof value === 'string' && !!value
+}
+
+/**
+ * Check that string has correctly closed brackets
+ * @example:
+ *    isClosedBrackets('ab[as)c')
+ *    >>> false
+ *    isClosedBrackets('ab[as])c')
+ *    >>> false
+ *    isClosedBrackets('{}ab([as])c')
+ *    >>> true
+ *    isClosedBrackets('abc')
+ *    >>> true
+ *
+ * @param {string} string - to check
+ * @returns {boolean} true - if no brackets exist or all are properly closed
+ */
+export function isClosedBrackets (string) {
+  let s
+  string = string.replace(nonBracketsPattern, '')
+  while (s !== string) {
+    s = string
+    string = string.replace(closeBracketsPattern, '')
+  }
+  return !string
 }
 
 /**
