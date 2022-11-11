@@ -9,7 +9,7 @@ import pluralizer from 'pluralize'
 export const alphaNumPattern = /[^a-zA-Z0-9]/g
 export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
 export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
-export const closeBracketsPattern = /{}|\[]|\(\)/g
+export const emptyBracketsPattern = /{}|\[]|\(\)/g
 export const nonBracketsPattern = /[^{}[\]()]/g
 export const escapeRegExpPattern = /[.*+?^${}()|[\]\\]/g
 export const fileNameWithoutExtPattern = /\.[^.$]+$/
@@ -164,7 +164,7 @@ export function isClosedBrackets (string) {
   string = string.replace(nonBracketsPattern, '')
   while (s !== string) {
     s = string
-    string = string.replace(closeBracketsPattern, '')
+    string = string.replace(emptyBracketsPattern, '')
   }
   return !string
 }
