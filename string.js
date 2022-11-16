@@ -5,6 +5,11 @@ import pluralizer from 'pluralize'
  * @example:
  *    // Sanitize the string to contain only alphanumeric characters
  *    str.replace(alphaNumPattern, '')
+ *
+ * @note:
+ *    - Regex with `/g` flag must be reset in between `exec` or .test(), or it can return false
+ *      => see https://stackoverflow.com/a/2630538
+ *    - Cached regex is only good for replacement or when it is without `/g` flag
  */
 export const alphaNumPattern = /[^a-zA-Z0-9]/g
 export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
