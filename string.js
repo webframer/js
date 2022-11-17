@@ -721,6 +721,15 @@ export function truncate (string, length = 15, lastChars = 3) {
 }
 
 /**
+ * Convert String to CapCase
+ * @param {String|*} string - value to convert
+ * @returns {String|*} - cap cased
+ */
+export function toCapCase (string) {
+  return string && startCase(string).replace(spacesPattern, '')
+}
+
+/**
  * Convert All Characters to lower case
  * @param {String|*} string - value to make lower case
  * @returns {String|*} - in lower case
