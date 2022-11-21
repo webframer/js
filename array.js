@@ -228,7 +228,7 @@ export function toListAvg (array) {
   for (const value of array) {
     sum += value
   }
-  return (sum / array.length)
+  return array.length && (sum / array.length)
 }
 
 /**
