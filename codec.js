@@ -1,4 +1,5 @@
 import CircularJSON from 'circular-json-es6' // do not change to `flatted` package,
+import { isNumber, isString } from 'lodash-es'
 // because it does not comply to JSON standard, and outputs a flat index of objects.
 // Example:
 //  - flatted.stringify({a:1}) >>> [{a:1}]
@@ -71,7 +72,10 @@ export function isJSON (data) {
 }
 
 /**
- * Convert Javascript object to text
+ * Convert any Javascript value to source code string.
+ * @example:
+ *    toText({a: 8})
+ *    >>> '{a: 8}'
  *
  * @param {*} value - to convert to text
  * @return {string}
@@ -80,8 +84,12 @@ export function toText (value) {
   if (value == null || value instanceof Error) return String(value)
   switch (typeof value) {
     case 'symbol':
+      return `Symbol${Symbol.for(value.description) === value ? '.for' : ''}("${value.description}")`
     case 'number':
       return String(value)
+    case 'object':
+      if (isString(value)) return `new String("${value}")`
+      if (isNumber(value)) return `new Number(${value})`
   }
 
   let string = []
@@ -108,7 +116,7 @@ export function toText (value) {
     // but in the server it converts as fat arrow function `()=>{}`
     string = value.toString()
     // In server, it generates `function() {}` without extra space, convert to match standard
-    if (string === 'function() {}') string = 'function () {}'
+    if (string.indexOf('function(') === 0) string = 'function (' + string.substring(9)
     return string
   }
 
