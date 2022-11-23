@@ -14,6 +14,20 @@ import pluralizer from 'pluralize'
 export const alphaNumPattern = /[^a-zA-Z0-9]/g
 export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
 export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
+/**
+ * Split CapCased String.
+ * This uses Regex Lookbehind, which may not work in Safari or IE:
+ *   - `/(?<=[a-z])(?=[A-Z0-9])/` - splits between lowercase and Uppercase `lower|UPPER`
+ *   - `/(?=[A-Z0-9][a-z])/` - splits when Uppercase is followed by lowercase `UPPER|Lower`
+ *   - Combining these results in a nice split pattern for `camelCase` or `CapCase` strings.
+ *
+ * @example:
+ *    'getMy1st3DGlasses XMLHttpRequest'.split(capCaseSplitPattern).join('-')
+ *    >>> 'get-My-1st-3D-Glasses XML-Http-Request'
+ */
+export const capCaseSplitPattern = /(?<=[a-z])(?=[A-Z0-9])|(?=[A-Z0-9][a-z])/
+// Similar to `capCaseSplitPattern` but only considers A-Z as cap case (without numbers)
+export const capCaseLetterSplitPattern = /(?<=[a-z])(?=[A-Z])|(?=[A-Z][a-z])/
 export const emptyBracketsPattern = /{}|\[]|\(\)/g
 export const nonBracketsPattern = /[^{}[\]()]/g
 export const escapeRegExpPattern = /[.*+?^${}()|[\]\\]/g

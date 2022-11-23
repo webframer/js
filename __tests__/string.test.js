@@ -3,6 +3,7 @@
  */
 import {
   appendNumber,
+  capCaseSplitPattern,
   escapeRegExp,
   fileNameWithoutExt,
   formatKeyPath,
@@ -42,6 +43,22 @@ test(`${appendNumber.name} increments string with a number`, () => {
   expect(appendNumber('User9')).toBe('User10')
   expect(appendNumber('User10')).toBe('User11')
   expect(appendNumber('Camera3D')).toBe('Camera3D1')
+})
+test(`capCaseSplitPattern splits correctly`, () => {
+  expect('camelCase'.split(capCaseSplitPattern).join('-'))
+    .toBe('camel-Case')
+  expect('CapCase'.split(capCaseSplitPattern).join('-'))
+    .toBe('Cap-Case')
+  expect('UPPERCASE'.split(capCaseSplitPattern).join('-'))
+    .toBe('UPPERCASE')
+  expect('lower'.split(capCaseSplitPattern).join('-'))
+    .toBe('lower')
+  expect('walkToTheMoon2022'.split(capCaseSplitPattern).join('-'))
+    .toBe('walk-To-The-Moon-2022')
+  expect('3DStairs'.split(capCaseSplitPattern).join('-'))
+    .toBe('3D-Stairs')
+  expect('getMy1st3DGlasses XMLHttpRequest'.split(capCaseSplitPattern).join('-'))
+    .toBe('get-My-1st-3D-Glasses XML-Http-Request')
 })
 
 it(`${escapeRegExp.name}() returns escaped string ready for RegexExp use`, () => {
