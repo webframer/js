@@ -47,11 +47,12 @@ export function cloneFast (obj) {
  *    >>> privateObj == {'view': 'Row'}
  *    >>> props == {_id: 'Id'}
  *
- * @param {object} obj - object with mixed of private and standard properties
+ * @param {object|array} obj - object with mixed of private and standard properties
  * @param {string} [prefix] - private property prefix
  * @returns {object} privateProps - with `#` (or `prefix` character) removed from keys
  */
 export function extractPrivateProps (obj, prefix = '#') {
+  if (isList(obj)) return obj
   const result = {}
   for (const key in obj) {
     if (key.indexOf(prefix) === 0) {
