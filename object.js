@@ -42,9 +42,9 @@ export function cloneFast (obj) {
 /**
  * Extract Object keys starting with `#` (or `prefix` character) into a new object by mutation
  * @example:
- *    const props = {'#view': 'Row', _id: 'Id'}
+ *    const props = {'#tag': 'Row', _id: 'Id'}
  *    const privateObj = extractPrivateProps(props)
- *    >>> privateObj == {'view': 'Row'}
+ *    >>> privateObj == {'tag': 'Row'}
  *    >>> props == {_id: 'Id'}
  *
  * @param {object|array} obj - object with mixed of private and standard properties
