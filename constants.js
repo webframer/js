@@ -77,7 +77,6 @@ export const ERROR = 'ERROR'
 export const TIMEOUT = 'TIMEOUT'
 
 export const ALL_ACTIONS = [
-	MESSAGE,
 	GET,
 	CREATE,
 	UPDATE,
@@ -118,6 +117,9 @@ export const ALL_RESULTS = [
 	SUCCESS,
 	ERROR,
 	TIMEOUT,
+	CONNECTED,
+	DISCONNECTED,
+	MESSAGE,
 	RECEIVED,
 	VOID,
 ]
