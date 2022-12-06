@@ -1,6 +1,6 @@
 import { get } from 'lodash-es'
 import now from 'performance-now'
-import { __BACKEND__, __CLIENT__, __DEV__, __TEST__, Active } from './_envs.js'
+import { __CLIENT__, __DEV__, __TEST__, Active } from './_envs.js'
 import { WARN } from './constants.js'
 import { isFunction } from './function.js'
 import { formatNumber } from './number.js'
@@ -277,14 +277,14 @@ export function warn (...args) {
 }
 
 /**
- * Ensure file is loaded in correct platform
+ * Ensure the program only runs in the frontend client side
  */
 export function assertFrontend () {
-  if (__BACKEND__ && !__TEST__) throw new Error(`${WARN} WARNING! Frontend file loaded in Backend!!!`)
+  if (!__CLIENT__ && !__TEST__) throw new Error(`${WARN} WARNING! Frontend file loaded in Backend!!!`)
 }
 
 /**
- * Ensure file is loaded in correct platform
+ * Ensure the program only runs in the backend server
  */
 export function assertBackend () {
   if (__CLIENT__ && !__TEST__) throw new Error(`${WARN} WARNING! Backend file loaded in Frontend!!!`)
