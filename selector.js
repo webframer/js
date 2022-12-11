@@ -5,6 +5,8 @@ import { ONE_MILLISECOND } from './constants.js'
 import { logSelector } from './log.js'
 import { formatNumber } from './number.js'
 
+export * from 'reselect'
+
 /**
  * Selector Decorator to turn all class static property functions into Memoized Functions
  *

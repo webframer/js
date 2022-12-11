@@ -9,7 +9,7 @@ import {
   FORMAT_TIME_FOR_HUMAN,
   ONE_HOUR,
   ONE_MINUTE,
-  THIRTY_MINUTES
+  THIRTY_MINUTES,
 } from './constants.js'
 import { isNumeric, startEndFromNumberRanges } from './number.js'
 
@@ -17,6 +17,8 @@ import { isNumeric, startEndFromNumberRanges } from './number.js'
  * TIME FUNCTIONS ==============================================================
  * =============================================================================
  */
+
+export { moment }
 
 /**
  * Convert Time Duration to User Friendly and Readable Format
@@ -26,7 +28,7 @@ import { isNumeric, startEndFromNumberRanges } from './number.js'
  * @param {Boolean} [shorten] - whether to shorten words, like `seconds` to `s`
  * @returns {String} - formatted time
  */
-export function formatDuration (milliseconds, { shorten = false, round = true, ...props } = {}) {
+export function formatDuration (milliseconds, {shorten = false, round = true, ...props} = {}) {
   props.round = round
   if (shorten) {
     return formatDuration.shortEnglish(milliseconds, props)

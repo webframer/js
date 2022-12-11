@@ -6,10 +6,12 @@ import {
   isEmpty,
   isEqual,
   isMap,
+  isNil,
   isObjectLike,
   isPlainObject,
   matches,
   merge as _merge,
+  omitBy,
   property,
   setWith as set,
   unset,
@@ -737,6 +739,8 @@ export {
 
   isMap,
   isObjectLike,
+  isNil,
+  omitBy,
 
   /**
    * Creates a function that returns the value at path of a given object
