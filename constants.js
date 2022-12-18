@@ -1,4 +1,4 @@
-/* Platform Prefixes */
+// Microservice Prefixes
 export const SERVICE = {
 	API: 'API',
 	BOT: 'BOT',
