@@ -65,6 +65,50 @@ export function appendNumber (string) {
   }
 }
 
+/**
+ * Find the common String Subsequence from list of strings.
+ * Complexity is O(nm) with storage of O(2n)
+ *
+ * @example:
+ *    longestCommonSubstring("abc d", "10,000 bc")
+ *    >>> 'bc'
+ *
+ * @param {string} str1
+ * @param {string} str2
+ * @returns {string} string - can be empty string
+ */
+export function longestCommonSubstring (str1, str2) {
+  if (!str1 || !str2) { return '' }
+
+  const str1Length = str1.length
+  const str2Length = str2.length
+  let maxLength = 0
+  let beginIdx = 0 // relative to str1
+  const num = [new Array(str2Length), ([]).fill(0, 0, -str2Length)]
+  for (let i = 0; i < str1Length; ++i) {
+    const lastRow = 1 - i % 2
+    const currentRow = num[1 - lastRow]
+    for (let j = 0; j < str2Length; ++j) {
+      if (str1[i] !== str2[j]) {
+        currentRow[j] = 0
+      } else {
+        if (i === 0 || j === 0) {
+          currentRow[j] = 1
+        } else {
+          currentRow[j] = 1 + num[lastRow][j - 1]
+        }
+
+        if (currentRow[j] > maxLength) {
+          maxLength = currentRow[j]
+          beginIdx = i - currentRow[j] + 1
+          // if the current LCS is the same as the last time this block ran
+        }
+      }
+    }
+  }
+  return str1.slice(beginIdx, maxLength + beginIdx)
+}
+
 // /**
 //  * Convert "camelCase" string to "Camel Case"
 //  * @param {string} string - to convert

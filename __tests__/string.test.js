@@ -14,6 +14,7 @@ import {
   isInString,
   isIpAddress,
   isPhoneNumber,
+  longestCommonSubstring,
   randomString,
   regexExp,
   sha256,
@@ -135,6 +136,19 @@ it(`${formatKeyPath.name}() formats square brackets correctly`, () => {
 it(`${fileNameWithoutExt.name}() returns file name without extension`, () => {
   expect(fileNameWithoutExt('exchange.csv')).toEqual('exchange')
   expect(fileNameWithoutExt('exchange.test.csv')).toEqual('exchange.test')
+})
+
+test(`${longestCommonSubstring.name} returns the longest common substring`, () => {
+  expect(longestCommonSubstring('abc', '10,000 bc')).toEqual('bc')
+  expect(longestCommonSubstring('bcd', '10,000d bc')).toEqual('bc')
+  expect(longestCommonSubstring('bcd', 'dbc')).toEqual('bc')
+  expect(longestCommonSubstring('bcd', 'dbc d')).toEqual('bc')
+  expect(longestCommonSubstring('bc d', 'dbc')).toEqual('bc')
+  expect(longestCommonSubstring('d-bc_dbc', 'a bc  bck')).toEqual('bc')
+  expect(longestCommonSubstring('d-bc_dbc', '')).toEqual('')
+  expect(longestCommonSubstring('', 'd-bc_dbc')).toEqual('')
+  expect(longestCommonSubstring('', '')).toEqual('')
+  expect(longestCommonSubstring('a', 'bc')).toEqual('')
 })
 
 it(`${sha256.name}() hashes string correctly to 64 characters long`, () => {
