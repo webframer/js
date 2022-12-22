@@ -539,7 +539,7 @@ export function padStringLeft (string, padTemplate) {
  * @return {String} padded with template - example: '700'
  */
 export function padStringRight (string, padTemplate) {
-  return `${string}${padTemplate}`.substr(0, Math.max(string.length, padTemplate.length))
+  return `${string}${padTemplate}`.substring(0, Math.max(string.length, padTemplate.length))
 }
 
 /**

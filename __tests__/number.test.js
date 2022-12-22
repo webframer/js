@@ -7,6 +7,7 @@ import {
   isContinuousNumberRanges,
   isNumber,
   isNumeric,
+  medianNumber,
   roundDownTo,
   roundTail,
   roundTo,
@@ -282,6 +283,15 @@ it(`${greatestCommonDivisor.name}() returns the biggest divisible number between
   expect(greatestCommonDivisor('0', '0')).toEqual(Infinity)
   expect(greatestCommonDivisor('0', '1')).toEqual(1)
   expect(greatestCommonDivisor('0', '-1')).toEqual(1)
+})
+
+test(`${medianNumber.name}() retrieves the middle number in the array`, () => {
+  expect(medianNumber([1, 2, 3])).toEqual(2)
+  expect(medianNumber([1, 2, 2, 3])).toEqual(2)
+  expect(medianNumber([1, 2, 3, 4])).toEqual(2.5)
+  expect(medianNumber([1])).toEqual(1)
+  expect(medianNumber([1, 2])).toEqual(1.5)
+  expect(medianNumber([])).toEqual(undefined)
 })
 
 it(`${roundTail.name}() rounds number to n* last digits`, () => {

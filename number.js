@@ -346,6 +346,17 @@ export function numericPattern (locales = navigator.languages) {
 }
 
 /**
+ * Get the median number from a list of numbers
+ * @param {number[]} array - list of numbers
+ */
+export function medianNumber (array) {
+	const len = array.length
+	if (len <= 1) return array[0]
+	const idx = Math.floor(len / 2)
+	return len % 2 ? array[idx] : (array[idx - 1] + array[idx]) / 2
+}
+
+/**
  * Parses value of input type="number" string into a Number type with Locale aware formatting
  * @see: https://stackoverflow.com/a/45309230
  * @example:

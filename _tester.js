@@ -45,3 +45,22 @@ function getListNodeArray (listNode) {
   }
   return r
 }
+
+// Numbers -----------------------------------------------------------------------------------------
+// Get the first non-dup number index
+function getNextIndex (nums, i = 0) {
+  let idx = i
+  while (nums[idx] === nums[idx + 1]) {
+    idx++
+  }
+  return idx
+}
+
+// Get the last non-dup number index
+function getPrevIndex (nums, j = nums.length - 1) {
+  let idx = j
+  while (nums[idx] === nums[idx - 1]) {
+    idx--
+  }
+  return idx
+}
