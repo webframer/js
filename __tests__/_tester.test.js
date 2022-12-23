@@ -1,10 +1,19 @@
 import tester from '../_tester.js'
 
 describe(`${tester.name || '_tester'}()`, () => {
-  const args = [
-    '',
+  const testCases = [
+    {
+      args: [
+        '',
+      ],
+      result: '',
+    },
   ]
-  test(`${args}`, () => {
-    expect(tester(...args)).toEqual('')
-  })
+
+  // Run tests
+  for (const {args, result} of testCases) {
+    test(`${args} => ${result}`, () => {
+      expect(tester(...args)).toEqual(result)
+    })
+  }
 })
