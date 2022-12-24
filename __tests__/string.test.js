@@ -157,10 +157,14 @@ it(`${sha256.name}() hashes string correctly to 64 characters long`, () => {
 
 it(`${toURI.name}() returns sanitized AlphaNumericHyphen string for use in browser URL`, () => {
   expect(toURI('')).toEqual('')
-  expect(toURI(' Test dot.   count!?123 4567*&^%  \n"')).toEqual('test-dot-count-123-4567')
-  expect(toURI('\n Test dot.   count!?123 4567*&^%  \n"')).toEqual('test-dot-count-123-4567')
-  expect(toURI('\n Test dot.   count!?\n123 4567*&^%  \n\n"')).toEqual('test-dot-count-123-4567')
-  expect(toURI('\n Test dot. \tcount!?\n123 4567*&^%  \n\n"')).toEqual('test-dot-count-123-4567')
+  expect(toURI('/')).toEqual('/')
+  expect(toURI('//example.com/page')).toEqual('//example.com/page')
+  expect(toURI('/images/file.svg')).toEqual('/images/file.svg')
+  expect(toURI(' Test dot,   count!?123 4567.png')).toEqual('test-dot-count-123-4567.png')
+  expect(toURI(' Test dot,   count!?123 4567*&^%  \n"')).toEqual('test-dot-count-123-4567')
+  expect(toURI('\n Test dot,   count!?123 4567*&^%  \n"')).toEqual('test-dot-count-123-4567')
+  expect(toURI('\n Test dot,   count!?\n123 4567*&^%  \n\n"')).toEqual('test-dot-count-123-4567')
+  expect(toURI('\n Test dot, \tcount!?\n123 4567*&^%  \n\n"')).toEqual('test-dot-count-123-4567')
 })
 
 it(`${truncate.name}() return shortened string with ellipses and last n characters`, () => {

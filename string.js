@@ -13,6 +13,7 @@ import pluralizer from 'pluralize'
  */
 export const alphaNumPattern = /[^a-zA-Z0-9]/g
 export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
+export const alphaNumURIPattern = /[^a-zA-Z0-9./_-]/g
 export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
 /**
  * Split CapCased String.
@@ -751,15 +752,26 @@ export function toAlphaNumId (string) {
 }
 
 /**
- * Sanitize String for use in URL without encoding.
- * @param {String} string - to sanitize, can contain any characters
- * @returns {String} URI - sanitized for browser URL, without encoding/decoding
+ * Sanitize String for use as URI without encoding.
+ *
+ * By default, this is not suitable for use as full URL, because it converts `:` to `-`,
+ * unless a different Regex pattern is used.
+ *
+ * @example:
+ *    toURI(' Test dot:   count!?123 4567*&^%  \n".png')
+ *    >>> 'test-dot-count-123-4567-.png'
+ *
+ * @param {string} string - to sanitize, can contain any characters
+ * @param {object} options:
+ *    {RegExp} [pattern] - Regex pattern of allowed characters
+ * @returns {string} URI - sanitized for browser URL, without encoding/decoding
  */
-export function toURI (string) {
-  return string && string.replace(spacesPattern, '-') // remove spaces/newlines before stripping special characters
-    .replace(alphaNumIdPattern, '-') // convert all invalid characters to hyphen
-    .replace(hyphensPattern, '-') // may have hyphen at the start or end
-    .replace(hyphensTrimPattern, '')
+export function toURI (string, {pattern = alphaNumURIPattern} = {}) {
+  if (!string) return string
+  return string.replace(spacesPattern, '-') // remove spaces/newlines before stripping special characters
+    .replace(pattern, '-') // convert all invalid characters to hyphen
+    .replace(hyphensPattern, '-') // convert multiple to single hyphen, may be at the start or end
+    .replace(hyphensTrimPattern, '') // trim hyphens from both ends
     .toLowerCase()
 }
 
