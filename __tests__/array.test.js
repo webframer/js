@@ -1,6 +1,7 @@
 import {
   binarySearch,
   by,
+  flatList,
   hasCommonListValue,
   hasDuplicateInList,
   hasListValue,
@@ -91,6 +92,14 @@ test(`${binarySearch.name}() returns index of target element in the array`, () =
   expect(binarySearch(['a', 'b'], 'b')).toEqual(1)
   expect(binarySearch(['a'], 'b')).toEqual(-1)
   expect(binarySearch(['a'], '-b')).toEqual(-1)
+})
+
+test(`${flatList.name}() returns new array with all values flattened`, () => {
+  expect(flatList([])).toEqual([])
+  expect(flatList([1, 4])).toEqual([1, 4])
+  expect(flatList([1, ['2', '3'], 4])).toEqual([1, '2', '3', 4])
+  expect(flatList([1, ['2', '3', ['c', null]], false, 4])).toEqual([1, '2', '3', 'c', null, false, 4])
+  expect(flatList([1, {a: ['ok']}, 4])).toEqual([1, {a: ['ok']}, 4])
 })
 
 describe(`${isEqualList.name}()`, () => {

@@ -57,6 +57,48 @@ export function binarySearch (array, target, left = 0, right = array.length - 1,
 }
 
 /**
+ * Flatten Array recursively
+ * @example:
+ *    flatList([1, ['2', '3'], 4])
+ *    >>> [1, '2', '3', 4]
+ * @param {*[]} array - with nested array elements to flatten
+ * @returns {*[]} list - new flat array with all values
+ */
+export function flatList (array) {
+  const outer = []
+  const r = []
+  let i = 0, v, o
+
+  while (i < array.length) {
+    v = array[i]
+    i++
+
+    // Nested array element
+    if (Array.isArray(v)) {
+      // Store outer array reference
+      outer.push({arr: array, i: i})
+      array = v
+      i = 0 // reset iteration
+    }
+
+    // Element is not Array
+    else {
+      r.push(v)
+    }
+
+    // If it reaches the end, check that there is no outer array before exiting
+    while (i >= array.length && outer.length) {
+      // Get to Outer array
+      o = outer.pop()
+      array = o.arr
+      i = o.i
+    }
+  }
+
+  return r
+}
+
+/**
  * Check if the data passed is an array and has values.
  *
  * @param {*} data - The variable to check
