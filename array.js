@@ -36,6 +36,27 @@ export function addToList (array, valueToAdd, mutate = false) {
 }
 
 /**
+ * Find the index of target element in the sorted array with binary search algorithm
+ * @param {*[]} array - haystack to search (elements must be comparable with `<` and `>` operators)
+ * @param {*} target - needle value to find index of in the array
+ * @param {number} [left] - index of array to search from (inclusive)
+ * @param {number} [right] - index of array to search up to (inclusive)
+ * @param {number} [count] - iteration count
+ * @returns {number} index - of target element in the array, or -1 if not found
+ */
+export function binarySearch (array, target, left = 0, right = array.length - 1, count = 0) {
+  if (target === array[left]) return left
+  if (target === array[right]) return right
+  if (count === 0 && (target < array[left] || target > array[right])) return -1
+  if (left >= right) return -1
+
+  const idx = Math.ceil((left + right) / 2)
+  if (target < array[idx]) return binarySearch(array, target, left, idx - 1, count + 1)
+  else if (array[idx] < target) return binarySearch(array, target, idx + 1, right, count + 1)
+  return idx
+}
+
+/**
  * Check if the data passed is an array and has values.
  *
  * @param {*} data - The variable to check

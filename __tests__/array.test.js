@@ -1,4 +1,5 @@
 import {
+  binarySearch,
   by,
   hasCommonListValue,
   hasDuplicateInList,
@@ -69,7 +70,30 @@ test(`intersection() does not mutate original list, and keeps first list's order
   expect(list).toEqual(listClone)
 })
 
-describe(`${isEqualList.name}()`, ()=> {
+test(`${binarySearch.name}() returns index of target element in the array`, () => {
+  expect(binarySearch([1, 2, 3, 4, 5, 6, 7], 3)).toEqual(2)
+  expect(binarySearch([1, 2, 3, 4, 5, 6, 7], 10)).toEqual(-1)
+  expect(binarySearch([1, 2, 3, 4, 5, 6, 7], -3)).toEqual(-1)
+  expect(binarySearch([], 10)).toEqual(-1)
+  expect(binarySearch([1], 10)).toEqual(-1)
+  expect(binarySearch([1, 2], 10)).toEqual(-1)
+  expect(binarySearch([1, 2], 2)).toEqual(1)
+  expect(binarySearch([1, 2], 1)).toEqual(0)
+  expect(binarySearch([1], 1)).toEqual(0)
+  expect(binarySearch([1], 2)).toEqual(-1)
+  expect(binarySearch([1], -2)).toEqual(-1)
+  expect(binarySearch(['a', 'b', 'c', 'd', 'e', 'f', 'g'], 'c')).toEqual(2)
+  expect(binarySearch(['a', 'b', 'c', 'd', 'e', 'f', 'g'], 'h')).toEqual(-1)
+  expect(binarySearch(['a', 'b', 'c', 'd', 'e', 'f', 'g'], '1')).toEqual(-1)
+  expect(binarySearch([], 'a')).toEqual(-1)
+  expect(binarySearch(['a'], 'a')).toEqual(0)
+  expect(binarySearch(['a', 'b'], 'a')).toEqual(0)
+  expect(binarySearch(['a', 'b'], 'b')).toEqual(1)
+  expect(binarySearch(['a'], 'b')).toEqual(-1)
+  expect(binarySearch(['a'], '-b')).toEqual(-1)
+})
+
+describe(`${isEqualList.name}()`, () => {
   test(`returns true when elements inside two lists are the same`, () => {
     let a = []
     let b = a
