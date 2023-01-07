@@ -21,14 +21,17 @@ export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
  *   - `/(?<=[a-z])(?=[A-Z0-9])/` - splits between lowercase and Uppercase `lower|UPPER`
  *   - `/(?=[A-Z0-9][a-z])/` - splits when Uppercase is followed by lowercase `UPPER|Lower`
  *   - Combining these results in a nice split pattern for `camelCase` or `CapCase` strings.
+ *   - `?<=` causes error in Safari, so storing as string instead for use in backend
+ *     @see https://stackoverflow.com/a/51568859
  *
  * @example:
+ *    const capCaseSplitPattern = new RegExp(capCaseSplitPatternStr)
  *    'getMy1st3DGlasses XMLHttpRequest'.split(capCaseSplitPattern).join('-')
  *    >>> 'get-My-1st-3D-Glasses XML-Http-Request'
  */
-export const capCaseSplitPattern = /(?<=[a-z])(?=[A-Z0-9])|(?=[A-Z0-9][a-z])/
+export const capCaseSplitPatternStr = '(?<=[a-z])(?=[A-Z0-9])|(?=[A-Z0-9][a-z])'
 // Similar to `capCaseSplitPattern` but only considers A-Z as cap case (without numbers)
-export const capCaseLetterSplitPattern = /(?<=[a-z])(?=[A-Z])|(?=[A-Z][a-z])/
+export const capCaseLetterSplitPatternStr = '(?<=[a-z])(?=[A-Z])|(?=[A-Z][a-z])'
 export const emptyBracketsPattern = /{}|\[]|\(\)/g
 export const nonBracketsPattern = /[^{}[\]()]/g
 export const escapeRegExpPattern = /[.*+?^${}()|[\]\\]/g

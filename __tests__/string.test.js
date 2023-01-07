@@ -3,7 +3,7 @@
  */
 import {
   appendNumber,
-  capCaseSplitPattern,
+  capCaseSplitPatternStr,
   escapeRegExp,
   fileNameWithoutExt,
   formatKeyPath,
@@ -46,6 +46,7 @@ test(`${appendNumber.name} increments string with a number`, () => {
   expect(appendNumber('Camera3D')).toBe('Camera3D1')
 })
 test(`capCaseSplitPattern splits correctly`, () => {
+  const capCaseSplitPattern = new RegExp(capCaseSplitPatternStr)
   expect('camelCase'.split(capCaseSplitPattern).join('-'))
     .toBe('camel-Case')
   expect('CapCase'.split(capCaseSplitPattern).join('-'))
