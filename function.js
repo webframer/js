@@ -190,11 +190,6 @@ export const testMock = {
 }
 
 /**
- * LODASH CLONES ---------------------------------------------------------------
- * -----------------------------------------------------------------------------
- */
-
-/**
  * A wrapper around the lodash's throttle function.
  * @see https://lodash.com/docs/4.17.2#throttle for further information.
  * @param {Function} func - to call
@@ -204,4 +199,30 @@ export const testMock = {
  */
 export function throttle (func, wait = TIME_DURATION_INSTANT, options = {leading: true, trailing: true}) {
 	return _throttle(func, wait, options)
+}
+
+/**
+ * Throttle Function execution to call once per rendered frame
+ * @param {function} func - to call
+ * @returns {function} function - throttled to once per frame
+ */
+export function throttlePerFrame (func) {
+	let pendingFrameRender
+	return function () {
+		if (pendingFrameRender) return
+
+		// Call the first time immediately
+		if (pendingFrameRender == null) {
+			func.apply(this, arguments)
+			pendingFrameRender = false
+			return
+		}
+
+		// Subsequent calls
+		pendingFrameRender = true
+		requestAnimationFrame(() => {
+			func.apply(this, arguments)
+			pendingFrameRender = false
+		})
+	}
 }
