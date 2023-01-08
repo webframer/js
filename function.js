@@ -208,6 +208,10 @@ export function throttle (func, wait = TIME_DURATION_INSTANT, options = {leading
  */
 export function throttlePerFrame (func) {
 	let pendingFrameRender
+	const reset = debounce(() => {
+		pendingFrameRender = null
+	}, TIME_DURATION_INSTANT)
+
 	return function () {
 		if (pendingFrameRender) return
 
@@ -215,6 +219,7 @@ export function throttlePerFrame (func) {
 		if (pendingFrameRender == null) {
 			func.apply(this, arguments)
 			pendingFrameRender = false
+			reset()
 			return
 		}
 
@@ -223,6 +228,7 @@ export function throttlePerFrame (func) {
 		requestAnimationFrame(() => {
 			func.apply(this, arguments)
 			pendingFrameRender = false
+			reset()
 		})
 	}
 }
