@@ -382,15 +382,15 @@ export function hasProp (obj, key) {
  *    coords: [[[1, -1], [2, -2]]]
  *  }
  *
- * @param {*} obj - the collection to search for matching object
- * @param {Object} keys - object with key paths and values to match, e.g. { 'properties.id': 7, type: 'DRAFT' }
- * @param {String} match - one of comparison types ['deep', 'shallow', 'include']
- * @returns {Object} - the matching object.
+ * @param {any} collection - the Object/Array to search for matching object
+ * @param {object} keys - object with key paths and values to match, e.g. { 'properties.id': 7, type: 'DRAFT' }
+ * @param {string} match - one of comparison types ['deep', 'shallow', 'include']
+ * @returns {object|undefined} - the matching object if found
  */
-export function findObjByKeys (obj, keys = {}, match = 'deep') {
-  for (const key in obj) {
-    if (!Object.hasOwnProperty.call(obj, key)) return
-    const value = obj[key]
+export function findObjByKeys (collection, keys = {}, match = 'deep') {
+  for (const key in collection) {
+    if (!Object.hasOwnProperty.call(collection, key)) return
+    const value = collection[key]
 
     if (!isObjectLike(value)) continue
 
@@ -404,20 +404,20 @@ export function findObjByKeys (obj, keys = {}, match = 'deep') {
 /**
  * Find all the objects which matches the keys in the object.
  * @see findObjByKeys on usage details.
- * @param obj
- * @param keys
- * @param match
- * @returns {Array}
+ * @param {any} collection
+ * @param {object} keys
+ * @param {string} match
+ * @returns {object[]} - the matching objects if found, else empty array
  */
-export function findAllObjsByKeys (obj, keys = {}, match = 'deep') {
+export function findAllObjsByKeys (collection, keys = {}, match = 'deep') {
   const result = []
-  _findAllObjsByKeys(result, obj, keys, match)
+  _findAllObjsByKeys(result, collection, keys, match)
   return result
 }
 
 /**
  * Get the first direct parent object/array containing given `value`
- * @param {object|array} collection - to search from
+ * @param {object|array|any} collection - to search from
  * @param {any} value - to find parent for
  * @returns {object|array|void} parent - containing given `value`
  */
@@ -439,15 +439,15 @@ export function findParent (collection, value) {
  * The only usage difference from findObjByKeys is that the found objects are not in the return value.
  * This method populates the argument array 'foundObjs' with the found objects. This method has no return value.
  *
- * @param {Array} result - this is the return array. Pass in an empty array and it will be populated with the found objects
- * @param {Object} obj - Object or Collection to search from
- * @param {Object} keys - object with key paths and values to match, e.g. { 'properties.id': 7, type: 'DRAFT' }
- * @param {String} match - one of comparison types ['deep', 'shallow', 'include']
+ * @param {object[]} result - this is the return array. Pass in an empty array, and it will be populated with the found objects
+ * @param {any} collection - Object or Array to search from
+ * @param {object} keys - object with key paths and values to match, e.g. { 'properties.id': 7, type: 'DRAFT' }
+ * @param {string} match - one of comparison types ['deep', 'shallow', 'include']
  */
-function _findAllObjsByKeys (result, obj, keys = {}, match = 'deep') {
-  for (const key in obj) {
-    if (!Object.hasOwnProperty.call(obj, key)) return
-    const value = obj[key]
+function _findAllObjsByKeys (result, collection, keys = {}, match = 'deep') {
+  for (const key in collection) {
+    if (!Object.hasOwnProperty.call(collection, key)) return
+    const value = collection[key]
 
     if (!isObjectLike(value)) continue
 
