@@ -1,7 +1,7 @@
 import { throttle as _throttle } from 'lodash-es'
 import { __DEV__ } from './_envs.js'
 import { isInListAny } from './array.js'
-import { NOW, ONE_DAY, ONE_HOUR, TIME_DURATION_INSTANT } from './constants.js'
+import { ONE_DAY, ONE_HOUR, TIME_DURATION_INSTANT } from './constants.js'
 import { randomNumberInRange } from './number.js'
 import { randomString } from './string.js'
 
@@ -158,6 +158,7 @@ export function debounce (func, wait = TIME_DURATION_INSTANT, { leading } = {}) 
 	}
 }
 
+const NOW = Date.now()
 /**
  * Mock Data for Testing
  */

@@ -325,8 +325,8 @@ export const SIZE_MB_16 = SIZE_MB * 16
 export const UI_STATE = 'UI_STATE'
 
 /* Time */
+// A delay in milliseconds that is perceived to be instant to humans
 export const TIME_DURATION_INSTANT = 200
-export const NOW = Date.now()
 export const ONE_MILLISECOND = 1
 export const HALF_SECOND = 500
 export const HALF_MINUTE = HALF_SECOND * 60
