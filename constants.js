@@ -42,9 +42,10 @@ export const SUBMIT = 'SUBMIT'          // For triggering submission of a resour
 export const ADD = 'ADD'             		// For adding a resource
 export const APPLY = 'APPLY'            // For administering a resource
 export const CHANGE = 'CHANGE'          // For changing state
+export const COPY = 'COPY'             	// For duplicating a resource
 export const REMOVE = 'REMOVE'          // For removing state
 export const REPORT = 'REPORT'       		// For broadcasting a resource
-export const PREFETCH = 'PREFETCH'      // For pre-loading resources
+export const PREFETCH = 'PREFETCH'      // For preloading a resource
 export const PRESET = 'PRESET'					// For preparing a resource
 export const PRE_ADD = 'PRE_ADD'				// For preparing a resource
 export const PRE_REMOVE = 'PRE_REMOVE'	// For preparing a resource
@@ -99,6 +100,7 @@ export const ALL_ACTIONS = [
 	APPLY,
 	ALERT,
 	CHANGE,
+	COPY,
 	REMOVE,
 	REPORT,
 	PREFETCH,
