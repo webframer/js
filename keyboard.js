@@ -1,5 +1,5 @@
 import { isList, toList } from './array.js'
-import { isMacLike, KEY, l } from './constants.js'
+import { isMacLike, KEY, l, TIME_DURATION_INSTANT } from './constants.js'
 import { isFunction } from './function.js'
 import { swapKeyWithValue } from './object.js'
 import { ips } from './string.js'
@@ -21,8 +21,8 @@ import { subscribeTo, unsubscribeFrom } from './utility.js'
  *    keyboard.unsubscribe() // pause Keyboard Event subscription
  *    keyboard.subscribe() // resume Keyboard Event subscription
  *    keyboard.pressed.Shift >>> true // if Shift key is currently pressed
- *    keyboard.keyCode[16] >>> true // if Shift key is currently pressed
- *    keyboard.keyCode[16] >>> undefined // if Shift key is released/not pressed
+ *    keyboard.pressedKeyCode[16] >>> true // if Shift key is currently pressed
+ *    keyboard.pressedKeyCode[16] >>> undefined // if Shift key is released/not pressed
  *
  * -----------------------------------------------------------------------------
  */
@@ -37,20 +37,29 @@ class Keyboard {
    * @returns {boolean} true is it is pressed
    */
   hasKeyPress = (keyCode) => {
-    return !!this.keyCode[keyCode]
+    return !!this.pressedKeyCode[keyCode]
   }
 
-  // Map of KEY.code as `key` and boolean true/undefined as value for currently pressed keys
+  // Map of Event.code as `key` and boolean true/undefined as value for currently pressed keys
   pressed = KEY // assigned KEY is purely for IDE intellisense, this gets reset to `{}`
 
-  // Map of KEY's keyCode as `key` and boolean true/undefined as value for currently pressed keys
-  keyCode = {}
+  // Map of Event.keyCode as `key` and boolean true/undefined as value for currently pressed keys
+  pressedKeyCode = {}
 
   // Keyboard Event sources to ignore
   ignoreEventsFrom = {
     'input': true,
     'textarea': true,
   }
+
+  // @archive: Map of Event.code string as `key` and boolean as value that should not clear after shortcut fires
+  // pressedKeyToKeepAfterShortcut = {
+  //   Ctrl: true,
+  //   Alt: true, AltLeft: true, AltRight: true,
+  //   Control: true, ControlLeft: true, ControlRight: true,
+  //   Meta: true, MetaLeft: true, MetaRight: true,
+  //   Shift: true, ShiftLeft: true, ShiftRight: true,
+  // }
 
   // Map of Ctrl keyCode conversions from Windows/macOS to a consistent internal KEY.Ctrl
   _ctrlKeyCode = isMacLike
@@ -191,14 +200,45 @@ class Keyboard {
     if (this.ignoreEventsFrom[event.target.localName]) return
     // Unify inconsistent behavior from OSes, by converting 'Control' and 'Meta' keys to KEY.Ctrl
     const keyCode = this._ctrlKeyCode[event.keyCode] || event.keyCode
-    this.pressed[this._keyByCode[keyCode]] = this.keyCode[keyCode] = true
-    const keyCodes = Object.keys(this.keyCode).sort().join()
-    let called
+    this.pressed[this._keyByCode[keyCode]] = this.pressedKeyCode[keyCode] = true
+    const keyCodes = Object.keys(this.pressedKeyCode).sort().join()
+
+    const callbacks = []
     for (const keysId in this._shortcuts) {
       const {keys, callback} = this._shortcuts[keysId]
-      if ((called = keys === keyCodes)) callback(event)
+      if (keys === keyCodes) callbacks.push(callback)
     }
-    if (called) event.preventDefault()
+    if (callbacks.length) {
+      // Note: if shortcut commands call native browser alert(),
+      // all code after the shortcut callback will freeze and only resume when the alert is closed.
+      // Browser alert() also prevents all subsequent `keyup` events from being fired,
+      // so we need to clear all keys when such thing happens (ie. code freeze),
+      // while also support repeated commands, such as paste.
+      const now = Date.now()
+      callbacks.forEach(callback => callback.call(this, event))
+      event.preventDefault()
+      if (Date.now() - now > TIME_DURATION_INSTANT) {
+        this.pressed = {}
+        this.pressedKeyCode = {}
+      }
+
+      // @archive: below approach did not work, because Meta keys persist without ever getting keyup
+      //           causing other single key presses, like `Escape`, to never match with shortcuts
+      // // `keyup` events do not fire when alert pops up,
+      // // so manually clear all non-meta keys once a shortcut is fired,
+      // // because it's not possible to prevent event default after firing shortcuts on `keyup`,
+      // // since browsers fire their own shortcuts on `keydown`.
+      // // Do not clear meta keys, like Ctrl, to allow repeated commands, like pasting.
+      // // see https://stackoverflow.com/questions/13593270/keyup-not-firing-when-keydown-opens-an-alert
+      // for (const code in this.pressed) {
+      //   if (this.pressedKeyToKeepAfterShortcut[code]) continue
+      //   delete this.pressed[code]
+      // }
+      // for (const keyCode in this.pressedKeyCode) {
+      //   if (this.pressedKeyToKeepAfterShortcut[this._keyByCode[keyCode]]) continue
+      //   delete this.pressedKeyCode[keyCode]
+      // }
+    }
   }
 
   _onRelease = (event) => {
@@ -209,12 +249,12 @@ class Keyboard {
      */
     if (event.key === 'Meta' && isMacLike) {
       this.pressed = {}
-      this.keyCode = {}
+      this.pressedKeyCode = {}
     } else {
       // delete to improve performance for _onPress
       const keyCode = this._ctrlKeyCode[event.keyCode] || event.keyCode
       delete this.pressed[this._keyByCode[keyCode]]
-      delete this.keyCode[keyCode]
+      delete this.pressedKeyCode[keyCode]
     }
   }
 }
