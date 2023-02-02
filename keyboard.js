@@ -246,6 +246,10 @@ class Keyboard {
     /**
      * In Mac browsers, `keyup` event does not fire when `Meta` (Cmd) is held - this is OS level bug.
      * => When Meta key is released on macOS, clear all pressed keys.
+     * This also means that user can not press Cmd + C, then Cmd + V while still holding Cmd,
+     * because C keyup does not fire in between key presses.
+     * => There is no fix for this behavior, because users may want to hold C, so we cannot clear it
+     * after matching a shortcut on keydown.
      */
     if (event.key === 'Meta' && isMacLike) {
       this.pressed = {}
