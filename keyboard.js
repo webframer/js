@@ -91,7 +91,7 @@ class Keyboard {
    * @returns {function} callback - to be used for removing the shortcut
    */
   addShortcut = (callback, keyCodes, id) => {
-    const keys = toList(keyCodes).sort().join()
+    const keys = [...toList(keyCodes)].sort().join()
     const keysId = `${keys}_${id}`
 
     // Check for duplicates
