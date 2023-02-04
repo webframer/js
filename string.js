@@ -142,10 +142,10 @@ export function escapeRegExp (string) {
 /**
  * Convert String to RegexExp (with given String being escaped first)
  * @param {String} string - to be converted to Regex
- * @param {*[]} [args] - to be passed to RegexExp initialization
+ * @param {string} [flags] - to be passed to RegexExp initialization
  */
-export function regexExp (string, ...args) {
-  return new RegExp(escapeRegExp(string), ...args)
+export function regexExp (string, flags) {
+  return new RegExp(escapeRegExp(string), flags)
 }
 
 /**
@@ -490,7 +490,7 @@ export function hostname (url) {
 }
 
 /**
- * Get Matching Substring Between Two Strings
+ * Get the first Matching Substring Between Two Strings
  *
  * @example:
  * matchBetween('cool_black__hat', '_', '__')
@@ -502,7 +502,7 @@ export function hostname (url) {
  * @returns {string} - matching string between `before` and `after` strings if found, or an empty string if not
  */
 export function matchBetween (string, before, after) {
-  return get(string.match(`${before}(.*)${after}`), '[1]') || ''
+  return get(string.match(`${escapeRegExp(before)}([^]*?)${escapeRegExp(after)}`), '[1]') || ''
 }
 
 /**

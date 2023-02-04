@@ -15,6 +15,7 @@ import {
   isIpAddress,
   isPhoneNumber,
   longestCommonSubstring,
+  matchBetween,
   randomString,
   regexExp,
   sha256,
@@ -71,6 +72,23 @@ it(`${escapeRegExp.name}() returns escaped string ready for RegexExp use`, () =>
 it(`${regexExp.name}() returns escaped string RegexExp`, () => {
   expect(regexExp('a | b')).toEqual(/a \| b/)
   expect(regexExp('a \\ b', 'i')).toEqual(/a \\ b/i)
+  expect(regexExp('/* <@')).toEqual(/\/\* <@/)
+  expect(regexExp('@> */')).toEqual(/@> \*\//)
+})
+
+test(`${matchBetween.name}() returns string in between given strings`, () => {
+  expect(matchBetween('a_b__c', '_', '__')).toEqual('b')
+  expect(matchBetween('a_b_c', '_', '_')).toEqual('b')
+  expect(matchBetween('/* comment */', '/* ', ' */')).toEqual('comment')
+  expect(matchBetween(`
+<View>
+  <div id='1'>
+    {variable}
+  </div>
+</View>
+`, '<div id=\'1\'>', '</div>')).toEqual(`
+    {variable}
+  `)
 })
 
 test(`${isClosedBrackets.name} returns true for properly closed or no brackets string`, () => {
