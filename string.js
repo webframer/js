@@ -497,12 +497,19 @@ export function hostname (url) {
  * >>> 'black'
  *
  * @param {string} string - to match against
- * @param {string} before - string preceding the match
- * @param {string} after - string succeeding the match
+ * @param {string} before - string preceding the match (can be a Regex pattern by default)
+ * @param {string} after - string succeeding the match (can be a Regex pattern by default)
+ * @param {object} [options]:
+ *    - {boolean} esc - whether to escape Regex the `before` and `after` strings and treat them literally
+ *    - {boolean} inclusive - whether to include the `before` and `after` strings in the result
  * @returns {string} - matching string between `before` and `after` strings if found, or an empty string if not
  */
-export function matchBetween (string, before, after) {
-  return get(string.match(`${escapeRegExp(before)}([^]*?)${escapeRegExp(after)}`), '[1]') || ''
+export function matchBetween (string, before, after, {esc = false, inclusive = false} = {}) {
+  if (esc) {
+    before = escapeRegExp(before)
+    after = escapeRegExp(after)
+  }
+  return get(string.match(`${before}([^]*?)${after}`), inclusive ? '[0]' : '[1]') || ''
 }
 
 /**

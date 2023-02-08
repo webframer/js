@@ -79,7 +79,8 @@ it(`${regexExp.name}() returns escaped string RegexExp`, () => {
 test(`${matchBetween.name}() returns string in between given strings`, () => {
   expect(matchBetween('a_b__c', '_', '__')).toEqual('b')
   expect(matchBetween('a_b_c', '_', '_')).toEqual('b')
-  expect(matchBetween('/* comment */', '/* ', ' */')).toEqual('comment')
+  expect(matchBetween('/* comment */', '/* ', ' */', {esc: true})).toEqual('comment')
+  expect(matchBetween('/* comment */', '/* ', ' */', {esc: true, inclusive: true})).toEqual('/* comment */')
   expect(matchBetween(`
 <View>
   <div id='1'>
