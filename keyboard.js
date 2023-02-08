@@ -216,7 +216,7 @@ class Keyboard {
       // while also support repeated commands, such as paste.
       const now = Date.now()
       callbacks.forEach(callback => callback.call(this, event))
-      event.preventDefault()
+      // event.preventDefault() // let implementation decide what to do with the event
       if (Date.now() - now > TIME_DURATION_INSTANT) {
         this.pressed = {}
         this.pressedKeyCode = {}
