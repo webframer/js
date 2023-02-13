@@ -92,7 +92,8 @@ export function hasObjectValue (obj) {
 }
 
 /**
- * Checks if value is the language type of Object
+ * Checks if value is a plain object, that is,
+ * an object created by the Object constructor or one with a [[Prototype]] of null.
  *
  * @uses lodash
  * @see https://lodash.com/docs/4.17.21#isPlainObject

@@ -13,19 +13,19 @@ import { randomString } from './string.js'
 /**
  * Checks if passed argument is of type function.
  *
- * @param {*} func - the thing we are checking for being a function
- * @return {boolean}
+ * @param {any} value - to check
+ * @return {boolean} true - if it's a normal async or generator unction, including class methods
  */
-export function isFunction (func) {
-	return typeof func === 'function' // works for async and generator functions too
+export function isFunction (value) {
+	return typeof value === 'function' // works for async and generator functions too
 }
 
-export function isAsyncFunction (func) {
-	return typeof func === 'function' && func.constructor === asyncFuncConstructor
+export function isAsyncFunction (value) {
+	return typeof value === 'function' && value.constructor === asyncFuncConstructor
 }
 
-export function isGeneratorFunction (func) {
-	return typeof func === 'function' && func.constructor === generatorFuncConstructor
+export function isGeneratorFunction (value) {
+	return typeof value === 'function' && value.constructor === generatorFuncConstructor
 }
 
 export const asyncFuncConstructor = (async () => {}).constructor

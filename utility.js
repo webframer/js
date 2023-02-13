@@ -1,9 +1,12 @@
+import { isBoolean, isSymbol } from 'lodash-es'
 import { Active, ENV } from './_envs.js'
 import { isInList, isList } from './array.js'
 import { fromJSON } from './codec.js'
-import { rad } from './number.js'
+import { isNumber, rad } from './number.js'
 import { isObject } from './object.js'
 import { isString, padStringLeft, randomString } from './string.js'
+
+export { isBoolean } from 'lodash-es'
 
 /**
  * AD HOC FUNCTIONS ============================================================
@@ -96,6 +99,17 @@ Id.history = {} // log of previously generated Ids by timestamp
  */
 export function isId (value) {
   return isString(value) && value.length >= Id.minLength && Id.pattern.test(value)
+}
+
+/**
+ * Check if value is of primitive type: string, number, boolean, bigint, symbol, null, undefined.
+ * String, Number, etc. in object form are considered as primitive because they coerce the same way.
+ *
+ * @param {any} val - check
+ * @returns {boolean} true - if it's considered of primitive value
+ */
+export function isPrimitive (val) {
+  return val == null || isString(val) || isNumber(val) || isBoolean(val) || isSymbol(val) || typeof val === 'bigint'
 }
 
 /**

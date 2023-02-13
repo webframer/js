@@ -1,7 +1,7 @@
 import { hasDuplicateInList } from '../array.js'
 import { ONE_HOUR, ONE_MINUTE, ONE_MONTH, ONE_SECOND, ONE_WEEK, ONE_YEAR } from '../constants.js'
 import { cloneDeep } from '../object.js'
-import { distanceBetween, Id, isId, isTruthy, timestampFromId } from '../utility.js'
+import { distanceBetween, Id, isId, isPrimitive, isTruthy, timestampFromId } from '../utility.js'
 
 const NON_TRUTHY_VALUES = [
   false,
@@ -83,6 +83,57 @@ const ALL_VALUE_TYPES = [
   () => {},
   new Date(),
 ]
+
+describe(`${isPrimitive.name}()`, () => {
+  it(`returns true for null and undefined`, () => {
+    expect(isPrimitive(null)).toBe(true)
+    expect(isPrimitive(undefined)).toBe(true)
+    expect(isPrimitive(void 0)).toBe(true)
+  })
+  it(`returns true for String, including in object form`, () => {
+    expect(isPrimitive('')).toBe(true)
+    // noinspection JSPrimitiveTypeWrapperUsage
+    expect(isPrimitive(new String(''))).toBe(true)
+  })
+  it(`returns true for Number, including in object form`, () => {
+    expect(isPrimitive(0)).toBe(true)
+    expect(isPrimitive(1e7)).toBe(true)
+    expect(isPrimitive(1e-7)).toBe(true)
+    expect(isPrimitive(Infinity)).toBe(true)
+    expect(isPrimitive(-Infinity)).toBe(true)
+    expect(isPrimitive(NaN)).toBe(true)
+    expect(isPrimitive(Number.MIN_VALUE)).toBe(true)
+    expect(isPrimitive(Number.MIN_SAFE_INTEGER)).toBe(true)
+    expect(isPrimitive(Number.MAX_VALUE)).toBe(true)
+    expect(isPrimitive(Number.MAX_SAFE_INTEGER)).toBe(true)
+    // noinspection JSPrimitiveTypeWrapperUsage
+    expect(isPrimitive(new Number(0))).toBe(true)
+  })
+  it(`returns true for BigInt`, () => {
+    expect(isPrimitive(BigInt(1))).toBe(true)
+  })
+  it(`returns true for Boolean, including in object form`, () => {
+    expect(isPrimitive(false)).toBe(true)
+    // noinspection JSPrimitiveTypeWrapperUsage
+    expect(isPrimitive(new Boolean(false))).toBe(true)
+  })
+  it(`returns true for Symbol, including Symbol.for() form`, () => {
+    expect(isPrimitive(Symbol('sym'))).toBe(true)
+    expect(isPrimitive(Symbol.for('key'))).toBe(true)
+  })
+  it(`returns false for array, plain object, function, class, regex and Date`, () => {
+    class A {}
+
+    expect(isPrimitive([])).toBe(false)
+    expect(isPrimitive({})).toBe(false)
+    expect(isPrimitive(function () {})).toBe(false)
+    expect(isPrimitive(() => {})).toBe(false)
+    expect(isPrimitive(A)).toBe(false)
+    expect(isPrimitive(new Date())).toBe(false)
+    expect(isPrimitive(new RegExp('.*'))).toBe(false)
+    expect(isPrimitive(/.*/)).toBe(false)
+  })
+})
 
 describe(`${isTruthy.name}() returns false for all non truthy values, true otherwise`, () => {
   NON_TRUTHY_VALUES.forEach((value) => {
