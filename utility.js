@@ -178,6 +178,39 @@ export function distanceBetween (point1, point2, unit = 'mm') {
 }
 
 /**
+ * Create a Dynamic Import Proxy map for code splitting, returning a new map object,
+ * with values being default asset exports (or their Promises in frontend, and null in backend).
+ *
+ * @example:
+ *    // Setup once
+ *    const assetMap = dynamicImport({
+ *      View: () => import(`./components/View.jsx`)
+ *    })
+ *
+ *    // Retrieving asset inside function or class Components
+ *    let { View = Component } = assetMap
+ *    if (View instanceof Promise) {
+ *       View.then(() => this.forceUpdate())
+ *       View = null
+ *    }
+ *    if (View === null) View = () => <Loader /> // component is loading for the first time
+ *    else {...} // logic to render View
+ *
+ * @param {{[p: string]: function}} assetMap - map of the assets' dynamic import functions
+ */
+export function dynamicImport (assetMap) {
+  return new Proxy(assetMap, {
+    get (assetMap, key) {
+      if (!assetMap[key]) return
+      // Prevent SSR hydration mismatch errors
+      if (typeof window === 'undefined') return null // return null to indicate the prop exists
+      const _key = `_${key}`
+      return this[_key] || (this[_key] = assetMap[key]().then(m => this[_key] = m.default || m))
+    },
+  })
+}
+
+/**
  * Check if given password is good enough
  * @see: https://lowe.github.io/tryzxcvbn/
  *    minimum score of 3 is for safe password in security sensitive applications, 2 is usually enough
