@@ -66,6 +66,31 @@ export function extractPrivateProps (obj, prefix = '#') {
 }
 
 /**
+ * Extract Object keys with all UPPER_CASE letters into a new object by mutation
+ * @example:
+ *    const props = {VIEW: 'Row', _id: 'Id'}
+ *    const upperObj = extractUppercaseProps(props)
+ *    >>> upperObj == {VIEW: 'Row'}
+ *    >>> props == {_id: 'Id'}
+ *
+ * @param {object|array} obj - object with mixed of uppercase and standard properties
+ * @param {string} [upperChars] - additional characters to be considered as UPPER case
+ * @returns {object} uppercaseProps - new object, and mutated props without uppercase keys
+ */
+export function extractUppercaseProps (obj, upperChars = '_') {
+  if (isList(obj)) return obj
+  const result = {}
+  const pattern = new RegExp(`^[A-Z${upperChars}]+$`)
+  for (const key in obj) {
+    if (pattern.test(key)) {
+      result[key] = obj[key]
+      delete obj[key]
+    }
+  }
+  return result
+}
+
+/**
  * Delete Nested Property of an Object by given Key Path
  * @param {Object} obj - to delete property from
  * @param {String|*} path - key path to nested property for deletion

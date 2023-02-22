@@ -2,6 +2,7 @@ import {
   classInstanceMethodNames,
   cloneDeep,
   deleteProp,
+  extractUppercaseProps,
   findAllObjsByKeys,
   findObjByKeys,
   findParent,
@@ -102,6 +103,14 @@ test(`${deleteProp.name}() removes nested property from object`, () => {
   const obj = {a: {b: 5, c: 1}}
   expect(deleteProp(obj, 'a.b')).toBe(true)
   expect(obj).toEqual({a: {c: 1}})
+})
+
+test(`${extractUppercaseProps.name}() mutates given object and returns a new object`, () => {
+  const props = {VIEW: 'Row', _id: 'Id'}
+  const upperObj = extractUppercaseProps(props)
+  expect(upperObj).toEqual({VIEW: 'Row'})
+  expect(props).toEqual({_id: 'Id'})
+  expect(['A', 'B', 'C']).toEqual(['A', 'B', 'C'])
 })
 
 it(`${hasObjMatch.name}() returns 'true' when nested Collection has a matching Object, else 'false'`, () => {
