@@ -51,7 +51,7 @@ export const FILE = {
   },
 }
 
-// File Extensions
+// File Extensions with dot prepended, for extension without dots, use FILE.FORMAT.*
 FILE.EXT = {}
 for (const key in FILE.FORMAT) {
   FILE.EXT[key] = `.${FILE.FORMAT[key]}`
@@ -103,7 +103,7 @@ export const UPLOAD = {
   DIR: `/uploads`, // relative to site's root for frontend, and _WORK_DIR_ for backend
   BY_ROUTE: {
     [FILE.TYPE.JSON]: {fileTypes: '.json', maxSize: SIZE_MB_16},
-    [FILE.TYPE.IMAGE]: {fileTypes: '.' + IMAGE.EXTS.join(', '), maxSize: SIZE_MB_16},
+    [FILE.TYPE.IMAGE]: {fileTypes: IMAGE.EXTS.join(', '), maxSize: SIZE_MB_16},
     [FILE.TYPE.SOUND]: {fileTypes: '.mp3', maxSize: SIZE_MB_16},
     [FILE.TYPE.VIDEO]: {fileTypes: '.mp4', maxSize: SIZE_MB_16},
   },
