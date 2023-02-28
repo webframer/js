@@ -103,8 +103,8 @@ export function enumFrom (DEFINITION) {
  *    <Dropdown options={options.items} .../> // options for currently active language can be accessed via `items`,
  *    <Dropdown options={options[LANGUAGE.ENGLISH._]} .../> // or directly via language _
  *
- * @param {Object<KEY<_...>>|Array<_...>} DEFINITION - key/value pairs of variable name with its underscore value
- * @return {Object<items, lang[{text, value}]>} options - grouped by language underscore value, with .items pointing to active lang
+ * @param {{[p: string]: {_: any}}|array} DEFINITION - key/value pairs of variable name with its underscore value
+ * @returns {{items, lang: Array<{text, value}}} options - grouped by language underscore value, with .items pointing to active lang
  */
 export function optionsFrom (DEFINITION) {
   const options = {

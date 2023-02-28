@@ -161,6 +161,7 @@ describe(`${Id.name}(), ${isId.name}(), and ${timestampFromId.name}()`, () => {
   const args = {caseSensitive: true, padCount}
   const id = Id(args)
   const limit = Math.pow(Id.alphabet.length, padCount) // the limit of timestamp
+  const limitLower = Math.pow(Id.alphabetLower.length, padCount)
 
   test(`${Id.name}() generates auto incrementing ID string using Timestamp`, () => {
     expect(id.length).toBeGreaterThanOrEqual(padCount + 3)
@@ -237,13 +238,19 @@ describe(`${Id.name}(), ${isId.name}(), and ${timestampFromId.name}()`, () => {
 
   test(`${timestampFromId.name}() converts Id string to Timestamp in milliseconds`, () => {
     // The last three characters are random string, not used for timestamp
+    const timestamp = Date.now()
+    expect(timestampFromId(Id({timestamp}))).toEqual(timestamp)
     expect(timestampFromId('0000000God')).toEqual(0)
     expect(timestampFromId('0000000000God')).toEqual(0)
-    expect(timestampFromId('000000ZGod')).toEqual(35)
-    expect(timestampFromId('0000010Sex')).toEqual(62)
-    expect(timestampFromId('0000011Sex')).toEqual(63)
-    expect(timestampFromId('zzzzzzzL0L')).toEqual(limit - 1)
-    expect(timestampFromId('10000000abs')).toEqual(limit)
+    expect(timestampFromId('000000ZGod', {caseSensitive: true})).toEqual(35)
+    expect(timestampFromId('0000010Sex', {caseSensitive: true})).toEqual(62)
+    expect(timestampFromId('0000010Sex', {caseSensitive: false})).toEqual(36)
+    expect(timestampFromId('0000011Sex', {caseSensitive: true})).toEqual(63)
+    expect(timestampFromId('0000011Sex', {caseSensitive: false})).toEqual(37)
+    expect(timestampFromId('zzzzzzzL0L', {caseSensitive: true})).toEqual(limit - 1)
+    expect(timestampFromId('zzzzzzzL0L', {caseSensitive: false})).toEqual(limitLower - 1)
+    expect(timestampFromId('10000000abs', {caseSensitive: true})).toEqual(limit)
+    expect(timestampFromId('10000000abs', {caseSensitive: false})).toEqual(limitLower)
   })
 
   test(`${timestampFromId.name}() throws error for invalid Id string`, () => {

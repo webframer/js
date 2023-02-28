@@ -4,8 +4,18 @@ import { __CLIENT__, __DEV__, Active } from './_envs.js'
 import { ONE_MILLISECOND } from './constants.js'
 import { logSelector } from './log.js'
 import { formatNumber } from './number.js'
+import { hasProp } from './object.js'
 
 export * from 'reselect'
+
+/**
+ * Check if given value is a memoized selector function
+ * @param {any} func
+ * @returns {boolean} true - if it was created with `createSelector` from 'reselect' library
+ */
+export function isSelector (func) {
+  return hasProp(func, 'memoizedResultFunc')
+}
 
 /**
  * Selector Decorator to turn all class static property functions into Memoized Functions
