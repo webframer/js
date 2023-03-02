@@ -5,6 +5,7 @@ import {
   appendNumber,
   capCaseSplitPatternStr,
   escapeRegExp,
+  fileFormat,
   fileNameWithoutExt,
   formatKeyPath,
   getParamByKey,
@@ -144,6 +145,21 @@ it(`${isPhoneNumber.name}() returns true if given value is a valid telephone num
   expect(isPhoneNumber('79255553355')).toBe(false)
   expect(isPhoneNumber('+79255553355')).toBe(true)
   expect(isPhoneNumber('+7 (925) 555-33-55')).toBe(true)
+})
+
+test(`${fileFormat.name}() returns file extension correctly`, () => {
+  expect(fileFormat(``)).toEqual('')
+  expect(fileFormat(`0`)).toEqual('')
+  expect(fileFormat(`folder`)).toEqual('')
+  expect(fileFormat(`image.png`)).toEqual('png')
+  expect(fileFormat(`image.jpeg`)).toEqual('jpeg')
+  expect(fileFormat(`image.jpg`)).toEqual('jpg')
+  expect(fileFormat(`file.spec.js`)).toEqual('js')
+  expect(fileFormat(`__test__.ts`)).toEqual('ts')
+  expect(fileFormat(`.`)).toEqual('')
+  expect(fileFormat(`.env`)).toEqual('env')
+  expect(fileFormat(`.env.production`)).toEqual('env')
+  expect(fileFormat(`.gitignore`)).toEqual('gitignore')
 })
 
 it(`${formatKeyPath.name}() formats square brackets correctly`, () => {

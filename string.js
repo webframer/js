@@ -404,6 +404,9 @@ export const formatKeyPathPattern = /(\[)(.*?)(\])/g
  * @returns {string} extension - file format if exists (ex. 'png') or empty string if it does not
  */
 export function fileFormat (fileName) {
+  // hidden files have extension as the part after the first dot, not the last like normal files
+  // Example: '.env.production'
+  if (fileName.startsWith('.')) return fileName.split('.')[1]
   const array = fileName.split('.')
   return array.length > 1 ? array.pop() : ''
 }

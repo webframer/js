@@ -17,6 +17,7 @@ export const FILE = {
   PATH_IMAGES: `${CDN_URL}/static/images/`,
   PATH_SOUNDS: `${CDN_URL}/static/sounds/`,
   CDN_URL,
+  // File extension without the dot in lowercase
   FORMAT: {
     BIN: 'bin',
     CSV: 'csv',
@@ -42,11 +43,12 @@ export const FILE = {
     SVG: 'image/svg+xml',
     WEBP: 'image/webp',
   },
-  // File Uploads
+  // File grouping into common media types
   TYPE: {
+    AUDIO: 'audio',
     JSON: 'json',
     IMAGE: 'image',
-    SOUND: 'sound',
+    TEXT: 'text',
     VIDEO: 'video',
   },
 }
@@ -104,7 +106,7 @@ export const UPLOAD = {
   BY_ROUTE: {
     [FILE.TYPE.JSON]: {fileTypes: '.json', maxSize: SIZE_MB_16},
     [FILE.TYPE.IMAGE]: {fileTypes: IMAGE.EXTS.join(', '), maxSize: SIZE_MB_16},
-    [FILE.TYPE.SOUND]: {fileTypes: '.mp3', maxSize: SIZE_MB_16},
+    [FILE.TYPE.AUDIO]: {fileTypes: '.mp3', maxSize: SIZE_MB_16},
     [FILE.TYPE.VIDEO]: {fileTypes: '.mp4', maxSize: SIZE_MB_16},
   },
 }
