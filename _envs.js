@@ -24,7 +24,7 @@ export const _SHOULD_SHOW_TEST_ = __DEV__
 export const _WORK_DIR_ = typeof process !== 'undefined' ? process.cwd() : '.'
 
 /* Globally Accessible Objects */
-export const Active = {
+export const Current = {
   // Will be overridden at runtime, used for avoiding circular import and env-dependent libraries
   DEFAULT: {LANG: LANGUAGE.ENGLISH._},
   // The currently used language definition
@@ -62,7 +62,7 @@ export const Active = {
    * Password Strength Calculator
    * @example: <script async src="/static/zxcvbn.js"/>
    *    - Frontend uses async script in <head/> section to load static zxcvbn.js for faster page load.
-   *    - Backend should override this prop with `Active.passwordCheck = require('zxcvbn')`
+   *    - Backend should override this prop with `Current.passwordCheck = require('zxcvbn')`
    * @returns {zxcvbn|(function(): {score: number})|*}
    */
   get passwordCheck () {

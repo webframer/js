@@ -1,4 +1,4 @@
-import { Active } from './_envs.js'
+import { Current } from './_envs.js'
 import { l, LANGUAGE } from './constants.js'
 import { ips } from './string.js'
 
@@ -26,8 +26,8 @@ export function localise (DEFINITION) {
     if (name == null && _ != null) {
       Object.defineProperty(DEFINITION[index], 'name', {
         get () {
-          return this[Active.LANGUAGE._] != null
-            ? this[Active.LANGUAGE._]
+          return this[Current.LANGUAGE._] != null
+            ? this[Current.LANGUAGE._]
             : (this[LANGUAGE.ENGLISH._] != null ? this[LANGUAGE.ENGLISH._] : String(_))
         },
       })
@@ -80,7 +80,7 @@ export function translate (TRANSLATION) {
         get () {
           // initially cannot use setter to define translations, thus fallback to _data
           const data = translate.instance[_key] || (translate.instance[_key] = _data)
-          return data[Active.LANGUAGE._] || data[Active.DEFAULT.LANG] || KEY || ''
+          return data[Current.LANGUAGE._] || data[Current.DEFAULT.LANG] || KEY || ''
         },
         set (data) {
           // merge new translations with existing
@@ -137,7 +137,7 @@ translate({
  *    >>> 'New Phrase'
  *
  *    // Set the current language.
- *    Active.LANGUAGE = LANGUAGE.RUSSIAN
+ *    Current.LANGUAGE = LANGUAGE.RUSSIAN
  *    log(_.NEW_PHRASE)
  *    >>> 'Новая Фраза'
  *

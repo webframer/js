@@ -1,4 +1,4 @@
-import { __DEV__, Active } from './_envs.js'
+import { __DEV__, Current } from './_envs.js'
 import { isList } from './array.js'
 import { fromJSON, toJSON } from './codec.js'
 import { ADD, DELETE, GET, SET } from './constants.js'
@@ -45,8 +45,8 @@ performCache.cache = {}
  * Perform localStorage (for the Web), node-persist (for Node.js) or AsyncStorage (for React Native)
  *
  * @setup (for backend):
- *   if (!Active.Storage) {
- *     Active.Storage = require('node-persist')
+ *   if (!Current.Storage) {
+ *     Current.Storage = require('node-persist')
  *     performStorage.init() // initiate local storage as async method to avoid blocking concurrent processes
  *   }
  * @example:
@@ -75,7 +75,7 @@ export function performStorage (ACTION, storageKey, value = null, initialValue =
   }
 
   /* SERVER (or missing localStorage) */
-  if (!hasLocalStorage) return Active.Storage[performStorage.toServer[ACTION]](storageKey, value)
+  if (!hasLocalStorage) return Current.Storage[performStorage.toServer[ACTION]](storageKey, value)
 
   /* CLIENT */
   enumCheck([GET, SET, DELETE], ACTION, this)
@@ -111,11 +111,11 @@ performStorage.toServerSync = {
 // Setup Asynchronous Local Storage
 performStorage.init = function (...args) {
   performStorage.isAsync = true
-  return Active.Storage.init(...args)
+  return Current.Storage.init(...args)
 }
 // Setup Synchronous Local Storage (not recommended)
 performStorage.initSync = function (...args) {
   performStorage.toServer = performStorage.toServerSync
-  return Active.Storage.initSync(...args)
+  return Current.Storage.initSync(...args)
 }
 

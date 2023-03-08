@@ -1,5 +1,5 @@
 import { isBoolean, isSymbol } from 'lodash-es'
-import { Active, ENV } from './_envs.js'
+import { Current, ENV } from './_envs.js'
 import { isInList, isList } from './array.js'
 import { fromJSON } from './codec.js'
 import { isNumber, rad } from './number.js'
@@ -301,7 +301,7 @@ export function namespace (constant, service) {
  * @return {Object} strength - result
  */
 export function passStrength (password) {
-  return Active.passwordCheck(password).score
+  return Current.passwordCheck(password).score
 }
 
 /**

@@ -8,9 +8,10 @@ The reason is because IDE Webstorm does not resolve `export * from './file.js` w
 
 ## Usage
 ### 1. Initial Setup
-```js
-import { Active } from '@webframer/js'
 
-Active.log = require('chalk') // use colored console.log for Node.js
-Active.Storage = require('node-persist') // set localStorage for Node.js
+```js
+import { Current } from '@webframer/js'
+
+Current.log = require('chalk') // use colored console.log for Node.js
+Current.Storage = require('node-persist') // set localStorage for Node.js
 ```

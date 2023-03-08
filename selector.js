@@ -1,6 +1,6 @@
 import now from 'performance-now' // adds almost zero KB to bundle size because browsers have window.performance.now()
 import { createSelector } from 'reselect'
-import { __CLIENT__, __DEV__, Active } from './_envs.js'
+import { __CLIENT__, __DEV__, Current } from './_envs.js'
 import { ONE_MILLISECOND } from './constants.js'
 import { logSelector } from './log.js'
 import { formatNumber } from './number.js'
@@ -63,14 +63,14 @@ export function selector (NAME, maxTime = 5 * ONE_MILLISECOND) {
             const duration = now() - start
             let time = `${formatNumber(duration, {decimals: 3})} ms`
             if (duration >= maxTime) {
-              if (__CLIENT__ || (!Active.log || !Active.log.keyword)) {
+              if (__CLIENT__ || (!Current.log || !Current.log.keyword)) {
                 time = '%c' + time + '%c'
                 logSelector(`${NAME} ${key} [${time}]`, result, 'color: Red', 'color: Orange')
               }
               // Chalk logger is available
               else {
                 // Since chalk v5.0.0 there is no orange color, only yellow, and no chalk.keyword(), and only ESM import
-                logSelector(`${NAME} ${key} [`, result, Active.log.keyword('red')(time), Active.log.keyword('orange')(']'))
+                logSelector(`${NAME} ${key} [`, result, Current.log.keyword('red')(time), Current.log.keyword('orange')(']'))
               }
             } else {
               logSelector(`${NAME} ${key} [${time}]`, result)
