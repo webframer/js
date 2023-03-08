@@ -1,20 +1,22 @@
-import { capitalize, get, startCase } from 'lodash-es'
+import { capitalize, get, isString, startCase } from 'lodash-es'
 import pluralizer from 'pluralize'
 
 /**
  * @example:
  *    // Sanitize the string to contain only alphanumeric characters
- *    str.replace(alphaNumPattern, '')
+ *    str.replace(nonAlphaNumPattern, '')
  *
  * @note:
  *    - Regex with `/g` flag must be reset in between `exec` or .test(), or it can return false
  *      => see https://stackoverflow.com/a/2630538
  *    - Cached regex is only good for replacement or when it is without `/g` flag
  */
-export const alphaNumPattern = /[^a-zA-Z0-9]/g
-export const alphaNumIdPattern = /[^a-zA-Z0-9_-]/g
-export const alphaNumURIPattern = /[^a-zA-Z0-9./_-]/g
-export const alphaNumVarPattern = /[^a-zA-Z0-9_]/g
+export const alphaNumWordsPattern = /[a-zA-Z0-9]+/g
+export const nonAlphaNumPattern = /[^a-zA-Z0-9]/g
+export const nonAlphaNumIdPattern = /[^a-zA-Z0-9_-]/g
+export const nonAlphaNumURIPattern = /[^a-zA-Z0-9./_-]/g
+export const nonAlphaNumVarPattern = /[^a-zA-Z0-9_]/g
+export const nonUnderscoreCharsPattern = /[^_]+/g
 /**
  * Split CapCased String.
  * This uses Regex Lookbehind, which may not work in Safari or IE:
@@ -41,6 +43,8 @@ export const hyphensTrimPattern = /^-+|-+$/g
 export const isBase64Pattern = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
 // Match a single or multiples spaces, including tabs, newline, etc.
 export const spacesPattern = /\s+/g
+// Match all words
+export const wordsPattern = /\w+/g
 
 // Random String Generation (with increased search space to 88^n)
 const symbols = `~!@#%^&*()[]|{}<>:;,.?-+_=` // only use safe symbols
@@ -53,7 +57,7 @@ const upperThresholdAlphaNum = 1 - 26 / 62 // minimum Math.random() result for u
  * =============================================================================
  */
 
-export { isString, startCase as toCapCaseSpace, camelCase as toCamelCase } from 'lodash-es'
+export { isString, startCase, camelCase as toCamelCase } from 'lodash-es'
 
 /**
  * Append an incrementing Number to given String to make it unique
@@ -751,7 +755,7 @@ export function toHex (string) {
  * @returns {String} - with alpha numeric characters only
  */
 export function toAlphaNum (string) {
-  return string.replace(alphaNumPattern, '')
+  return string.replace(nonAlphaNumPattern, '')
 }
 
 /**
@@ -761,7 +765,7 @@ export function toAlphaNum (string) {
  * @returns {String} - with alpha numeric characters, dash and underscore only
  */
 export function toAlphaNumId (string) {
-  return string.replace(alphaNumIdPattern, '')
+  return string.replace(nonAlphaNumIdPattern, '')
 }
 
 /**
@@ -776,13 +780,13 @@ export function toAlphaNumId (string) {
  *
  * @param {string} string - to sanitize, can contain any characters
  * @param {object} options:
- *    {RegExp} [pattern] - Regex pattern of allowed characters
+ *    {RegExp} [pattern] - Regex pattern of characters to replace with hyphen
  * @returns {string} URI - sanitized for browser URL, without encoding/decoding
  */
-export function toURI (string, {pattern = alphaNumURIPattern} = {}) {
+export function toURI (string, {replacePattern = nonAlphaNumURIPattern} = {}) {
   if (!string) return string
   return string.replace(spacesPattern, '-') // remove spaces/newlines before stripping special characters
-    .replace(pattern, '-') // convert all invalid characters to hyphen
+    .replace(replacePattern, '-') // convert all invalid characters to hyphen
     .replace(hyphensPattern, '-') // convert multiple to single hyphen, may be at the start or end
     .replace(hyphensTrimPattern, '') // trim hyphens from both ends
     .toLowerCase()
@@ -804,12 +808,28 @@ export function truncate (string, length = 15, lastChars = 3) {
 }
 
 /**
- * Convert String to CapCase
- * @param {String|*} string - value to convert
- * @returns {String|*} - cap cased
+ * Convert String to CapCase (ie. Capitalize each word, remove spaces, and optionally remove symbols).
+ * Note that the underscore character is not considered as symbol, it is part of Regex `\w+` match.
+ * @example:
+ *   toCapCase('firstName')
+ *   >>> 'FirstName'
+ *
+ *   toCapCase('-webkit-scrollbar')
+ *   >>> 'WebkitScrollbar'
+ *
+ *   toCapCase('__FOO_BAR__')
+ *   >>> '__FOO_BAR__'
+ *
+ *
+ * @param {string} string - value to convert
+ * @param {object} [options]:
+ *    {boolean|string} keepSymbols - false by default -> all symbols are removed (good for code variable)
+ * @returns {string} - CapCased
  */
-export function toCapCase (string) {
-  return string && startCase(string).replace(spacesPattern, '')
+export function toCapCase (string, {keepSymbols = false} = {}) {
+  if (!string) return string
+  if (keepSymbols === true) return string.replace(alphaNumWordsPattern, startCase)
+  return string.replace(nonUnderscoreCharsPattern, startCase).replace(spacesPattern, '')
 }
 
 /**
@@ -846,6 +866,30 @@ export function toUpperCase (string) {
  */
 export function toUpperCaseAny (value) {
   return String(value).toUpperCase()
+}
+
+/**
+ * Convert String to 'Title Case' (ie. Capitalize each word and add space between words)
+ * @example:
+ *   toCapCase('firstName')
+ *   >>> 'First Name'
+ *
+ *   toCapCase('-webkit-scrollbar')
+ *   >>> '-Webkit-Scrollbar'
+ *
+ *   toCapCase('__FOO_BAR__')
+ *   >>> '__FOO_BAR__'
+ *
+ *
+ * @param {string} string - value to convert
+ * @param {object} [options]:
+ *    {boolean|string} keepSymbols - true by default, else symbols are replaced with spaces
+ * @returns {string} - Title Cased
+ */
+export function toTitleCase (string, {keepSymbols = true} = {}) {
+  if (!string) return string
+  if (keepSymbols === true) return string.replace(alphaNumWordsPattern, startCase)
+  return startCase(string)
 }
 
 /**

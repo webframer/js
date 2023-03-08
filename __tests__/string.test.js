@@ -20,6 +20,8 @@ import {
   randomString,
   regexExp,
   sha256,
+  toCapCase,
+  toTitleCase,
   toURI,
   truncate,
 } from '../string.js'
@@ -189,6 +191,26 @@ test(`${longestCommonSubstring.name} returns the longest common substring`, () =
 
 it(`${sha256.name}() hashes string correctly to 64 characters long`, () => {
   expect(sha256(randomString()).length).toEqual(64)
+})
+
+test(`${toCapCase.name}() converts string correctly`, () => {
+  expect(toCapCase('firstName')).toEqual('FirstName')
+  expect(toCapCase('-webkit-scrollbar')).toEqual('WebkitScrollbar')
+  expect(toCapCase('__FOO_BAR__')).toEqual('__FOO_BAR__')
+  expect(toCapCase('_')).toEqual('_')
+  expect(toCapCase('_1')).toEqual('_1')
+  expect(toCapCase('_1st')).toEqual('_1st')
+  expect(toCapCase('john & Co Ltd.')).toEqual('JohnCoLtd')
+})
+
+test(`${toTitleCase.name}() converts string correctly`, () => {
+  expect(toTitleCase('firstName')).toEqual('First Name')
+  expect(toTitleCase('-webkit-scrollbar')).toEqual('-Webkit-Scrollbar')
+  expect(toTitleCase('__FOO_BAR__')).toEqual('__FOO_BAR__')
+  expect(toTitleCase('_')).toEqual('_')
+  expect(toTitleCase('_1')).toEqual('_1')
+  expect(toTitleCase('_1st')).toEqual('_1st')
+  expect(toTitleCase('john & Co Ltd.')).toEqual('John & Co Ltd.')
 })
 
 it(`${toURI.name}() returns sanitized AlphaNumericHyphen string for use in browser URL`, () => {
