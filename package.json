@@ -1,11 +1,11 @@
 {
   "name": "@webframer/js",
-  "version": "0.11.8",
+  "version": "0.12.0",
   "description": "JS Helper Functions",
   "license": "MIT",
   "type": "module",
   "main": "index.js",
-  "homepage": "https://github.com/webframer/utils",
+  "homepage": "https://github.com/webframer/js",
   "sideEffects": false,
   "keywords": [
     "helper",
@@ -23,7 +23,6 @@
     "flat": "^5.0.2",
     "humanize-duration": "^3.27.2",
     "lodash-es": "^4.17.21",
-    "papaparse": "^5.3.2",
     "performance-now": "^2.1.0",
     "pluralize": "^8.0.0",
     "reselect": "^4.1.6"

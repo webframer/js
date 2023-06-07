@@ -183,8 +183,8 @@ export function toTimeRanges (dates) {
 /**
  * Convert Date with Hours and Minutes to Unix Timestamp Range
  *
- * @param {Object<{date: 'dd.mm.yyyy', from: 'hh:mm', to: 'hh:mm', ...}>} dateTime - strings
- * @returns {Object<{from: Number, to: Number, ...}>} time - Unix timestamp range
+ * @param {{date: string, from: string, to: string}} dateTime - {date: 'dd.mm.yyyy', from: 'hh:mm', to: 'hh:mm', ...}
+ * @returns {{from?: number, to?: number}} time - Unix timestamp range
  */
 export function toTimeRange ({date, from, to, ...result}) {
   const timeOfTheDay = timestampFromDate(date)

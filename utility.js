@@ -35,7 +35,7 @@ export { isBoolean } from 'lodash-es'
  *        a. using 36 (case-insensitive) characters have 36^3 = 46,656 possibilities,
  *        b. using 62 (case-sensitive) characters have 62^3 = 238,328 possibilities,
  *        => it is unlikely two people would create more than that possibilities in the same millisecond.
- *    - Collision from the same user is prevented by checking for suffix duplicates within each millisecond.
+ *    - Collision within the same instance is prevented by checking for suffix duplicates within each millisecond.
  *    - This function is purposely slow with de-optimization to prevent generating too many Ids within one millisecond.
  *
  * @param {Number|String} [timestamp] - custom timestamp to generate ID for, defaults to Date.now()
@@ -43,7 +43,7 @@ export { isBoolean } from 'lodash-es'
  * @param {Boolean} [caseSensitive] - whether to use case-sensitive characters
  * @param {Number} [padCount] - if generated ID length is less than this, it's padded with the first character in the `alphabet`
  * @param {String} [suffix] - string to append to ID timestamp, default is random alphanumeric 3 characters string
- * @return {String} ID - example: 'MJ8FU-RVRo'
+ * @return {String} ID - example: 'mj8foo3ago'
  */
 export function Id ({
   timestamp = Date.now(),

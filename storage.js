@@ -28,7 +28,7 @@ export function memoryCache (initValue = {}) {
 }
 
 /**
- * Perform fastest possible cache in RAM
+ * Perform the fastest possible cache in RAM
  *
  * @param {string} ACTION - one of GET, SET, or DELETE
  * @param {string} key - stored value's key identifier
