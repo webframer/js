@@ -13,7 +13,8 @@
     "functions"
   ],
   "scripts": {
-    "push": "npm publish --access public"
+    "push": "npm publish --access public",
+    "build": "rm -fr dist/* && tsc -p ../../scripts/npm/@js-tsconfig.json"
   },
   "dependencies": {
     "bson-objectid": "^2.0.3",
