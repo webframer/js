@@ -1,6 +1,6 @@
 {
   "name": "@webframer/js",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "JS Helper Functions",
   "license": "MIT",
   "type": "module",
@@ -14,8 +14,7 @@
   ],
   "scripts": {
     "build": "rm -fr dist/* && tsc -p ../../scripts/npm/@js-tsconfig.json && node ../../scripts/npm/build.js",
-    "push": "npm run build && cd dist && npm run release && cd ../",
-    "release": "npm publish --access public"
+    "push": "npm run build && cd dist && npm publish --access public && cd ../"
   },
   "dependencies": {
     "bson-objectid": "^2.0.3",
