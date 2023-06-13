@@ -90,10 +90,8 @@ export function rgbFromColor3 (color3) {
 }
 
 /**
- * Convert an RGB Color to Hex String
- * @param {Number} r
- * @param {Number} g
- * @param {Number} b
+ * Convert an RGB Color array to Hex String
+ * @param {[r: number, g: number, b: number]} array - of [r, g, b] numbers
  * @return {String} hex color
  */
 export function rgbToHex ([r, g, b]) {

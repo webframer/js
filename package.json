@@ -1,6 +1,6 @@
 {
   "name": "@webframer/js",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "description": "JS Helper Functions",
   "license": "MIT",
   "type": "module",
