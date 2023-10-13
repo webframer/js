@@ -1,4 +1,13 @@
-import { FIVE_HOURS, FORMAT_DATE, ONE_DAY, ONE_HOUR, ONE_MINUTE, ONE_MONTH, ONE_YEAR } from '../constants.js'
+import {
+  FIVE_HOURS,
+  FORMAT_DATE,
+  FORMAT_TIME_FOR_CLI_OPTS,
+  ONE_DAY,
+  ONE_HOUR,
+  ONE_MINUTE,
+  ONE_MONTH,
+  ONE_YEAR,
+} from '../constants.js'
 import {
   formatDuration,
   formatTime,
@@ -9,7 +18,7 @@ import {
   toLeadingZero,
   totalFromTimeRanges,
   toTimeRanges,
-  toTimestamp
+  toTimestamp,
 } from '../time.js'
 
 const date = '31.12.2000'
@@ -17,7 +26,8 @@ const timestamp = timestampFromDate(date)
 
 it(`${formatDuration.name}() renders durations correctly`, () => {
   expect(formatDuration(1234, {shorten: true, round: false, units: ['ms']})).toEqual('1234 ms')
-  expect(formatDuration(1234, {shorten: false, round: false, units: ['ms']})).toEqual('1234 milliseconds')
+  expect(formatDuration(1234, FORMAT_TIME_FOR_CLI_OPTS)).toEqual('1 s, 234 ms')
+  expect(formatDuration(234, FORMAT_TIME_FOR_CLI_OPTS)).toEqual('234 ms')
 })
 
 it(`${formatTime.name}() renders date correctly`, () => {

@@ -42,7 +42,7 @@ export function cloneFast (obj) {
 }
 
 /**
- * Extract Object keys starting with `#` (or `prefix` character) into a new object by mutation
+ * Extract Object keys starting with `#` (or `prefix` character) into a new object
  * @example:
  *    const props = {'#tag': 'Row', _id: 'Id'}
  *    const privateObj = extractPrivateProps(props)
@@ -50,16 +50,18 @@ export function cloneFast (obj) {
  *    >>> props == {_id: 'Id'}
  *
  * @param {object|array} obj - object with mixed of private and standard properties
- * @param {string} [prefix] - private property prefix
+ * @param {object} [o] - options
+ * @param {string} [o.prefix] - private property prefix
+ * @param {boolean} [o.mutate] - whether to remove extracted props from given object
  * @returns {object} privateProps - with `#` (or `prefix` character) removed from keys
  */
-export function extractPrivateProps (obj, prefix = '#') {
+export function extractPrivateProps (obj, {prefix = '#', mutate = true} = {}) {
   if (isList(obj)) return obj
   const result = {}
   for (const key in obj) {
     if (key.indexOf(prefix) === 0) {
       result[key.replace(prefix, '')] = obj[key]
-      delete obj[key]
+      if (mutate) delete obj[key]
     }
   }
   return result
