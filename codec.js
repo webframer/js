@@ -72,7 +72,7 @@ export function isJSON (data) {
 }
 
 /**
- * Convert any Javascript value to source code string.
+ * Converts any Javascript value to literal string for use as source code.
  * @example:
  *    toText({a: 8})
  *    >>> '{a: 8}'
@@ -84,12 +84,15 @@ export function toText (value) {
   if (value == null || value instanceof Error) return String(value)
   switch (typeof value) {
     case 'symbol':
-      return `Symbol${Symbol.for(value.description) === value ? '.for' : ''}("${value.description}")`
+      return `Symbol${Symbol.for(value.description) === value ? '.for' : ''}('${value.description}')`
     case 'number':
       return String(value)
     case 'object':
-      if (isString(value)) return `new String("${value}")`
+      if (isString(value)) return `new String('${value}')`
       if (isNumber(value)) return `new Number(${value})`
+      break
+    case 'string':
+      return `'${value}'` // use single quote for consistency with modern programs
   }
 
   let string = []
