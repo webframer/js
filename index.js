@@ -1,4 +1,4 @@
-/* ! Copyright (c) webframe.app by Ecoinomist (https://github.com/ecoinomist) | MIT License */
+/* ! Copyright (c) webframe.app by Ecoinomist (https://github.com/webframer) | MIT License */
 /**
  * EXPORTS =====================================================================
  * Modules' Exposing API - to enable consistent and maintainable app integration
