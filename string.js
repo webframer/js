@@ -16,6 +16,7 @@ export const nonAlphaNumPattern = /[^a-zA-Z0-9]/g
 export const nonAlphaNumIdPattern = /[^a-zA-Z0-9_-]/g
 export const nonAlphaNumURIPattern = /[^a-zA-Z0-9./_-]/g
 export const nonAlphaNumVarPattern = /[^a-zA-Z0-9_]/g
+export const nonJSVarPattern = /^\d|[^a-zA-Z0-9_]/g
 export const nonUnderscoreCharsPattern = /[^_]+/g
 /**
  * Split CapCased String.
@@ -141,6 +142,23 @@ export function longestCommonSubstring (str1, str2) {
  */
 export function escapeRegExp (string) {
   return string.replace(escapeRegExpPattern, '\\$&') // $& means the whole matched string
+}
+
+/**
+ * Escape/Replace string for given characters
+ * @param {string} str - to escape
+ * @param {{[old: string]: string}} charsMap - maps of old string as key, and new string as value
+ * @returns {string} escaped string
+ */
+export function escapeString (str, charsMap = {
+  '\'': '\\\'',
+  '\n': '\\n',
+  '\t': '\\t',
+}) {
+  for (const old in charsMap) {
+    str = str.replaceAll(old, charsMap[old])
+  }
+  return str
 }
 
 /**

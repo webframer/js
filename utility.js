@@ -328,7 +328,7 @@ export function requireEnv (required) {
  * @param {string} eventName - example: 'keydown', 'keyup', etc.
  * @param {function} callback - event handler to add, receives `event` as argument
  * @param {boolean | AddEventListenerOptions} [options]
- * @param {HTMLElement} [node] - to subscribe to
+ * @param {HTMLElement|Document|Window} [node] - to subscribe to, default is `window` object
  */
 export function subscribeTo (eventName, callback, options, node) {
   if (typeof window === 'undefined') return
@@ -342,7 +342,7 @@ export function subscribeTo (eventName, callback, options, node) {
  * @param {string} eventName - example: 'keydown', 'keyup', etc.
  * @param {function} callback - event handler to remove
  * @param {boolean | EventListenerOptions} [options]
- * @param {HTMLElement} [node] - to unsubscribe from
+ * @param {HTMLElement|Document|Window} [node] - to unsubscribe from
  */
 export function unsubscribeFrom (eventName, callback, options, node) {
   if (typeof window === 'undefined') return

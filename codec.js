@@ -1,5 +1,6 @@
 import CircularJSON from 'circular-json-es6' // do not change to `flatted` package,
 import { isNumber, isString } from 'lodash-es'
+import { escapeString, nonJSVarPattern } from './string.js'
 // because it does not comply to JSON standard, and outputs a flat index of objects.
 // Example:
 //  - flatted.stringify({a:1}) >>> [{a:1}]
@@ -92,7 +93,7 @@ export function toText (value) {
       if (isNumber(value)) return `new Number(${value})`
       break
     case 'string':
-      return `'${value}'` // use single quote for consistency with modern programs
+      return `'${escapeString(value)}'` // use single quote for consistency with modern programs
   }
 
   let string = []
@@ -108,7 +109,8 @@ export function toText (value) {
   /* Object */
   if (value.constructor === Object) {
     for (const prop in value) {
-      string.push(prop + ':' + toText(value[prop]))
+      const key = nonJSVarPattern.test(prop) ? `'${escapeString(prop)}'` : prop
+      string.push(key + ':' + toText(value[prop]))
     }
     return '{' + string.join(',') + '}'
   }

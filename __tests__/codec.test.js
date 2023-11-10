@@ -42,4 +42,16 @@ describe(`${toText.name}()`, () => {
     expect(toText({a: 3, b: '4', c: {a: 9, s: 'string'}, d: null, ar: [1, 3, 5]}))
       .toEqual(`{a:3,b:'4',c:{a:9,s:'string'},d:null,ar:[1,3,5]}`)
   })
+  it('escapes single quote for String type', () => {
+    expect(toText('It\'s sunny today')).toEqual(`'It\\'s sunny today'`)
+  })
+  it('escapes newline for String type', () => {
+    expect(toText('Hello,\nWorld')).toEqual(`'Hello,\\nWorld'`)
+  })
+  it('escapes tab for String type', () => {
+    expect(toText('Hello,\tWorld')).toEqual(`'Hello,\\tWorld'`)
+  })
+  it('escapes Object key string correctly', () => {
+    expect(toText({'It\'s\n sunny\t today': true})).toEqual(`{'It\\'s\\n sunny\\t today':true}`)
+  })
 })

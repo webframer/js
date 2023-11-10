@@ -236,7 +236,7 @@ export function formatNumber(
 
 /**
  * Shorten Number to given Digits Length, with Suffix Added if Necessary
- *
+ * todo: Localise decimal numbers
  * @param {number|string} value - number to format
  * @param {Number} [digits] - maximum number of digits to keep (will add/remove decimals to match final length)
  * @param {Number} [divider] - value to divide by when determining exponent steps, example: 1024 for bytes
