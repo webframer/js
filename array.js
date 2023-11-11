@@ -348,20 +348,34 @@ export function toUniqueList (array) {
 }
 
 /**
- * Ensure array has only unique primitive values.
+ * Ensure array has only unique values using exact match `===`
  *
  * @param {Array} array - the array to enforce unique primitive values for
  * @return {Array} - new array
  */
 export function toUniqueListFast (array) {
-  return array.filter((value, index, self) => self.indexOf(value) === index)
+  return array.filter(filterUnique)
 }
 
 /**
- * Ensure array has only unique values case insensitive keeping the first occurrence of duplicates.
+ * A predicate to filter Array and keep only unique values using exact match `===`
+ * @example:
+ *    array.filter(filterUnique)
  *
- * @param {Array<*>} array - the array to enforce unique values for (can be mix of value types)
- * @return {Array<*>} list - new array containing only unique values, case insensitive
+ * @param {?} value
+ * @param {number} index
+ * @param {?[]} self
+ * @returns {boolean}
+ */
+export function filterUnique (value, index, self) {
+  return self.indexOf(value) === index
+}
+
+/**
+ * Ensure array has only unique values case-insensitive keeping the first occurrence of duplicates.
+ *
+ * @param {Array<*>} array - the array to enforce unique values for (can be a mix of value types)
+ * @return {Array<*>} list - new array containing only unique values, case-insensitive
  */
 export function toUniqueListCaseInsensitive (array) {
   const listLower = array.map(toLowerCaseAny)
