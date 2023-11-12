@@ -1,6 +1,6 @@
 {
   "name": "@webframer/js",
-  "version": "0.12.5",
+  "version": "0.13.0",
   "description": "JS Helper Functions",
   "license": "MIT",
   "type": "module",
@@ -13,8 +13,10 @@
     "functions"
   ],
   "scripts": {
-    "build": "rm -fr dist/* && tsc -p ../../scripts/npm/@js-tsconfig.json && node ../../scripts/npm/build.js",
-    "push": "npm run build && cd dist && npm publish --access public && cd ../"
+    "build": "rm -fr dist/* && tsc -p ../../scripts/npm/@js-tsconfig.json",
+    "bundle": "node ../../scripts/npm/build.js",
+    "unbundle": "rm -rf dist",
+    "push": "npm run build && npm run bundle && cd dist && npm publish --access public && cd ../ && npm run unbundle"
   },
   "dependencies": {
     "bson-objectid": "^2.0.3",
