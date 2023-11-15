@@ -13,8 +13,8 @@ export const SERVICE = {
  * COMMON ACTION CONSTANTS =====================================================
  * =============================================================================
  */
-export const SEPARATOR = ' -> '         // ACTION type separator string
-export const RESULT_SEPARATOR = '_'     // RESULT type separator string
+export const ACTION_SEPARATOR = ' -> '  // ACTION type separator string
+export const RESULT_SEPARATOR = ':'     // RESULT type separator string
 export const SYSTEM = 'SYSTEM'          // Internal app action subject
 
 /* CRUD Actions */

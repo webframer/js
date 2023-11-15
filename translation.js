@@ -92,6 +92,7 @@ export function translate (TRANSLATION) {
   return translate.instance
 }
 
+/** @type {{[p: string]: string}} */
 translate.instance = {}
 translate.queriedById = {}
 
@@ -141,7 +142,7 @@ translate({
  *    log(_.NEW_PHRASE)
  *    >>> 'Новая Фраза'
  *
- * @returns {Object} localised string - that returns localised 'Untranslated' string if no translation found
+ * @type {{[p: string]: string}} object that returns localised 'Untranslated' string if no translation found
  */
 export const _ = new Proxy(translate.instance, {
   get (target, key) {
