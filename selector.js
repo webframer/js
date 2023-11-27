@@ -28,17 +28,22 @@ export function isSelector (func) {
  *  *@selector(NAME)
  *   export default class select {
  *
+ *     // Shorthand declaration syntax (`this` is undefined)
  *     static activeRoute = () => [
  *       (state) => get(state, `${NAME}.location.pathname`),
  *       (pathname) => pathname
  *     ]
  *
- *     // Reusing selectors
+ *     // Reusing selectors declaration syntax (`this` is the `select` class instance)
  *     static activeUri = function () {
  *        // noinspection JSPotentiallyInvalidUsageOfClassThis
  *        return [
+ *          // Reusing selector defined above (order of declaration matters)
  *          this.activeRoute,
+ *          // This function will execute every time the `state` object changes its reference,
+ *          // but it does not execute if we mutate `state` object without changing reference.
  *          (state) => get(state, `${this.NAME}.location.id`),
+ *          // The last function only executes when any of its arguments changes reference
  *          (route, id) => route.split('/').pop()
  *        ]
  *     }
