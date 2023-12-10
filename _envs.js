@@ -23,8 +23,8 @@ export const _SHOULD_SHOW_TEST_ = __DEV__
 // Directory path relative to the root `index.js`
 export const _WORK_DIR_ = typeof process !== 'undefined' ? process.cwd() : '.'
 
-/* Globally Accessible Objects */
-export const Current = {
+/* Globally Accessible Variables */
+export const current = {
   // Will be overridden at runtime, used for avoiding circular import and env-dependent libraries
   DEFAULT: {LANG: LANGUAGE.ENGLISH._},
   // The currently used language definition

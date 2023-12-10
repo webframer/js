@@ -1,4 +1,4 @@
-import { Current } from './_envs.js'
+import { current } from './_envs.js'
 import { l, LANGUAGE } from './constants.js'
 import { ips } from './string.js'
 
@@ -26,8 +26,8 @@ export function localise (DEFINITION) {
     if (name == null && _ != null) {
       Object.defineProperty(DEFINITION[index], 'name', {
         get () {
-          return this[Current.LANGUAGE._] != null
-            ? this[Current.LANGUAGE._]
+          return this[current.LANGUAGE._] != null
+            ? this[current.LANGUAGE._]
             : (this[LANGUAGE.ENGLISH._] != null ? this[LANGUAGE.ENGLISH._] : String(_))
         },
       })
@@ -80,7 +80,7 @@ export function translate (TRANSLATION) {
         get () {
           // initially cannot use setter to define translations, thus fallback to _data
           const data = translate.instance[_key] || (translate.instance[_key] = _data)
-          return data[Current.LANGUAGE._] || data[Current.DEFAULT.LANG] || KEY || ''
+          return data[current.LANGUAGE._] || data[current.DEFAULT.LANG] || KEY || ''
         },
         set (data) {
           // merge new translations with existing

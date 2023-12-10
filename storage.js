@@ -1,4 +1,4 @@
-import { __DEV__, Current } from './_envs.js'
+import { __DEV__, current } from './_envs.js'
 import { isList } from './array.js'
 import { fromJSON, toJSON } from './codec.js'
 import { ADD, DELETE, GET, SET } from './constants.js'
@@ -75,7 +75,7 @@ export function performStorage (ACTION, storageKey, value = null, initialValue =
   }
 
   /* SERVER (or missing localStorage) */
-  if (!hasLocalStorage) return Current.Storage[performStorage.toServer[ACTION]](storageKey, value)
+  if (!hasLocalStorage) return current.Storage[performStorage.toServer[ACTION]](storageKey, value)
 
   /* CLIENT */
   enumCheck([GET, SET, DELETE], ACTION, this)
@@ -111,11 +111,11 @@ performStorage.toServerSync = {
 // Setup Asynchronous Local Storage
 performStorage.init = function (...args) {
   performStorage.isAsync = true
-  return Current.Storage.init(...args)
+  return current.Storage.init(...args)
 }
 // Setup Synchronous Local Storage (not recommended)
 performStorage.initSync = function (...args) {
   performStorage.toServer = performStorage.toServerSync
-  return Current.Storage.initSync(...args)
+  return current.Storage.initSync(...args)
 }
 

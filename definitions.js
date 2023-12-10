@@ -1,4 +1,4 @@
-import { Current } from './_envs.js'
+import { current } from './_envs.js'
 import { LANGUAGE } from './constants.js'
 
 /**
@@ -109,7 +109,7 @@ export function enumFrom (DEFINITION) {
 export function optionsFrom (DEFINITION) {
   const options = {
     get items () {
-      return this[Current.LANGUAGE._] || this[LANGUAGE.ENGLISH._] || []
+      return this[current.LANGUAGE._] || this[LANGUAGE.ENGLISH._] || []
     }
   }
   for (const index in DEFINITION) {

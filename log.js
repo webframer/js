@@ -1,6 +1,6 @@
 import { get } from 'lodash-es'
 import now from 'performance-now'
-import { __CLIENT__, __DEV__, __TEST__, Current } from './_envs.js'
+import { __CLIENT__, __DEV__, __TEST__, current } from './_envs.js'
 import { WARN } from './constants.js'
 import { isFunction } from './function.js'
 import { formatNumber } from './number.js'
@@ -97,14 +97,14 @@ benchA.skip = new Function('')  // eslint-disable-line
 export function log (first, ...args) {
   if (!__DEV__) return
   // Client or no Chalk logger
-  if (__CLIENT__ || (!Current.log || !Current.log.keyword)) {
+  if (__CLIENT__ || (!current.log || !current.log.keyword)) {
     console.log((typeof first === 'string' && isInString(args[0] || '', 'color:')) ? `%c${first}` : first, ...args)
   }
 
   // Backend with Chalk logger
   else {
     const color = isInString(args[0] || '', 'color:') ? args.shift().split(': ')[1].toLowerCase() : ''
-    console.log((typeof first === 'string' && color) ? Current.log.keyword(color)(first) : first, ...args)
+    console.log((typeof first === 'string' && color) ? current.log.keyword(color)(first) : first, ...args)
   }
 }
 
@@ -126,13 +126,13 @@ export function logBenchmark ({name, type = '', duration, loop = null, result = 
   const time = `${formatNumber(duration / loop, {decimals: 3})} ms`
   const each = 'each'
   const output = (result != null) ? ['\n>>>', result] : []
-  if (Current.log) {
+  if (current.log) {
     console.log(
-      Current.log.green(task),
-      Current.log.keyword('cyan')(took),
-      Current.log.keyword('orange')(ms),
-      Current.log.keyword('cyan')(iteration),
-      Current.log.keyword('orange')(time),
+      current.log.green(task),
+      current.log.keyword('cyan')(took),
+      current.log.keyword('orange')(ms),
+      current.log.keyword('cyan')(iteration),
+      current.log.keyword('orange')(time),
       each,
       ...output,
     )

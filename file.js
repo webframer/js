@@ -1,4 +1,4 @@
-import { _WORK_DIR_, Current, ENV } from './_envs.js'
+import { _WORK_DIR_, current, ENV } from './_envs.js'
 import { isList } from './array.js'
 import { SIZE_MB_16 } from './constants.js'
 import { warn } from './log.js'
@@ -146,7 +146,7 @@ function soundFile (name) {
       } catch (err) {
         warn(err)
       }
-      if (Current.SETTINGS.HAS_SOUND && file) file.play().catch()
+      if (current.SETTINGS.HAS_SOUND && file) file.play().catch()
     },
   }
 }
